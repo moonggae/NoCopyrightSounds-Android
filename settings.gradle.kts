@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ncs"
 include(":app")
- 
+include(":designsystem")
+include(":data")
+include(":model")
