@@ -1,11 +1,14 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.include
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.secrets)
 }
 
 android {
-    namespace = "com.ccc.ncs.data"
+    namespace = "com.ccc.ncs.network"
     compileSdk = 34
 
     defaultConfig {
@@ -13,6 +16,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -30,15 +37,21 @@ android {
     }
 }
 
+secrets {
+    defaultPropertiesFileName = "local.properties"
+}
+
+
 dependencies {
     implementation(project(":model"))
-    implementation(project(":network"))
 
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.jsoup)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.okhttp.logging)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
-    implementation(libs.paing.runtime)
-    implementation(libs.paing.compose)
 }
