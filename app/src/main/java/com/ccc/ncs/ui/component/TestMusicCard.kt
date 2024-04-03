@@ -15,6 +15,7 @@ import com.ccc.ncs.model.Music
 
 @Composable
 fun TestMusicCard(
+    modifier: Modifier = Modifier,
     item: Music
 ) {
     Row(
@@ -23,7 +24,7 @@ fun TestMusicCard(
             .padding(
                 horizontal = 16.dp,
                 vertical = 8.dp
-            ),
+            ).then(modifier),
     ) {
         AsyncImage(
             model = item.coverThumbnailUrl,

@@ -1,5 +1,9 @@
 package com.ccc.ncs.ui
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -27,6 +31,17 @@ fun NcsApp(
 
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
+    val mediaPlayer: MediaPlayer = remember {
+        MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+        }
+    }
+
     val notConnectedMessage = stringResource(R.string.not_connected)
     LaunchedEffect(isOffline) {
         if (isOffline) {
@@ -39,6 +54,7 @@ fun NcsApp(
         }
     }
 
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
@@ -47,7 +63,20 @@ fun NcsApp(
         ) {
             items(count = testMusics.itemCount) { index ->
                 testMusics[index]?.let { music ->
-                    TestMusicCard(item = music)
+                    TestMusicCard(
+                        item = music,
+                        modifier = Modifier.clickable {
+                            Log.d("TAG", "${music.dataUrl}")
+                            mediaPlayer.apply {
+                                reset()
+                                setDataSource(music.dataUrl)
+                                setOnPreparedListener {
+                                    start()
+                                }
+                                prepareAsync()
+                            }
+                        }
+                    )
                 }
             }
         }
