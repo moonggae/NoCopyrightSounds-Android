@@ -27,6 +27,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.ccc.ncs.data.util.NetworkMonitor
+import com.ccc.ncs.ui.NcsApp
+import com.ccc.ncs.ui.rememberNcsAppState
 import com.ccc.ncs.ui.theme.NcsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -41,46 +44,29 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel: MainActivityViewModel by viewModels()
+    
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         setContent {
-            val musics = viewModel.musics.collectAsLazyPagingItems()
+            val appState = rememberNcsAppState(
+                networkMonitor = networkMonitor
+            )
 
             NcsTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    LazyColumn {
-                        items(count = musics.itemCount) { index ->
-                            musics[index]?.let { music ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        ),
-                                ) {
-                                    AsyncImage(
-                                        model = music.coverThumbnailUrl,
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .padding(end = 12.dp)
-                                            .size(56.dp)
-                                    )
-
-                                    Column {
-                                        Text(text = music.title)
-                                        Text(text = music.artist)
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    NcsApp(
+                        appState = appState,
+                        testMusics = viewModel.musics.collectAsLazyPagingItems()
+                    )
                 }
             }
         }

@@ -2,6 +2,8 @@ package com.ccc.ncs.data.di
 
 import com.ccc.ncs.data.repository.DefaultMusicRepository
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.data.util.ConnectivityManagerNetworkMonitor
+import com.ccc.ncs.data.util.NetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +16,9 @@ abstract class DataModule {
     internal abstract fun bindsMusicRepository(
         musicRepository: DefaultMusicRepository
     ): MusicRepository
+
+    @Binds
+    internal abstract fun bindsNetworkMonitor(
+        networkMonitor: ConnectivityManagerNetworkMonitor
+    ): NetworkMonitor
 }
