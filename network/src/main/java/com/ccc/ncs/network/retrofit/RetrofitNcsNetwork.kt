@@ -1,6 +1,7 @@
 package com.ccc.ncs.network.retrofit
 
 
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -11,6 +12,7 @@ import okhttp3.Call
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -33,6 +35,14 @@ private interface RetrofitNcsNetworkApi {
         @Query("mood") moodId: Int? = null,
         @Query("version") version: String? = null,
         @Query("display") display: String = "list"
+    ): Response<String>
+
+    @GET("/artists")
+    suspend fun getArtistListHtml(
+        @Query("page") page: Int,
+        @Query("q") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("year") year: Int? = null
     ): Response<String>
 }
 
@@ -66,6 +76,35 @@ class RetrofitNcsNetwork @Inject constructor(
         return parseMusicRows(musicTable)
     }
 
+    override suspend fun getArtists(
+        page: Int,
+        query: String?,
+        sort: String?,
+        year: Int?
+    ): List<Artist> {
+        val htmlString = fetchArtistListHtml(page, query, sort, year) ?: return emptyList()
+
+        val document = Jsoup.parse(htmlString)
+        val artistElements = findArtistDivs(document)
+
+        return parseArtists(artistElements)
+    }
+
+    private fun parseArtists(artistElements: Elements): List<Artist> {
+        return artistElements.map { element ->
+            val detailUrl = element.select("a").attr("href")
+            val name = element.select("div.bottom strong").html()
+            val imageStyleString = element.select("div.img").attr("style")
+            val photoUrl = imageStyleString.split("'")[1]
+
+            Artist(
+                name = name,
+                detailUrl = detailUrl,
+                photoUrl = if (photoUrl.startsWith("/static")) WEB_URL + photoUrl else photoUrl
+            )
+        }
+    }
+
     private suspend fun fetchMusicListHtml(
         page: Int,
         query: String?,
@@ -74,6 +113,19 @@ class RetrofitNcsNetwork @Inject constructor(
         version: String?
     ): String? {
         return networkApi.getMusicListHtml(page, query, genreId, moodId, version).body()
+    }
+
+    private suspend fun fetchArtistListHtml(
+        page: Int,
+        query: String?,
+        sort: String?,
+        year: Int?
+    ): String? {
+        return networkApi.getArtistListHtml(page, query, sort, year).body()
+    }
+
+    private fun findArtistDivs(doc: Document): Elements {
+        return doc.select("body > main > article.module.artists div.row > div.item")
     }
 
     private fun findMusicTable(doc: Document): Element? {
