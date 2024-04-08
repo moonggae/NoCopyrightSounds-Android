@@ -85,4 +85,6 @@ dependencies {
 
     implementation(libs.paing.runtime)
     implementation(libs.paing.compose)
+
+    implementation(libs.bundles.media3)
 }
