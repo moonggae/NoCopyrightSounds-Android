@@ -60,16 +60,17 @@ internal fun HomeScreen(
                     modifier = Modifier.clickable {
                         mediaController?.run {
                             val mediaItem =
-                            MediaItem.Builder()
-                                .setUri(music.dataUrl)
-                                .setMediaMetadata(MediaMetadata
-                                    .Builder()
-                                    .setArtist(music.artist)
-                                    .setTitle(music.title)
-                                    .setArtworkUri(Uri.parse(music.coverUrl))
+                                MediaItem.Builder()
+                                    .setUri(music.dataUrl)
+                                    .setMediaMetadata(
+                                        MediaMetadata
+                                            .Builder()
+                                            .setArtist(music.artist)
+                                            .setTitle(music.title)
+                                            .setArtworkUri(Uri.parse(music.coverUrl))
+                                            .build()
+                                    )
                                     .build()
-                                )
-                                .build()
                             setMediaItem(mediaItem)
                             prepare()
                             play()
