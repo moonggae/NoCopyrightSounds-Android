@@ -2,48 +2,38 @@ package com.ccc.ncs.network.retrofit
 
 
 import com.ccc.ncs.model.Artist
-import com.ccc.ncs.model.Genre
-import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
-import com.ccc.ncs.model.Version
 import com.ccc.ncs.network.BuildConfig
 import com.ccc.ncs.network.NcsNetworkDataSource
+import com.ccc.ncs.network.converter.NcsHtmlConverterFactory
 import okhttp3.Call
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 private interface RetrofitNcsNetworkApi {
     @GET("/music-search")
-    suspend fun getMusicListHtml(
+    suspend fun getMusicList(
         @Query("page") page: Int,
         @Query("q") query: String? = null,
         @Query("genre") genreId: Int? = null,
         @Query("mood") moodId: Int? = null,
         @Query("version") version: String? = null,
         @Query("display") display: String = "list"
-    ): Response<String>
+    ): Response<List<Music>>
 
     @GET("/artists")
-    suspend fun getArtistListHtml(
+    suspend fun getArtistList(
         @Query("page") page: Int,
         @Query("q") query: String? = null,
         @Query("sort") sort: String? = null,
         @Query("year") year: Int? = null
-    ): Response<String>
+    ): Response<List<Artist>>
 }
 
 private const val WEB_URL = BuildConfig.WEB_URL
@@ -55,7 +45,7 @@ class RetrofitNcsNetwork @Inject constructor(
     private val networkApi by lazy {
         Retrofit.Builder()
             .baseUrl(WEB_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(NcsHtmlConverterFactory())
             .callFactory { okHttpCallFactory.newCall(it) }
             .build()
             .create(RetrofitNcsNetworkApi::class.java)
@@ -67,146 +57,12 @@ class RetrofitNcsNetwork @Inject constructor(
         genreId: Int?,
         moodId: Int?,
         version: String?
-    ): List<Music> {
-        val htmlString = fetchMusicListHtml(page, query, genreId, moodId, version) ?: return emptyList()
-
-        val document = Jsoup.parse(htmlString)
-        val musicTable = findMusicTable(document) ?: return emptyList()
-
-        return parseMusicRows(musicTable)
-    }
+    ): List<Music> = networkApi.getMusicList(page, query, genreId, moodId, version).body() ?: emptyList()
 
     override suspend fun getArtists(
         page: Int,
         query: String?,
         sort: String?,
         year: Int?
-    ): List<Artist> {
-        val htmlString = fetchArtistListHtml(page, query, sort, year) ?: return emptyList()
-
-        val document = Jsoup.parse(htmlString)
-        val artistElements = findArtistDivs(document)
-
-        return parseArtists(artistElements)
-    }
-
-    private fun parseArtists(artistElements: Elements): List<Artist> {
-        return artistElements.map { element ->
-            val detailUrl = element.select("a").attr("href")
-            val name = element.select("div.bottom strong").html()
-            val imageStyleString = element.select("div.img").attr("style")
-            val photoUrl = imageStyleString.split("'")[1]
-
-            Artist(
-                name = name,
-                detailUrl = detailUrl,
-                photoUrl = if (photoUrl.startsWith("/static")) WEB_URL + photoUrl else photoUrl
-            )
-        }
-    }
-
-    private suspend fun fetchMusicListHtml(
-        page: Int,
-        query: String?,
-        genreId: Int?,
-        moodId: Int?,
-        version: String?
-    ): String? {
-        return networkApi.getMusicListHtml(page, query, genreId, moodId, version).body()
-    }
-
-    private suspend fun fetchArtistListHtml(
-        page: Int,
-        query: String?,
-        sort: String?,
-        year: Int?
-    ): String? {
-        return networkApi.getArtistListHtml(page, query, sort, year).body()
-    }
-
-    private fun findArtistDivs(doc: Document): Elements {
-        return doc.select("body > main > article.module.artists div.row > div.item")
-    }
-
-    private fun findMusicTable(doc: Document): Element? {
-        return doc.select("body > main > article.module.table").firstOrNull { element ->
-            !element.classNames().contains("featured")
-        }
-    }
-
-    private fun parseMusicRows(table: Element): List<Music> {
-        return table.select("tbody > tr").mapNotNull { row ->
-            parseMusicRow(row)
-        }
-    }
-
-    private fun parseMusicRow(row: Element): Music? {
-        val titleTag = row.selectFirst("td:nth-child(1) > a") ?: return null
-        val artistDetailUrl = parseArtistDetailUrl(titleTag)
-        val releaseDate = parseReleaseDate(row) ?: return null
-        val genres = parseGenres(row)
-        val moods = parseMoods(row)
-        val versions = parseVersions(row)
-
-        return Music(
-            title = titleTag.attribute("data-track").value,
-            artist = titleTag.attribute("data-artistraw").value,
-            dataUrl = titleTag.attribute("data-url").value,
-            artistDetailUrl = artistDetailUrl,
-            coverThumbnailUrl = titleTag.attribute("data-cover").value,
-            coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "325x325"),
-            detailUrl = row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: "",
-            releaseDate = releaseDate,
-            genres = genres.toSet(),
-            moods = moods.toSet(),
-            versions = versions.toSet()
-        )
-    }
-
-    private fun parseArtistDetailUrl(tag: Element): String {
-        val artistTagHtml = tag.attribute("data-artist").html()
-        return Jsoup.parse(artistTagHtml).select("a").attr("href")
-    }
-
-    private fun parseReleaseDate(row: Element): LocalDate? {
-        val dateText = row.selectFirst("td:nth-child(6)")?.html() ?: return null
-        val (day, monthStr, year) = dateText.split(" ")
-        val month = SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthStr)?.let {
-            val calendar = Calendar.getInstance()
-            calendar.time = it
-            calendar.get(Calendar.MONTH) + 1
-        } ?: return null
-        return LocalDate.of(year.toInt(), month, day.toInt())
-    }
-
-    private fun parseGenres(row: Element): Set<Genre> {
-        return parseTags(row, "genre") { id, name ->
-            Genre(id = id, name = name)
-        }.toSet()
-    }
-
-    private fun parseMoods(row: Element): Set<Mood> {
-        return parseTags(row, "mood") { id, name ->
-            Mood(id = id, name = name)
-        }.toSet()
-    }
-
-    private fun <T> parseTags(row: Element, type: String, createInstance: (Int, String) -> T): List<T> {
-        return row.selectFirst("td:nth-child(5)")?.select("a")
-            ?.filter { it -> it.attr("href").contains(type) }
-            ?.mapNotNull { tag ->
-                val id = tag.attr("href").split("=").last().toIntOrNull() ?: return@mapNotNull null
-                createInstance(id, tag.html())
-            } ?: emptyList()
-    }
-
-    private fun parseVersions(row: Element): Set<Version> {
-        val versionString = row.selectFirst("td:nth-child(7)")?.html() ?: return emptySet()
-        return Version.values().filter { version ->
-            versionString.uppercase().contains(version.name.uppercase())
-        }.toSet()
-    }
-
-
-
+    ): List<Artist> = networkApi.getArtistList(page, query, sort, year).body() ?: emptyList()
 }
