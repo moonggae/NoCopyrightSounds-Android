@@ -7,34 +7,10 @@ import com.ccc.ncs.network.BuildConfig
 import com.ccc.ncs.network.NcsNetworkDataSource
 import com.ccc.ncs.network.converter.NcsHtmlConverterFactory
 import okhttp3.Call
-import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
-private interface RetrofitNcsNetworkApi {
-    @GET("/music-search")
-    suspend fun getMusicList(
-        @Query("page") page: Int,
-        @Query("q") query: String? = null,
-        @Query("genre") genreId: Int? = null,
-        @Query("mood") moodId: Int? = null,
-        @Query("version") version: String? = null,
-        @Query("display") display: String = "list"
-    ): Response<List<Music>>
-
-    @GET("/artists")
-    suspend fun getArtistList(
-        @Query("page") page: Int,
-        @Query("q") query: String? = null,
-        @Query("sort") sort: String? = null,
-        @Query("year") year: Int? = null
-    ): Response<List<Artist>>
-}
 
 private const val WEB_URL = BuildConfig.WEB_URL
 

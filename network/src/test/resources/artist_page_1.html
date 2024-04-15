@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Artists - NCS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/web/css/style.css?_m=1693568156">
+    <link rel="icon" type="image/png" href="/favicon.png?_m=1597301782">
+
+
+    <meta name="description" content="View the artists who have released on NCS (NoCopyrightSounds)">
+
+    <link rel="canonical" href="https://ncs.io/artists?page=1">
+
+    <meta property="og:title" content="Artists - NCS">
+    <meta property="og:description" content="View the artists who have released on NCS (NoCopyrightSounds)">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ncs.io/artists">
+    <meta property="og:site_name" content="NCS">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@ncsounds">
+    <meta name="twitter:title" content="Artists - NCS">
+    <meta name="twitter:url" content="https://ncs.io/artists">
+    <meta name="twitter:description" content="View the artists who have released on NCS (NoCopyrightSounds)">
+
+    <meta property="og:image" content="https://ncs.io/static/web/img/logo-og.png?_m=1597301782">
+    <meta name="twitter:image" content="https://ncs.io/static/web/img/logo-og.png?_m=1597301782">
+    <meta name="twitter:image:alt" content="NCS">
+
+
+</head>
+<body><!-- Google Tag Manager (noscript) -->
+
+<header class="clearfix">
+    <a href="/" class="logo">
+        <img src="/static/web/img/logo.png?_m=1597301782" alt="NCS">
+    </a>
+    <a class="menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <nav>
+        <ul>
+            <li>
+                <a class="panel-btn" data-panel="#login">
+                    <img src="/static/web/img/svg/sign-in.svg?_m=1597828013" alt="Log In">
+                    <p>Log In</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="/music">
+                    <img src="/static/web/img/svg/music-alt.svg?_m=1597828013" alt="Music Library">
+                    <p>Music Library</p>
+                </a>
+            </li>
+            <li>
+                <a href="/artists" class="active">
+                    <img src="/static/web/img/svg/user-friends.svg?_m=1597828013" alt="Artists">
+                    <p>Artists</p>
+                </a>
+            </li>
+
+
+
+        </ul>
+        <ul>
+            <li>
+                <a href="/usage-policy">
+                    <img src="/static/web/img/svg/file-alt.svg?_m=1597828013" alt="Usage Policy">
+                    <p>Usage Policy</p>
+                </a>
+            </li>
+            <li>
+                <a href="/about">
+                    <img src="/static/web/img/svg/info-circle.svg?_m=1597828013" alt="About">
+                    <p>About</p>
+                </a>
+            </li>
+            <li>
+                <a href="/contact">
+                    <img src="/static/web/img/svg/file-user.svg?_m=1597828013" alt="Contact">
+                    <p>Contact</p>
+                </a>
+            </li>
+
+            <li style="margin-top:7vh;"><a href="https://ncs.lnk.to/SpotfiyPlaylistWE" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/001/1691764744_1qszULdYbm_spotify.svg" class="social" alt="Spotify"> <p>Spotify</p></a></li>
+            <li><a href="https://www.instagram.com/nocopyrightsounds/" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/004/1691765545_zUsDyv3fjp_instagram.svg" class="social" alt="Instagram"> <p>Instagram</p></a></li>
+            <li><a href="https://www.youtube.com/nocopyrightsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/005/1691765587_3jQGCufgfS_youtube.svg" class="social" alt="YouTube"> <p>YouTube</p></a></li>
+
+        </ul>
+        <div class="logo-id">
+            <a href="https://www.netdreams.co.uk/" target="_blank" class="id-text">Web Design</a>
+        </div>
+    </nav>
+</header>
+<div class="panel" id="login">
+    <div class="inner">
+        <h3>Log In <a class="panel-close"><i class="far fa-times-circle"></i></a></h3>
+        <hr>
+        <a style="margin-bottom: 6px" href="/facebook/auth/login" class="btn fb white-btn"><i class="facebook "></i> Log in with Facebook</a>
+        <a style="margin-bottom: 6px" href="/google/auth/login" class="btn fb white-btn"><i class="google"></i> Log in with Google</a>
+        <a href="/spotify/auth/login" class="btn fb white-btn"><i class="spotify"></i> Log in with Spotify</a>
+        <hr>
+        <form class="clearfix" method="post" action="/log-in">
+            <div class="clearfix">
+
+
+                <fieldset>
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </fieldset>
+                <fieldset >
+                    <label>Password</label>
+                    <input type="password" name="password">
+                </fieldset>
+            </div>
+            <a class="forgot panel-btn" data-panel="#forgot">Forgot Password?</a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="forgot panel-btn" data-panel="#signup">Sign Up</a>
+            <input type="submit" value="Log In" class="btn black-full">
+            <input type="hidden" name="_token" value="njnCSyuIA7Sz3poZLxyBkLxAUz26zTiSPmK7v8tx">    </form>
+    </div>
+</div>
+
+<div class="panel" id="forgot">
+    <div class="inner">
+        <h3>Forgot Password <a class="panel-close"><i class="far fa-times-circle"></i></a></h3>
+        <hr>
+        <form class="clearfix" method="post" action="/forgot-password">
+            <div class="clearfix">
+
+
+                <fieldset style="margin-bottom: 20px">
+                    <p>Enter your email address below. If an account exists, we will email you password reset instructions.</p>
+                </fieldset>
+                <fieldset>
+                    <label>Email Address</label>
+                    <input name="email" type="email" value="" required>
+                </fieldset>
+            </div>
+            <input type="submit" value="Submit" class="btn black-full">
+            <input type="hidden" name="_token" value="njnCSyuIA7Sz3poZLxyBkLxAUz26zTiSPmK7v8tx">    </form>
+    </div>
+</div>
+
+<div class="panel" id="forgot-reset">
+    <div class="inner">
+        <h3>Reset Password <a class="panel-close"><i class="far fa-times-circle"></i></a></h3>
+        <hr>
+        <form class="clearfix" method="post" action="/forgot-password/reset">
+            <div class="clearfix">
+
+
+                <fieldset style="margin-bottom: 20px">
+                    <p>Please enter and confirm your new password below. Passwords need to be at least 6 characters long.</p>
+                </fieldset>
+                <fieldset >
+                    <label>New Password</label>
+                    <input name="password" type="password" required>
+                </fieldset>
+                <fieldset >
+                    <label>Confirm New Password</label>
+                    <input name="password_confirmation" type="password" required>
+                </fieldset>
+            </div>
+            <input type="submit" value="Submit" class="btn black-full">
+            <input type="hidden" name="token" value="">
+            <input type="hidden" name="_token" value="njnCSyuIA7Sz3poZLxyBkLxAUz26zTiSPmK7v8tx">    </form>
+    </div>
+</div>
+
+<div class="panel" id="signup">
+    <div class="inner">
+        <h3>Sign Up <a class="panel-close"><i class="far fa-times-circle"></i></a></h3>
+        <hr>
+
+        <a href="/facebook/auth/register" class="btn fb white-btn" style="margin-bottom: 6px"><i class="facebook"></i> Sign up with Facebook</a>
+        <a href="/google/auth/register" class="btn fb white-btn" style="margin-bottom: 6px"><i class="google"></i> Sign up with Google</a>
+        <a href="/spotify/auth/register" class="btn fb white-btn"><i class="spotify"></i> Sign up with Spotify</a>
+
+        <hr>
+        <form class="clearfix" method="post" action="#">
+            <div class="clearfix">
+
+
+            </div>
+            <p>By signing up, you agree to the <a href="/usage-policy/terms" style="color:inherit;text-decoration:underline;" target="_blank">terms &amp; conditions</a> and <a href="/privacy" style="color:inherit;text-decoration:underline;" target="_blank">privacy policy</a> of this website.</p>
+            <p>Already a member? Please <a class="forgot panel-btn" style="color:inherit;text-decoration:underline;" data-panel="#login">log in</a>.</p>
+        </form>
+    </div>
+</div>
+
+
+<div class="panel" id="download"></div>
+
+<main>
+    <article class="module filters">
+        <div class="top">
+            <div class="container-fluid">
+                <h5>Artists</h5>
+            </div>
+        </div>
+        <form class="styled sticky" id="music-search-form" data-spacing="0" method="get" action="/artists">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3 col-xl-2">
+                        <fieldset>
+                            <input class="submit-on-enter" type="text" placeholder="Search Artists" name="q" value="">
+                            <i class="far fa-search icon"></i>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-3 col-xl-2">
+                        <fieldset>
+                            <select class="js-choice" name="sort" onchange="$('#music-search-form').submit();">
+                                <option value="latest">Latest Artists</option>
+                                <option value="az">A - Z</option>
+                                <option value="za">Z - A</option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-3 col-xl-2">
+                        <fieldset>
+                            <select class="js-choice" name="year" onchange="$('#music-search-form').submit();">
+                                <option value="" selected>All Release Years</option>
+
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                                <option value="2013">2013</option>
+
+                            </select>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </article>
+    <article class="module artists">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-lg-2 item">
+                    <a href="/artist/1099/unlike-pluto">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Unlike Pluto</strong></p>
+                            <span class="tags">Alternative Pop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1098/p3pper">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>P3PPER</strong></p>
+                            <span class="tags">Melodic House</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1097/beksy">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>BEKSY.</strong></p>
+                            <span class="tags">Dance Pop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1096/pala-chrome">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Pala Chrome</strong></p>
+                            <span class="tags">Electronic Rock</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1095/christopher-damas">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/095/325x325/1711554683_oWICH9FfpB_Christopher-Damas.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Christopher Damas</strong></p>
+                            <span class="tags">Trap</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1093/aisake">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Aisake</strong></p>
+                            <span class="tags">Lofi Hip-Hop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1094/dosi">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/094/325x325/1711554676_OccvdbV5Rg_Dosi.png')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Dosi</strong></p>
+                            <span class="tags">Lofi Hip-Hop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1092/linker">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/092/325x325/1710861082_xrPv26njLq_PI-1-.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>LINKER</strong></p>
+                            <span class="tags">Melodic Dubstep</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1091/ripple">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Ripple</strong></p>
+                            <span class="tags">Drum &amp; Bass</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1090/jinxspr0">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/090/325x325/1710264937_uIQJhfsaiZ_JINXSPR0-NCS-HEADSHOTS-2.png')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>JINXSPR0</strong></p>
+                            <span class="tags">Dance Pop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1089/ariadne">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/089/325x325/1710264886_CKnAVAMLw5_Ariadne-Karma-Press7--photo-Martti-Pedanik.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Ariadne</strong></p>
+                            <span class="tags">Drum &amp; Bass, Alternative Pop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1087/sebotage">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/087/325x325/1710264721_Q0DE51Kw4b_Sebotage.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Sebotage</strong></p>
+                            <span class="tags">Drum &amp; Bass</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1088/natty-lou">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/088/325x325/1710264617_RvgeCvbn50_Natty---Galactic-4.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Natty Lou</strong></p>
+                            <span class="tags">Drum &amp; Bass</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1083/noep">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/083/325x325/1710264481_Wvlylw8qGM_NOEP.png')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>NOËP</strong></p>
+                            <span class="tags">Garage House</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1084/soundy">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Soundy</strong></p>
+                            <span class="tags">Garage House</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1085/malou">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/085/325x325/1710264162_oG6fFZT7Dr_Malou.png')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Malou</strong></p>
+                            <span class="tags">Garage House</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1086/raul-ojamaa">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/086/325x325/1710263967_NwVpP2U7M4_Raul-Ojamaa.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Raul Ojamaa</strong></p>
+                            <span class="tags">Garage House</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1082/sumu">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('/static/web/img/no-artist.png?_m=1693299337')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>sumu</strong></p>
+                            <span class="tags">Lofi Hip-Hop</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1081/primate">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/081/325x325/1710263886_IpdcFihaaE_Primate.png')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>Primate</strong></p>
+                            <span class="tags">Drum &amp; Bass</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 item">
+                    <a href="/artist/1079/sadbois">
+                        <div class="inner">
+                            <div class="img" style="background-image: url('https://ncsmusic.s3.eu-west-1.amazonaws.com/artists/000/001/079/325x325/1710263716_vpgcaWwsvL_SadBois_21.jpg')"></div>
+                        </div>
+                        <div class="bottom">
+                            <p><strong>SadBois</strong></p>
+                            <span class="tags">Electronic Rock</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </article>
+
+    <ul class="pagination">
+
+        <li class="page-item disabled" aria-disabled="true" aria-label="&laquo; Previous">
+            <span class="page-link" aria-hidden="true">&lsaquo;</span>
+        </li>
+
+
+
+
+
+        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=2">2</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=3">3</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=4">4</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=5">5</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=6">6</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=7">7</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=8">8</a></li>
+
+        <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
+
+
+
+
+
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=52">52</a></li>
+        <li class="page-item"><a class="page-link" href="https://ncs.io/artists?page=53">53</a></li>
+
+
+        <li class="page-item">
+            <a class="page-link" href="https://ncs.io/artists?page=2" rel="next" aria-label="Next &raquo;">&rsaquo;</a>
+        </li>
+    </ul>
+
+</main>
+<footer>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 text-center social-media">
+
+                <a href="https://ncs.lnk.to/SpotfiyPlaylistWE" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/001/1691764744_1qszULdYbm_spotify.svg" alt="Spotify"> </a>
+                <a href="https://music.apple.com/profile/nocopyrightsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/002/1691764937_EcEcxzZBRI_apple.svg" alt="Apple Music"> </a>
+                <a href="https://www.tiktok.com/@nocopyrightsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/003/1691765143_xnXb2p0CQX_tiktok.svg" alt="TikTok"> </a>
+                <a href="https://www.instagram.com/nocopyrightsounds/" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/004/1691765545_zUsDyv3fjp_instagram.svg" alt="Instagram"> </a>
+                <a href="https://www.youtube.com/nocopyrightsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/005/1691765587_3jQGCufgfS_youtube.svg" alt="YouTube"> </a>
+                <a href="https://www.facebook.com/NoCopyrightSounds/" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/006/1691765622_pKK6BRISkJ_facebook-f.svg" alt="Facebook"> </a>
+                <a href="https://www.twitch.tv/nocopyrightsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/007/1691765635_uzzDlRGd99_twitch.svg" alt="Twitch"> </a>
+                <a href="https://twitter.com/ncsounds" target="_blank"> <img src="https://ncsmusic.s3.eu-west-1.amazonaws.com/social-links/000/000/008/1691765647_KadoOr94t9_twitter.svg" alt="Twitter"> </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="newsletter panel">
+        <a class="panel-close"><i class="far fa-times-circle"></i></a>
+        <form id="newsletter-subscribe-form">
+            <h3>Newsletter</h3>
+            <p>Keep up to date with all new releases</p>
+            <fieldset>
+                <label>First Name</label>
+                <input type="text" name="name" required>
+            </fieldset>
+            <fieldset>
+                <label>Email Address</label>
+                <input type="email" name="email" required>
+            </fieldset>
+            <a class="btn black-full" onclick="ncs.newsletter(this);return false;">Subscribe</a>
+            <input type="hidden" name="_token" value="njnCSyuIA7Sz3poZLxyBkLxAUz26zTiSPmK7v8tx">    </form>
+    </div>
+
+</footer>
+<input type="hidden" id="g_csrf" value="njnCSyuIA7Sz3poZLxyBkLxAUz26zTiSPmK7v8tx">
+</body>
+</html>
