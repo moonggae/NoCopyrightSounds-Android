@@ -44,6 +44,9 @@ class ConverterTest {
         val service = retrofit.create(RetrofitNcsNetworkApi::class.java)
 
         val musics = service.getMusicList(1).body()
+        musics?.forEach {
+            println(it)
+        }
         assert(musics?.size == 20)
     }
 

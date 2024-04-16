@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
+import java.util.UUID
 
 class MusicListConverter: Converter<ResponseBody, List<Music>> {
     override fun convert(resonseBody: ResponseBody): List<Music> {
@@ -42,6 +43,7 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         val versions = parseVersions(row)
 
         return Music(
+            id = UUID.fromString(titleTag.attribute("data-tid").value),
             title = titleTag.attribute("data-track").value,
             artist = titleTag.attribute("data-artistraw").value,
             dataUrl = titleTag.attribute("data-url").value,

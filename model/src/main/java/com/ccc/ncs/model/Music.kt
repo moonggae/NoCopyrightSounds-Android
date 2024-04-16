@@ -1,8 +1,10 @@
 package com.ccc.ncs.model
 
 import java.time.LocalDate
+import java.util.UUID
 
 data class Music(
+    val id: UUID,
     val title: String,
     val artist: String,
     val releaseDate: LocalDate,
