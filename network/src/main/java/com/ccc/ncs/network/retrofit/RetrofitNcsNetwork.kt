@@ -2,6 +2,8 @@ package com.ccc.ncs.network.retrofit
 
 
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.network.BuildConfig
 import com.ccc.ncs.network.NcsNetworkDataSource
@@ -41,4 +43,7 @@ class RetrofitNcsNetwork @Inject constructor(
         sort: String?,
         year: Int?
     ): List<Artist> = networkApi.getArtistList(page, query, sort, year).body() ?: emptyList()
+
+    override suspend fun getAllGenreAndMood(): Pair<List<Genre>, List<Mood>> =
+        networkApi.getAllGenreAndMood().body() ?: Pair(emptyList(), emptyList())
 }

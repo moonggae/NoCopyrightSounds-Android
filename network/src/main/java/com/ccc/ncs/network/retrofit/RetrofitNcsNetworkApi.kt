@@ -1,6 +1,8 @@
 package com.ccc.ncs.network.retrofit
 
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import retrofit2.Response
 import retrofit2.http.GET
@@ -24,4 +26,10 @@ interface RetrofitNcsNetworkApi {
         @Query("sort") sort: String? = null,
         @Query("year") year: Int? = null
     ): Response<List<Artist>>
+
+    @GET("/music-search")
+    suspend fun getAllGenreAndMood(
+        @Query("page") page: Int = 1,
+        @Query("display") display: String = "list"
+    ): Response<Pair<List<Genre>, List<Mood>>>
 }

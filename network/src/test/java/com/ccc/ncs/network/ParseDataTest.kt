@@ -38,4 +38,21 @@ class ParseDataTest {
         }
         assert(artist?.size == 20)
     }
+
+    @Test
+    @Throws
+    fun `test parse genre and mood`() = runTest {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.WEB_URL)
+            .addConverterFactory(NcsHtmlConverterFactory())
+            .build()
+
+        val service = retrofit.create(RetrofitNcsNetworkApi::class.java)
+
+        val (genres, moods) = service.getAllGenreAndMood().body() ?: throw Exception("Fail to get html")
+        assert(
+            genres.size > 10 &&
+            moods.size > 10
+        )
+    }
 }

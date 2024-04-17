@@ -1,6 +1,8 @@
 package com.ccc.ncs.network.converter
 
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -15,6 +17,16 @@ class NcsHtmlConverterFactory : Converter.Factory() {
             return when (innerType) {
                 Music::class.java -> MusicListConverter()
                 Artist::class.java -> ArtistListConverter()
+                else -> null
+            }
+        } else if (getRawType(type) == Pair::class.java) {
+            val firstPairType = (type as ParameterizedType).actualTypeArguments[0]
+            val secondPairType = (type as ParameterizedType).actualTypeArguments[1]
+            val firstInnerType = (firstPairType as ParameterizedType).actualTypeArguments[0]
+            val secondInnerType = (secondPairType as ParameterizedType).actualTypeArguments[0]
+            return when {
+                firstInnerType == Genre::class.java && secondInnerType == Mood::class.java -> GenreAndMoodConverter()
+                firstInnerType == Mood::class.java && secondInnerType == Genre::class.java -> MoodAndGenreConverter()
                 else -> null
             }
         }

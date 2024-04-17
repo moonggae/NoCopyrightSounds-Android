@@ -36,9 +36,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":model"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.test.core.ktx)
-
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

@@ -71,4 +71,30 @@ class ConverterTest {
         val artist = service.getArtistList(1).body()
         assert(artist?.size == 20)
     }
+
+    @Test
+    @Throws
+    fun `test genre, mood converter`() = runTest {
+        val htmlFile = File(javaClass.classLoader!!.getResource("music_page_1.html").toURI())
+
+        server.enqueue(
+            MockResponse()
+                .setBody(htmlFile.readText())
+                .addHeader("Content-Type", "text/html")
+        )
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(server.url("/"))
+            .addConverterFactory(NcsHtmlConverterFactory())
+            .build()
+
+
+        val service = retrofit.create(RetrofitNcsNetworkApi::class.java)
+
+        val (genre, mood) = service.getAllGenreAndMood().body() ?: throw Exception("Fail to parse")
+        assert(
+            genre.size > 10 &&
+            mood.size > 10
+        )
+    }
 }

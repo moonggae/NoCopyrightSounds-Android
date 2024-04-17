@@ -1,6 +1,8 @@
 package com.ccc.ncs.network
 
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 
 interface NcsNetworkDataSource {
@@ -18,4 +20,6 @@ interface NcsNetworkDataSource {
         sort: String? = null,
         year: Int? = null
     ): List<Artist>
+
+    suspend fun getAllGenreAndMood(): Pair<List<Genre>, List<Mood>>
 }
