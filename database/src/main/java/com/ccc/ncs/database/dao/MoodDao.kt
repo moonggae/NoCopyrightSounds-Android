@@ -14,4 +14,7 @@ interface MoodDao {
 
     @Query("SELECT * FROM mood")
     fun getAllMoods(): Flow<List<MoodEntity>>
+
+    @Query("DELETE FROM mood")
+    suspend fun deleteAllMoods()
 }

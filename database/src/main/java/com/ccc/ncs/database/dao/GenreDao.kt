@@ -14,4 +14,7 @@ interface GenreDao {
 
     @Query("SELECT * FROM genre")
     fun getAllGenres(): Flow<List<GenreEntity>>
+
+    @Query("DELETE FROM genre")
+    suspend fun deleteAllGenres()
 }

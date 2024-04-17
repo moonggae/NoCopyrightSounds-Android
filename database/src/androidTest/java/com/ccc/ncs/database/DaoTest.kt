@@ -88,10 +88,26 @@ class DaoTest {
     }
 
     @Test
+    fun genreDao_delete_all() = runTest {
+        insertMockGenres()
+        genreDao.deleteAllGenres()
+        val insertedGenres = genreDao.getAllGenres().first()
+        assert(insertedGenres.isEmpty())
+    }
+
+    @Test
     fun moodDao_insert_and_fetch() = runTest {
         insertMockMoods()
         val insertedMoods = moodDao.getAllMoods().first()
         assert(insertedMoods == MockMoodList)
+    }
+
+    @Test
+    fun moodDao_delete_all() = runTest {
+        insertMockMoods()
+        moodDao.deleteAllMoods()
+        val insertedMoods = moodDao.getAllMoods().first()
+        assert(insertedMoods.isEmpty())
     }
 
     @Test
