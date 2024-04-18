@@ -2,7 +2,7 @@ package com.ccc.ncs.database.mock
 
 import com.ccc.ncs.database.model.GenreEntity
 
-internal val MockGenreList = listOf(
+internal val MockGenreEntityList = listOf(
     GenreEntity(1, "Bass"),
     GenreEntity(2, "Chill"),
     GenreEntity(3, "Drum & Bass"),

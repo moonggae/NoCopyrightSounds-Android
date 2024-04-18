@@ -19,6 +19,6 @@ import java.util.UUID
     ]
 )
 data class PlayListMusicCrossRef(
-    val playListId: Int,
+    val playListId: UUID,
     val musicId: UUID
 )

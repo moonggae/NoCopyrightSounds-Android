@@ -18,6 +18,9 @@ interface MusicDao {
     suspend fun insertMusic(music: MusicEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMusics(music: List<MusicEntity>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun linkMusicToGenre(crossRef: List<MusicGenreCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,4 +29,8 @@ interface MusicDao {
     @Transaction
     @Query("SELECT * FROM music WHERE id = :id")
     fun getMusic(id: UUID): Flow<MusicWithGenreAndMood>
+
+    @Transaction
+    @Query("SELECT * FROM music WHERE id in (:ids) ORDER BY rowid")
+    fun getMusics(ids: List<UUID>): Flow<List<MusicWithGenreAndMood>>
 }

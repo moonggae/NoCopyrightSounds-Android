@@ -6,6 +6,7 @@ import androidx.room.Relation
 import com.ccc.ncs.database.model.MusicEntity
 import com.ccc.ncs.database.model.PlayListEntity
 import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
+import com.ccc.ncs.model.PlayList
 
 data class PlayListWithMusics(
     @Embedded val playList: PlayListEntity,
@@ -21,4 +22,11 @@ data class PlayListWithMusics(
         )
     )
     val musics: List<MusicWithGenreAndMood>,
+)
+
+
+fun PlayListWithMusics.asModel() = PlayList(
+    id = playList.id,
+    name = playList.name,
+    musics = musics.map { it.asModel() }
 )

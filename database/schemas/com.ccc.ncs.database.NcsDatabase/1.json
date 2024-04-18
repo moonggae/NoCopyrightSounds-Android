@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f1247155db0c0110779f687eaeca70ca",
+    "identityHash": "c289c32f519c04a1417ca5d4c4e53b22",
     "entities": [
       {
         "tableName": "play_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "BLOB",
             "notNull": true
           },
           {
@@ -206,12 +206,12 @@
       },
       {
         "tableName": "play_list_music_cross_ref",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playListId` INTEGER NOT NULL, `musicId` BLOB NOT NULL, PRIMARY KEY(`playListId`, `musicId`), FOREIGN KEY(`playListId`) REFERENCES `play_list`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playListId` BLOB NOT NULL, `musicId` BLOB NOT NULL, PRIMARY KEY(`playListId`, `musicId`), FOREIGN KEY(`playListId`) REFERENCES `play_list`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "playListId",
             "columnName": "playListId",
-            "affinity": "INTEGER",
+            "affinity": "BLOB",
             "notNull": true
           },
           {
@@ -247,7 +247,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f1247155db0c0110779f687eaeca70ca')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c289c32f519c04a1417ca5d4c4e53b22')"
     ]
   }
 }

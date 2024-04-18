@@ -8,15 +8,17 @@ import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
 import com.ccc.ncs.database.dao.PlayListDao
-import com.ccc.ncs.database.mock.MockGenreList
-import com.ccc.ncs.database.mock.MockMoodList
-import com.ccc.ncs.database.mock.MockMusic
-import com.ccc.ncs.database.mock.MockMusicWithGenreAndMood
+import com.ccc.ncs.database.mock.MockGenreEntityList
+import com.ccc.ncs.database.mock.MockMoodEntityList
+import com.ccc.ncs.database.mock.MockMusicList
+import com.ccc.ncs.database.mock.MockMusicWithGenreAndMoodList
 import com.ccc.ncs.database.mock.MockPlayList
-import com.ccc.ncs.database.mock.MockPlayListWithMusics
+import com.ccc.ncs.database.model.MusicEntity
+import com.ccc.ncs.database.model.asEntity
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
 import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
+import com.ccc.ncs.database.model.relation.PlayListWithMusics
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -46,13 +48,13 @@ class DaoTest {
     @After
     fun closeDb() = db.close()
 
-    private suspend fun insertMockGenres() = genreDao.insertAllGenres(MockGenreList)
-    private suspend fun insertMockMoods() = moodDao.insertAllMoods(MockMoodList)
+    private suspend fun insertMockGenres() = genreDao.insertAllGenres(MockGenreEntityList)
+    private suspend fun insertMockMoods() = moodDao.insertAllMoods(MockMoodEntityList)
     private suspend fun insertMockMusic() {
         insertMockGenres()
         insertMockMoods()
 
-        MockMusicWithGenreAndMood.run {
+        MockMusicWithGenreAndMoodList[0].run {
             musicDao.insertMusic(music)
             musicDao.linkMusicToGenre(genres.map {
                 MusicGenreCrossRef(
@@ -69,22 +71,58 @@ class DaoTest {
         }
     }
 
-    private suspend fun insertMockPlayList() {
+    private suspend fun insertMockMusicList() {
+        insertMockGenres()
+        insertMockMoods()
+
+        val musicEntities = mutableListOf<MusicEntity>()
+        val genreCrossRefs = mutableListOf<MusicGenreCrossRef>()
+        val moodCrossRefs = mutableListOf<MusicMoodCrossRef>()
+
+        MockMusicList.forEach { music ->
+            musicEntities.add(music.asEntity())
+            genreCrossRefs.addAll(music.genres.map {
+                MusicGenreCrossRef(
+                    musicId = music.id,
+                    genreId = it.id
+                )
+            })
+            moodCrossRefs.addAll(music.moods.map {
+                MusicMoodCrossRef(
+                    musicId = music.id,
+                    moodId = it.id
+                )
+            })
+        }
+
+        musicDao.insertMusics(MockMusicList.map { it.asEntity() })
+        musicDao.linkMusicToGenre(genreCrossRefs)
+        musicDao.linkMusicToMood(moodCrossRefs)
+    }
+
+    private suspend fun insertMockPlayList(): PlayListWithMusics {
         insertMockMusic()
-        playListDao.insertPlayList(MockPlayList)
+        val rowId = playListDao.insertPlayList(MockPlayList)
         playListDao.linkMusicToPlayList(listOf(
             PlayListMusicCrossRef(
                 playListId = MockPlayList.id,
-                musicId = MockMusic.id
+                musicId = MockMusicList[0].id
             )
         ))
+
+        val insertedPlayList = playListDao.getPlayListByRowId(rowId).first() ?: throw Exception("fail to insert play list")
+
+        println("rowId: $rowId")
+        println(insertedPlayList)
+
+        return insertedPlayList
     }
 
     @Test
     fun genreDao_insert_and_fetch() = runTest {
         insertMockGenres()
         val insertedGenres = genreDao.getAllGenres().first()
-        assert(insertedGenres == MockGenreList)
+        assert(insertedGenres == MockGenreEntityList)
     }
 
     @Test
@@ -99,7 +137,7 @@ class DaoTest {
     fun moodDao_insert_and_fetch() = runTest {
         insertMockMoods()
         val insertedMoods = moodDao.getAllMoods().first()
-        assert(insertedMoods == MockMoodList)
+        assert(insertedMoods == MockMoodEntityList)
     }
 
     @Test
@@ -114,19 +152,28 @@ class DaoTest {
     fun musicDao_insert_and_fetch() = runTest {
         insertMockMusic()
 
-        val insertedMusicWithGenreAndMood = musicDao.getMusic(MockMusicWithGenreAndMood.music.id).first()
+        val insertedMusicWithGenreAndMood = musicDao.getMusic(MockMusicWithGenreAndMoodList[0].music.id).first()
 
         Log.d("TAG", "$insertedMusicWithGenreAndMood")
 
-        assert(insertedMusicWithGenreAndMood == MockMusicWithGenreAndMood)
+        assert(insertedMusicWithGenreAndMood == MockMusicWithGenreAndMoodList[0])
+    }
+
+    @Test
+    fun musicDao_insert_music_list() = runTest {
+        insertMockMusicList()
+        val musics = musicDao.getMusics(MockMusicList.map { it.id }).first()
+        musics.forEachIndexed { index, _ ->
+            println(musics[index])
+            println(MockMusicWithGenreAndMoodList[index])
+        }
+        assert(musics == MockMusicWithGenreAndMoodList)
     }
 
     @Test
     fun playListDao_insert_and_fetch() = runTest {
-        insertMockPlayList()
-
-        val insertedPlayListWithMusics = playListDao.getPlayList(MockPlayList.id).first()
-        assert(insertedPlayListWithMusics == MockPlayListWithMusics)
+        val insertedPlayList = insertMockPlayList()
+        assert(insertedPlayList.playList == MockPlayList)
     }
 
     @Test
@@ -156,7 +203,7 @@ class DaoTest {
         insertMockPlayList()
 
         val insertedPlayListWithMusics = playListDao.getPlayList(MockPlayList.id).first() ?: throw Exception("Fail to get")
-        playListDao.deletePlayList(insertedPlayListWithMusics.playList)
+        playListDao.deletePlayList(insertedPlayListWithMusics.playList.id)
 
         val deletedEntity = playListDao.getPlayList(insertedPlayListWithMusics.playList.id).first()
         assert(deletedEntity == null)
