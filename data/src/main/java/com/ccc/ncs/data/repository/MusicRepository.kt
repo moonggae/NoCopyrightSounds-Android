@@ -16,6 +16,8 @@ interface MusicRepository {
 
     suspend fun initGenreAndMood()
 
+    fun insertMusics(musics: List<Music>): Flow<List<Music>>
+
     fun getGenres(): Flow<List<Genre>>
 
     fun getMoods(): Flow<List<Mood>>
