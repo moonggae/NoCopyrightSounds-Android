@@ -4,6 +4,7 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.Version
+import com.ccc.ncs.network.BuildConfig
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -14,6 +15,8 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
+
+private const val WEB_URL = BuildConfig.WEB_URL
 
 class MusicListConverter: Converter<ResponseBody, List<Music>> {
     override fun convert(resonseBody: ResponseBody): List<Music> {
@@ -47,10 +50,10 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
             title = titleTag.attribute("data-track").value,
             artist = titleTag.attribute("data-artistraw").value,
             dataUrl = titleTag.attribute("data-url").value,
-            artistDetailUrl = artistDetailUrl,
+            artistDetailUrl = WEB_URL + artistDetailUrl,
             coverThumbnailUrl = titleTag.attribute("data-cover").value,
             coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "325x325"),
-            detailUrl = row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: "",
+            detailUrl = WEB_URL + (row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: ""),
             releaseDate = releaseDate,
             genres = genres.toSet(),
             moods = moods.toSet(),
