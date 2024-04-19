@@ -12,6 +12,7 @@ import com.ccc.ncs.database.model.asEntity
 import com.ccc.ncs.database.model.asModel
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
+import com.ccc.ncs.database.model.relation.MusicWithGenreAndMood
 import com.ccc.ncs.database.model.relation.asModel
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
@@ -66,32 +67,28 @@ internal class DefaultMusicRepository @Inject constructor(
         val musicMoodCrossRefs = mutableListOf<MusicMoodCrossRef>()
 
         musics.forEach { music ->
-            val genreCrossRef = music.genres.map { genre ->
+            music.genres.mapTo(musicGenreCrossRefs) { genre ->
                 MusicGenreCrossRef(
                     musicId = music.id,
                     genreId = genre.id
                 )
             }
 
-            val moodCrossRef = music.moods.map { mood ->
+            music.moods.mapTo(musicMoodCrossRefs) { mood ->
                 MusicMoodCrossRef(
                     musicId = music.id,
                     moodId = mood.id
                 )
             }
-
-            musicGenreCrossRefs.addAll(genreCrossRef)
-            musicMoodCrossRefs.addAll(moodCrossRef)
         }
 
         musicDao.linkMusicToGenre(musicGenreCrossRefs)
         musicDao.linkMusicToMood(musicMoodCrossRefs)
 
-        val insertedMusics = musicDao.getMusics(musics.map { it.id }).map { list ->
-            list.map { musicWithGenreAndMood ->
-                musicWithGenreAndMood.asModel()
-            }
-        }.first()
+        val insertedMusics = musicDao
+            .getMusics(musics.map(Music::id))
+            .map { it.map(MusicWithGenreAndMood::asModel) }
+            .first()
 
         emit(insertedMusics)
     }

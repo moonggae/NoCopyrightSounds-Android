@@ -42,4 +42,7 @@ dependencies {
 
     implementation(libs.paing.runtime)
     implementation(libs.paing.compose)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

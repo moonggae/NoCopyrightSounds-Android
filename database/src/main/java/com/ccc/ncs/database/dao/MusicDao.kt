@@ -15,10 +15,10 @@ import java.util.UUID
 @Dao
 interface MusicDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMusic(music: MusicEntity): Long
+    suspend fun insertMusic(music: MusicEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMusics(music: List<MusicEntity>): List<Long>
+    suspend fun insertMusics(musics: List<MusicEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun linkMusicToGenre(crossRef: List<MusicGenreCrossRef>)
@@ -28,7 +28,7 @@ interface MusicDao {
 
     @Transaction
     @Query("SELECT * FROM music WHERE id = :id")
-    fun getMusic(id: UUID): Flow<MusicWithGenreAndMood>
+    fun getMusic(id: UUID): Flow<MusicWithGenreAndMood?>
 
     @Transaction
     @Query("SELECT * FROM music WHERE id in (:ids) ORDER BY rowid")
