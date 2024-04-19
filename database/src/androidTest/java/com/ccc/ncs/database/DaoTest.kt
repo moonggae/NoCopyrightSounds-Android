@@ -8,11 +8,6 @@ import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
 import com.ccc.ncs.database.dao.PlayListDao
-import com.ccc.ncs.database.mock.MockGenreEntityList
-import com.ccc.ncs.database.mock.MockMoodEntityList
-import com.ccc.ncs.database.mock.MockMusicList
-import com.ccc.ncs.database.mock.MockMusicWithGenreAndMoodList
-import com.ccc.ncs.database.mock.MockPlayList
 import com.ccc.ncs.database.model.MusicEntity
 import com.ccc.ncs.database.model.asEntity
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
@@ -24,6 +19,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import com.ccc.ncs.database.test.mock.MockGenreEntityList
+import com.ccc.ncs.database.test.mock.MockMoodEntityList
+import com.ccc.ncs.database.test.mock.MockMusicList
+import com.ccc.ncs.database.test.mock.MockMusicWithGenreAndMoodList
+import com.ccc.ncs.database.test.mock.MockPlayList
 
 class DaoTest {
     private lateinit var moodDao: MoodDao

@@ -1,8 +1,8 @@
-package com.ccc.ncs.data.mock
+package com.ccc.ncs.database.test.mock
 
 import com.ccc.ncs.database.model.MoodEntity
 
-internal val MockMoodEntityList = listOf(
+val MockMoodEntityList = listOf(
     MoodEntity(1, "Angry"),
     MoodEntity(2, "Dark"),
     MoodEntity(3, "Dreamy"),

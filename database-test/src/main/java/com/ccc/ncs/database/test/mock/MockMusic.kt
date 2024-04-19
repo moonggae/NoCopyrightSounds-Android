@@ -1,4 +1,4 @@
-package com.ccc.ncs.database.mock
+package com.ccc.ncs.database.test.mock
 
 import com.ccc.ncs.database.model.asEntity
 import com.ccc.ncs.database.model.relation.MusicWithGenreAndMood
@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 
-internal val MockMusicList = listOf(
+val MockMusicList = listOf(
     Music(
         id = UUID.fromString("c81804c6-c916-4288-bb28-1e811f2b795b"),
         title = "I Wanna Dance",
@@ -33,7 +33,7 @@ internal val MockMusicList = listOf(
             Mood(id = 18, name = "Restless"),
             Mood(id = 23, name = "Suspense")
         ),
-        versions = setOf(Version.Regular, Version.Instrumental)
+        versions = setOf()
     ),
     Music(
         id = UUID.fromString("049fc0ba-8998-45d7-bba4-cacd18aa1793"),
@@ -55,7 +55,7 @@ internal val MockMusicList = listOf(
             Mood(id = 16, name = "Quirky"),
             Mood(id = 18, name = "Restless")
         ),
-        versions = setOf(Version.Regular, Version.Instrumental)
+        versions = setOf()
     ),
     Music(
         id = UUID.fromString("f26da352-0c23-4829-90c1-e7070acdf7bd"),
@@ -76,7 +76,7 @@ internal val MockMusicList = listOf(
             Mood(id = 12, name = "Hopeful"),
             Mood(id = 22, name = "Sexy")
         ),
-        versions = setOf(Version.Regular)
+        versions = setOf()
     ),
     Music(
         id = UUID.fromString("9e5f2700-a887-4c76-bd50-e69722dee3e1"),
@@ -100,11 +100,11 @@ internal val MockMusicList = listOf(
             Mood(id = 19, name = "Romantic"),
             Mood(id = 31, name = "Sentimental")
         ),
-        versions = setOf(Version.Regular)
+        versions = setOf()
     )
 )
 
-internal val MockMusicWithGenreAndMoodList: List<MusicWithGenreAndMood> = MockMusicList.map { music ->
+val MockMusicWithGenreAndMoodList: List<MusicWithGenreAndMood> = MockMusicList.map { music ->
     MusicWithGenreAndMood(
         music = music.asEntity(),
         genres = music.genres.map { it.asEntity() }.toSet(),

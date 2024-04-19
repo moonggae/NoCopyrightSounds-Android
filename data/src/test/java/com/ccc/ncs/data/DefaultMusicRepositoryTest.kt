@@ -1,14 +1,14 @@
 package com.ccc.ncs.data
 
-import com.ccc.ncs.data.mock.MockGenreEntityList
 import com.ccc.ncs.data.repository.DefaultMusicRepository
 import com.ccc.ncs.data.testdouble.TestGenreDao
 import com.ccc.ncs.data.testdouble.TestMoodDao
 import com.ccc.ncs.data.testdouble.TestMusicDao
 import com.ccc.ncs.data.testdouble.TestNcsNetworkDataSource
-import com.ccc.ncs.data.mock.MockMoodEntityList
-import com.ccc.ncs.data.mock.MockMusicList
 import com.ccc.ncs.database.model.asModel
+import com.ccc.ncs.database.test.mock.MockGenreEntityList
+import com.ccc.ncs.database.test.mock.MockMoodEntityList
+import com.ccc.ncs.database.test.mock.MockMusicList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -48,6 +48,8 @@ class DefaultMusicRepositoryTest {
     fun `test insert musics`() = runTest {
         repository.initGenreAndMood()
         val insertedMusics = repository.insertMusics(MockMusicList).first()
+        println(insertedMusics)
+        println(MockMusicList)
         assert(insertedMusics == MockMusicList)
     }
 }

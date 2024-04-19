@@ -1,8 +1,9 @@
-package com.ccc.ncs.database.mock
+package com.ccc.ncs.database.test.mock
 
 import com.ccc.ncs.database.model.GenreEntity
 
-internal val MockGenreEntityList = listOf(
+
+val MockGenreEntityList = listOf(
     GenreEntity(1, "Bass"),
     GenreEntity(2, "Chill"),
     GenreEntity(3, "Drum & Bass"),

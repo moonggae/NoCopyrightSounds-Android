@@ -1,16 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
 
 android {
-    namespace = "com.ccc.ncs.database"
+    namespace = "com.ccc.ncs.database.test"
     compileSdk = 34
 
     defaultConfig {
@@ -37,21 +31,5 @@ android {
 
 dependencies {
     implementation(project(":model"))
-    androidTestImplementation(project(":database-test"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.test.core.ktx)
-
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.room.testing)
+    implementation(project(":database"))
 }

@@ -1,10 +1,9 @@
 package com.ccc.ncs.data.testdouble
 
-
-import com.ccc.ncs.data.mock.MockGenreEntityList
-import com.ccc.ncs.data.mock.MockMoodEntityList
-import com.ccc.ncs.data.mock.MockMusicList
 import com.ccc.ncs.database.model.asModel
+import com.ccc.ncs.database.test.mock.MockGenreEntityList
+import com.ccc.ncs.database.test.mock.MockMoodEntityList
+import com.ccc.ncs.database.test.mock.MockMusicList
 import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
