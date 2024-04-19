@@ -35,10 +35,12 @@ dependencies {
     implementation(project(":network"))
     implementation(project(":database"))
     testImplementation(project(":database-test"))
+    androidTestImplementation(project(":network"))
 
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.hilt.android)
+    androidTestImplementation(project(":database-test"))
     ksp(libs.hilt.compiler)
 
     implementation(libs.paing.runtime)
@@ -46,4 +48,12 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.okhttp.logging)
 }

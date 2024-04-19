@@ -26,7 +26,7 @@ import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
     ],
     version = 1
 )
-internal abstract class NcsDatabase : RoomDatabase() {
+abstract class NcsDatabase : RoomDatabase() {
     abstract fun genreDao(): GenreDao
     abstract fun moodDao(): MoodDao
     abstract fun musicDao(): MusicDao

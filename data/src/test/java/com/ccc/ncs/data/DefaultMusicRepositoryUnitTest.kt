@@ -14,7 +14,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class DefaultMusicRepositoryTest {
+class DefaultMusicRepositoryUnitTest {
     private lateinit var repository: DefaultMusicRepository
 
     @Before
