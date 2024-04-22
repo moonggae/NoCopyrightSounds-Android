@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c289c32f519c04a1417ca5d4c4e53b22",
+    "identityHash": "920f7d837c8bec71096eb0bc42ac2351",
     "entities": [
       {
         "tableName": "play_list",
@@ -206,7 +206,7 @@
       },
       {
         "tableName": "play_list_music_cross_ref",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playListId` BLOB NOT NULL, `musicId` BLOB NOT NULL, PRIMARY KEY(`playListId`, `musicId`), FOREIGN KEY(`playListId`) REFERENCES `play_list`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playListId` BLOB NOT NULL, `musicId` BLOB NOT NULL, `order` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`playListId`) REFERENCES `play_list`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "playListId",
@@ -219,13 +219,18 @@
             "columnName": "musicId",
             "affinity": "BLOB",
             "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "playListId",
-            "musicId"
+            "order"
           ]
         },
         "indices": [],
@@ -247,7 +252,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c289c32f519c04a1417ca5d4c4e53b22')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '920f7d837c8bec71096eb0bc42ac2351')"
     ]
   }
 }
