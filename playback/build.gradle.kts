@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.ccc.ncs.data"
+    namespace = "com.ccc.ncs.playback"
     compileSdk = 34
 
     defaultConfig {
@@ -32,28 +33,10 @@ android {
 
 dependencies {
     implementation(project(":model"))
-    implementation(project(":network"))
-    implementation(project(":database"))
-    testImplementation(project(":database-test"))
-    androidTestImplementation(project(":network"))
 
     implementation(libs.androidx.core.ktx)
-
+    implementation(libs.coroutines.guava)
     implementation(libs.hilt.android)
-    androidTestImplementation(project(":database-test"))
     ksp(libs.hilt.compiler)
-
-    implementation(libs.paing.runtime)
-    implementation(libs.paing.compose)
-
-    testImplementation(libs.junit)
-    testImplementation(libs.coroutines.test)
-
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.test.core.ktx)
-    androidTestImplementation(libs.coroutines.test)
-    androidTestImplementation(libs.room.testing)
-    androidTestImplementation(libs.okhttp.logging)
+    implementation(libs.bundles.media3)
 }

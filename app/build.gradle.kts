@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":model"))
     implementation(project(":data"))
     implementation(project(":designsystem"))
+    implementation(project(":playback"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
