@@ -1,5 +1,6 @@
 package com.ccc.ncs.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -22,11 +24,13 @@ import com.ccc.ncs.model.Music
 @Composable
 fun TestMusicCard(
     modifier: Modifier = Modifier,
-    item: Music
+    item: Music,
+    selected: Boolean = false
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = if (selected) MaterialTheme.colorScheme.secondary else Color.Transparent)
             .padding(
                 horizontal = 16.dp,
                 vertical = 8.dp
@@ -46,12 +50,16 @@ fun TestMusicCard(
         )
 
         Column {
-            Text(text = item.title)
+            Text(
+                text = item.title,
+                color = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
+            )
             Text(
                 text = item.artist,
                 style = TextStyle(
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    color =
+                    if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }
