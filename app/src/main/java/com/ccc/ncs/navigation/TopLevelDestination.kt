@@ -10,8 +10,8 @@ enum class TopLevelDestination(
     val iconTextId: Int
 ) {
     HOME(
-        selectedIcon = NcsIcons.MusicNote,
-        unselectedIcon = NcsIcons.MusicNoteBorder,
+        selectedIcon = NcsIcons.Home,
+        unselectedIcon = NcsIcons.HomeBorder,
         iconTextId = R.string.feature_home_title,
     ),
 
@@ -27,9 +27,9 @@ enum class TopLevelDestination(
         iconTextId = R.string.feature_library_title,
     ),
 
-    SETTING(
-        selectedIcon = NcsIcons.Settings,
-        unselectedIcon = NcsIcons.SettingsBorder,
-        iconTextId = R.string.feature_settings_title,
+    MENU(
+        selectedIcon = NcsIcons.Menu,
+        unselectedIcon = NcsIcons.MenuBorder,
+        iconTextId = R.string.feature_menu_title,
     )
 }

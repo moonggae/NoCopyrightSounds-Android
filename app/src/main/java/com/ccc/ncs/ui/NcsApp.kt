@@ -4,27 +4,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -35,11 +29,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
+import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.play.PlayingScreen
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NcsApp(
     appState: NcsAppState
@@ -67,7 +61,8 @@ fun NcsApp(
             NcsBottomBar(
                 destinations = appState.topLevelDestinations,
                 onNavigateToDestination = appState::navigateToTopLevelDestination,
-                currentDestination = appState.currentDestination
+                currentDestination = appState.currentDestination,
+                modifier = Modifier.height(80.dp)
             )
         }
     ) { padding ->
@@ -82,7 +77,11 @@ fun NcsApp(
 
             PlayingScreen(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                maxHeight = configuration.screenHeightDp.dp - padding.calculateBottomPadding() + with(density) { WindowInsets.systemBars.getBottom(density).toDp() }
+                maxHeight = configuration.screenHeightDp.dp - padding.calculateBottomPadding() + with(density) {
+                    WindowInsets.systemBars.getBottom(
+                        density
+                    ).toDp()
+                }
             )
         }
     }
@@ -114,7 +113,12 @@ private fun NcsBottomBar(
                         contentDescription = null
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) },
+                label = {
+                    Text(
+                        text = stringResource(destination.iconTextId),
+                        style = NcsTypography.Label.navigationLabel
+                    )
+                },
                 modifier = modifier
             )
         }

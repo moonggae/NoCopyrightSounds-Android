@@ -17,8 +17,8 @@ import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.navigateToHome
 import com.ccc.ncs.feature.library.LIBRARY_ROUTE
 import com.ccc.ncs.feature.library.navigateToLibrary
-import com.ccc.ncs.feature.setting.SETTING_ROUTE
-import com.ccc.ncs.feature.setting.navigateToSetting
+import com.ccc.ncs.feature.menu.MENU_ROUTE
+import com.ccc.ncs.feature.menu.navigateToMenu
 import com.ccc.ncs.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -59,7 +59,7 @@ class NcsAppState(
             HOME_ROUTE -> TopLevelDestination.HOME
             ARTIST_ROUTE -> TopLevelDestination.ARTIST
             LIBRARY_ROUTE -> TopLevelDestination.LIBRARY
-            SETTING_ROUTE -> TopLevelDestination.SETTING
+            MENU_ROUTE -> TopLevelDestination.MENU
             else -> null
         }
 
@@ -92,7 +92,7 @@ class NcsAppState(
             TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
             TopLevelDestination.ARTIST -> navController.navigateToArtist(topLevelNavOptions)
             TopLevelDestination.LIBRARY -> navController.navigateToLibrary(topLevelNavOptions)
-            TopLevelDestination.SETTING -> navController.navigateToSetting(topLevelNavOptions)
+            TopLevelDestination.MENU -> navController.navigateToMenu(topLevelNavOptions)
         }
     }
 }

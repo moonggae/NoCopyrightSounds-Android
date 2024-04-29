@@ -7,7 +7,7 @@ import com.ccc.ncs.feature.artist.artistScreen
 import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.homeScreen
 import com.ccc.ncs.feature.library.libraryScreen
-import com.ccc.ncs.feature.setting.settingScreen
+import com.ccc.ncs.feature.menu.menuScreen
 import com.ccc.ncs.ui.NcsAppState
 
 @Composable
@@ -26,6 +26,6 @@ fun NcsNavHost(
         homeScreen()
         artistScreen()
         libraryScreen()
-        settingScreen()
+        menuScreen()
     }
 }

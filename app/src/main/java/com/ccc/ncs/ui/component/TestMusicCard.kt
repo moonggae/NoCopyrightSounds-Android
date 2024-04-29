@@ -20,7 +20,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ccc.ncs.designsystem.theme.NcsTypography
-import com.ccc.ncs.designsystem.theme.ncsTypography
 import com.ccc.ncs.model.Music
 
 @OptIn(ExperimentalFoundationApi::class)
