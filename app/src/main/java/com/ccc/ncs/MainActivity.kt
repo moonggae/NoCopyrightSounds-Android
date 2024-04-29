@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.ui.NcsApp
 import com.ccc.ncs.ui.rememberNcsAppState
-import com.ccc.ncs.ui.theme.NcsTheme
+import com.ccc.ncs.designsystem.theme.NcsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,12 +37,7 @@ class MainActivity : ComponentActivity() {
             NcsTheme(
                 darkTheme = true
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    NcsApp(appState = appState)
-                }
+                NcsApp(appState = appState)
             }
         }
     }

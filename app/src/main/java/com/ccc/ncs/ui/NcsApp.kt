@@ -76,10 +76,7 @@ fun NcsApp(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Row(
-                Modifier
-                    .fillMaxSize()
-            ) {
+            Row(Modifier.fillMaxSize()) {
                 NcsNavHost(appState = appState)
             }
 

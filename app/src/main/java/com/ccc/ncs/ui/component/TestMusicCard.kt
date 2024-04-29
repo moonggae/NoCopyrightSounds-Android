@@ -1,6 +1,8 @@
 package com.ccc.ncs.ui.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,12 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.designsystem.theme.ncsTypography
 import com.ccc.ncs.model.Music
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TestMusicCard(
     modifier: Modifier = Modifier,
@@ -52,15 +55,17 @@ fun TestMusicCard(
         Column {
             Text(
                 text = item.title,
-                color = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
+                style = NcsTypography.Music.Title.medium.copy(
+                    color = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
+                ),
+                modifier = Modifier.basicMarquee()
             )
             Text(
                 text = item.artist,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    color =
-                    if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                style = NcsTypography.Music.Artist.medium.copy(
+                    color = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                modifier = Modifier.basicMarquee()
             )
         }
     }
