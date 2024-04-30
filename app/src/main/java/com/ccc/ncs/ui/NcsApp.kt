@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -16,10 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,30 +41,20 @@ fun NcsApp(
     appState: NcsAppState
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var playingScreenHeightWeight by remember { mutableFloatStateOf(0f) }
 
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-
-    val notConnectedMessage = stringResource(R.string.not_connected)
-    LaunchedEffect(isOffline) {
-        if (isOffline) {
-            snackbarHostState.showSnackbar(
-                message = notConnectedMessage,
-                duration = SnackbarDuration.Indefinite
-            )
-        }
-    }
-
-    val density = LocalDensity.current
-    val configuration = LocalConfiguration.current
+    HandleOfflineStatus(isOffline, snackbarHostState)
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NcsBottomBar(
                 destinations = appState.topLevelDestinations,
                 onNavigateToDestination = appState::navigateToTopLevelDestination,
                 currentDestination = appState.currentDestination,
-                modifier = Modifier.height(80.dp)
+                visibility = 1 - playingScreenHeightWeight
             )
         }
     ) { padding ->
@@ -77,10 +69,8 @@ fun NcsApp(
 
             PlayingScreen(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                maxHeight = configuration.screenHeightDp.dp - padding.calculateBottomPadding() + with(density) {
-                    WindowInsets.systemBars.getBottom(
-                        density
-                    ).toDp()
+                onUpdateScreenSize = { percentage ->
+                    playingScreenHeightWeight = percentage
                 }
             )
         }
@@ -88,37 +78,45 @@ fun NcsApp(
 }
 
 @Composable
+private fun HandleOfflineStatus(isOffline: Boolean, snackbarHostState: SnackbarHostState) {
+    val notConnectedMessage = stringResource(R.string.not_connected)
+    LaunchedEffect(isOffline) {
+        if (isOffline) {
+            snackbarHostState.showSnackbar(
+                message = notConnectedMessage,
+                duration = SnackbarDuration.Indefinite
+            )
+        }
+    }
+}
+
+@Composable
 private fun NcsBottomBar(
+    modifier: Modifier = Modifier,
     destinations: List<TopLevelDestination>,
     onNavigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?,
-    modifier: Modifier = Modifier,
+    visibility: Float = 1f,
 ) {
-    NcsNavigationBar(modifier = modifier) {
+    val contentHeight = 60.dp
+    val navigationBarInsertHeight = with(LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).toDp() }
+
+    val height = (contentHeight + navigationBarInsertHeight) * visibility
+
+    NcsNavigationBar(modifier = modifier.then(
+        Modifier
+            .height(height)
+            .alpha(visibility)
+    )) {
         destinations.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
 
             NcsNavigationBarItem(
                 selected = selected,
                 onClick = { onNavigateToDestination(destination) },
-                icon = {
-                    Icon(
-                        imageVector = destination.unselectedIcon,
-                        contentDescription = null
-                    )
-                },
-                selectedIcon = {
-                    Icon(
-                        imageVector = destination.selectedIcon,
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(destination.iconTextId),
-                        style = NcsTypography.Label.navigationLabel
-                    )
-                },
+                icon = { Icon(imageVector = destination.unselectedIcon, contentDescription = null) },
+                selectedIcon = { Icon(imageVector = destination.selectedIcon, contentDescription = null) },
+                label = { Text(text = stringResource(destination.iconTextId), style = NcsTypography.Label.navigationLabel) },
                 modifier = modifier
             )
         }
