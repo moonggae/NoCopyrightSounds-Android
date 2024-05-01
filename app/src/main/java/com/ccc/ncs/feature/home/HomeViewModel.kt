@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
@@ -38,6 +41,22 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             musicRepository.initGenreAndMood()
+
+            launch {
+                musicRepository.getGenres().collectLatest { genres ->
+                    _uiState.update {
+                        it.copy(genres = genres)
+                    }
+                }
+            }
+
+            launch {
+                musicRepository.getMoods().collectLatest { moods ->
+                    _uiState.update {
+                        it.copy(moods = moods)
+                    }
+                }
+            }
         }
     }
 
@@ -85,14 +104,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getAllGenres() = musicRepository.getGenres()
-    fun getAllMoods() = musicRepository.getMoods()
+//    fun getAllGenres() = musicRepository.getGenres()
+//    fun getAllMoods() = musicRepository.getMoods()
 }
 
 data class HomeUiState(
     val searchUiState: SearchUiState = SearchUiState(),
     val isSelectMode: Boolean = false,
-    val selectedMusics: MutableList<Music> = mutableListOf()
+    val selectedMusics: MutableList<Music> = mutableListOf(),
+    val genres: List<Genre> = emptyList(),
+    val moods: List<Mood> = emptyList()
 )
 
 data class SearchUiState(

@@ -1,6 +1,7 @@
 package com.ccc.ncs.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LibraryMusic
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.People
+import androidx.compose.material.icons.rounded.Search
 
 object NcsIcons {
     val Home = Icons.Rounded.Home
@@ -24,4 +26,6 @@ object NcsIcons {
 
     val Close = Icons.Rounded.Close
     val Play = Icons.Filled.PlayArrow
+    val Search = Icons.Rounded.Search
+    val ArrowDropDown = Icons.Filled.ArrowDropDown
 }

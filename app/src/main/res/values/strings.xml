@@ -5,4 +5,8 @@
     <string name="feature_artist_title">Artists</string>
     <string name="feature_library_title">Library</string>
     <string name="feature_menu_title">Menu</string>
+
+    <string name="home_search_placeholder"><![CDATA[Search Tracks & Artists]]></string>
+    <string name="Genre">Genre</string>
+    <string name="Mood">Mood</string>
 </resources>
