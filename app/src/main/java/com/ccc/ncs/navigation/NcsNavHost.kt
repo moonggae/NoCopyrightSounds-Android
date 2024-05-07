@@ -8,6 +8,9 @@ import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.homeScreen
 import com.ccc.ncs.feature.library.libraryScreen
 import com.ccc.ncs.feature.menu.menuScreen
+import com.ccc.ncs.feature.search.backFromSearch
+import com.ccc.ncs.feature.search.navigateToSearch
+import com.ccc.ncs.feature.search.searchScreen
 import com.ccc.ncs.ui.NcsAppState
 
 @Composable
@@ -23,9 +26,10 @@ fun NcsNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        homeScreen()
+        homeScreen(onMoveToSearchScreen = { navController.navigateToSearch(it) })
         artistScreen()
         libraryScreen()
         menuScreen()
+        searchScreen(onSearch = navController::backFromSearch)
     }
 }

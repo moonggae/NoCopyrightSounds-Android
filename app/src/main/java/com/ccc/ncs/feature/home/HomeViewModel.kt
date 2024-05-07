@@ -26,17 +26,16 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> get() = _uiState
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val musics = _uiState
+    val musics = uiState
         .distinctUntilChangedBy { it.searchUiState }
         .flatMapLatest {
             musicRepository
                 .getSearchResultStream(
                     query = it.searchUiState.query,
-                    genreId = it.searchUiState.genreId,
-                    moodId = it.searchUiState.moodId
+                    genreId = it.searchUiState.genre?.id,
+                    moodId = it.searchUiState.mood?.id
                 )
-                .cachedIn(viewModelScope)
-        }
+        }.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -60,20 +59,31 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
-    fun searchMusic(
-        query: String?,
-        genreId: Int?,
-        moodId: Int?
-    ) {
+    fun onSearchQueryChanged(query: String?) {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    searchUiState = SearchUiState(
-                        query = query,
-                        genreId = genreId,
-                        moodId = moodId
-                    )
+            _uiState.update { state ->
+                state.copy(
+                    searchUiState = state.searchUiState.copy(query = query)
+                )
+            }
+        }
+    }
+
+    fun onSearchGenreChanged(genre: Genre?) {
+        viewModelScope.launch {
+            _uiState.update { state ->
+                state.copy(
+                    searchUiState = state.searchUiState.copy(genre = genre)
+                )
+            }
+        }
+    }
+
+    fun onSearchMoodChanged(mood: Mood?) {
+        viewModelScope.launch {
+            _uiState.update { state ->
+                state.copy(
+                    searchUiState = state.searchUiState.copy(mood = mood)
                 )
             }
         }
@@ -103,9 +113,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-//    fun getAllGenres() = musicRepository.getGenres()
-//    fun getAllMoods() = musicRepository.getMoods()
 }
 
 data class HomeUiState(
@@ -118,6 +125,6 @@ data class HomeUiState(
 
 data class SearchUiState(
     val query: String? = null,
-    val genreId: Int? = null,
-    val moodId: Int? = null
+    val genre: Genre? = null,
+    val mood: Mood? = null
 )

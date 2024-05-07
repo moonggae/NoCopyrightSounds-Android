@@ -1,16 +1,28 @@
 package com.ccc.ncs.feature.home
 
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.ccc.ncs.feature.search.SEARCHED_QUERY
 
 const val HOME_ROUTE = "home"
 
 fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HOME_ROUTE, navOptions)
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeScreen(
+    onMoveToSearchScreen: (String?) -> Unit
+) {
     composable(route = HOME_ROUTE) {
-        HomeRoute()
+        val homeViewModel: HomeViewModel = hiltViewModel()
+        val searchedQuery: String? by it.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
+        HomeRoute(
+            onClickSearchBar = onMoveToSearchScreen,
+            searchQuery = searchedQuery,
+            viewModel = homeViewModel
+        )
     }
 }

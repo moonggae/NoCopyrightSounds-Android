@@ -47,26 +47,35 @@ import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.GenreModalBottomSheet
 import com.ccc.ncs.ui.component.MoodModalBottomSheet
-import com.ccc.ncs.ui.component.SearchBar
 import com.ccc.ncs.ui.component.TestMusicCard
 
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onClickSearchBar: (String?) -> Unit,
+    searchQuery: String?
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(searchQuery) {
+        viewModel.onSearchQueryChanged(query = searchQuery)
+    }
 
     HomeScreen(
         modifier = modifier,
         testMusics = viewModel.musics.collectAsLazyPagingItems(),
         homeUiState = homeUiState,
-        onSearchMusic = viewModel::searchMusic,
+        updateSearchQuery = viewModel::onSearchQueryChanged,
+        updateSearchGenre = viewModel::onSearchGenreChanged,
+        updateSearchMood = viewModel::onSearchMoodChanged,
         updateSelectMode = viewModel::updateSelectMode,
-        updateSelectMusic = viewModel::updateSelectMusic
+        updateSelectMusic = viewModel::updateSelectMusic,
+        onClickSearchBar = onClickSearchBar
     )
 }
 
@@ -76,9 +85,12 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     testMusics: LazyPagingItems<Music>,
     homeUiState: HomeUiState,
-    onSearchMusic: (query: String?, genreId: Int?, moodId: Int?) -> Unit,
+    updateSearchQuery: (query: String?) -> Unit,
+    updateSearchGenre: (Genre?) -> Unit,
+    updateSearchMood: (Mood?) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
-    updateSelectMusic: (Music) -> Unit
+    updateSelectMusic: (Music) -> Unit,
+    onClickSearchBar: (String?) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -92,10 +104,10 @@ internal fun HomeScreen(
                     uiState = homeUiState.searchUiState,
                     genres = homeUiState.genres,
                     moods = homeUiState.moods,
-                    onUpdateSearch = onSearchMusic,
-                    onClickSearchBar = {
-                        // todo
-                    }
+                    updateSearchQuery = updateSearchQuery,
+                    updateSearchGenre = updateSearchGenre,
+                    updateSearchMood = updateSearchMood,
+                    onClickSearchBar = onClickSearchBar
                 )
             }
 
@@ -191,39 +203,35 @@ fun SearchBox(
     uiState: SearchUiState,
     genres: List<Genre>,
     moods: List<Mood>,
-    onClickSearchBar: () -> Unit,
-    onUpdateSearch: (query: String?, genreId: Int?, moodId: Int?) -> Unit
+    onClickSearchBar: (String?) -> Unit,
+    updateSearchQuery: (query: String?) -> Unit,
+    updateSearchGenre: (Genre?) -> Unit,
+    updateSearchMood: (Mood?) -> Unit,
 ) {
     var showGenreBottomSheet by remember { mutableStateOf(false) }
     var showMoodBottomSheet by remember { mutableStateOf(false) }
-
-    var selectedGenre: Genre? by remember { mutableStateOf(genres.find { uiState.genreId == it.id }) }
-    var selectedMood: Mood? by remember { mutableStateOf(moods.find { uiState.moodId == it.id }) }
-
-    LaunchedEffect(selectedGenre, selectedMood) {
-        onUpdateSearch(uiState.query, selectedGenre?.id, selectedMood?.id)
-    }
 
     Column(
         modifier = Modifier.padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SearchBar(
+        ClickableSearchBar(
             query = uiState.query,
             placeholder = stringResource(R.string.home_search_placeholder),
-            onClick = onClickSearchBar
+            onClick = { onClickSearchBar(uiState.query) },
+            onClickDelete = { updateSearchQuery(null) }
         )
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DropDownButton(
-                label = "${stringResource(R.string.Genre)}${selectedGenre?.let { ": " + it.name } ?: ""}",
+                label = "${stringResource(R.string.Genre)}${uiState.genre?.let { ": " + it.name } ?: ""}",
                 onClick = { showGenreBottomSheet = true }
             )
 
             DropDownButton(
-                label = "${stringResource(R.string.Mood)}${selectedMood?.let { ": " + it.name } ?: ""}",
+                label = "${stringResource(R.string.Mood)}${uiState.mood?.let { ": " + it.name } ?: ""}",
                 onClick = { showMoodBottomSheet = true }
             )
         }
@@ -234,7 +242,7 @@ fun SearchBox(
         GenreModalBottomSheet(
             onDismissRequest = { showGenreBottomSheet = false },
             genreItems = genres,
-            onItemSelected = { selectedGenre = it }
+            onItemSelected = updateSearchGenre
         )
     }
 
@@ -242,7 +250,7 @@ fun SearchBox(
         MoodModalBottomSheet(
             onDismissRequest = { showMoodBottomSheet = false },
             moodItems = moods,
-            onItemSelected = { selectedMood = it }
+            onItemSelected = updateSearchMood
         )
     }
 }
@@ -258,8 +266,10 @@ fun SearchAppBarPreview() {
                 uiState = SearchUiState(),
                 genres = emptyList(),
                 moods = emptyList(),
-                onUpdateSearch = { _, _, _ -> },
-                onClickSearchBar = {}
+                onClickSearchBar = {},
+                updateSearchGenre = {},
+                updateSearchMood = {},
+                updateSearchQuery = {}
             )
         }
     }
@@ -276,8 +286,10 @@ fun SearchAppBarQueryPreview() {
                 uiState = SearchUiState(query = "Alan Walker"),
                 genres = emptyList(),
                 moods = emptyList(),
-                onUpdateSearch = { _, _, _ -> },
-                onClickSearchBar = {}
+                onClickSearchBar = {},
+                updateSearchGenre = {},
+                updateSearchMood = {},
+                updateSearchQuery = {}
             )
         }
     }
