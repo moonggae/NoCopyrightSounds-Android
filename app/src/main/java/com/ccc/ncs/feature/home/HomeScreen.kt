@@ -6,6 +6,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -176,6 +178,7 @@ fun SearchAppBar(
     containerColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit
 ) {
+    val density = LocalDensity.current
     val heightOffsetLimit =
         with(LocalDensity.current) { -containerHeight.toPx() }
     SideEffect {
@@ -188,6 +191,8 @@ fun SearchAppBar(
         containerHeight.toPx() + (scrollBehavior?.state?.heightOffset ?: 0f)
     }
 
+    // todo height 변화 대응하기
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,6 +203,7 @@ fun SearchAppBar(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchBox(
     uiState: SearchUiState,
@@ -222,8 +228,9 @@ fun SearchBox(
             onClickDelete = { updateSearchQuery(null) }
         )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DropDownButton(
                 label = "${stringResource(R.string.Genre)}${uiState.genre?.let { ": " + it.name } ?: ""}",

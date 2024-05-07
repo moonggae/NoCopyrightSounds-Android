@@ -5,6 +5,7 @@ import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
 import com.ccc.ncs.database.dao.PlayListDao
+import com.ccc.ncs.database.dao.RecentSearchQueryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +34,9 @@ internal object DaosModule {
     fun providesPlayListDao(
         database: NcsDatabase
     ): PlayListDao = database.playListDao()
+
+    @Provides
+    fun providesRecentSearchQueryDao(
+        database: NcsDatabase
+    ): RecentSearchQueryDao = database.recentSearchQueryDao()
 }

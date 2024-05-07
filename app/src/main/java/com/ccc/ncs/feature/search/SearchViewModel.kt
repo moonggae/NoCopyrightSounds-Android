@@ -6,9 +6,14 @@ import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ccc.ncs.data.repository.RecentSearchRepository
+import com.ccc.ncs.model.RecentSearchQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,11 +21,22 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
+    private val recentSearchRepository: RecentSearchRepository,
+) : ViewModel() {
     private val searchQuery: StateFlow<String?> = savedStateHandle.getStateFlow(SEARCH_QUERY_ARG, null)
 
     @OptIn(ExperimentalFoundationApi::class)
     val queryState = TextFieldState()
+
+    val recentSearchQueriesUiState: StateFlow<RecentSearchQueriesUiState> =
+        recentSearchRepository
+            .getRecentSearchQueries(10)
+            .map(RecentSearchQueriesUiState::Success)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = RecentSearchQueriesUiState.Loading,
+            )
 
     init {
         viewModelScope.launch {
@@ -32,6 +48,23 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchTriggered(query: String) {
-        // todo
+        if (query.isBlank()) return
+        viewModelScope.launch {
+            recentSearchRepository.insertOrReplaceRecentSearch(searchQuery = query)
+        }
     }
+
+    fun deleteRecentSearch(query: String) {
+        viewModelScope.launch {
+            recentSearchRepository.deleteRecentSearch(query)
+        }
+    }
+}
+
+sealed interface RecentSearchQueriesUiState {
+    data object Loading : RecentSearchQueriesUiState
+
+    data class Success(
+        val recentQueries: List<RecentSearchQuery> = emptyList(),
+    ) : RecentSearchQueriesUiState
 }

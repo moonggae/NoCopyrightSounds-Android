@@ -3,7 +3,9 @@ package com.ccc.ncs.data.di
 import com.ccc.ncs.data.repository.ArtistRepository
 import com.ccc.ncs.data.repository.DefaultArtistRepository
 import com.ccc.ncs.data.repository.DefaultMusicRepository
+import com.ccc.ncs.data.repository.DefaultRecentSearchRepository
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.data.repository.RecentSearchRepository
 import com.ccc.ncs.data.util.ConnectivityManagerNetworkMonitor
 import com.ccc.ncs.data.util.NetworkMonitor
 import dagger.Binds
@@ -28,4 +30,9 @@ abstract class DataModule {
     internal abstract fun bindsNetworkMonitor(
         networkMonitor: ConnectivityManagerNetworkMonitor
     ): NetworkMonitor
+
+    @Binds
+    internal abstract fun bindRecentSearchRepository(
+        recentSearchRepository: DefaultRecentSearchRepository
+    ): RecentSearchRepository
 }
