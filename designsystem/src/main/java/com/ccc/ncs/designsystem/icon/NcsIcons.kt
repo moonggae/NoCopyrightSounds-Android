@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Search
 
@@ -30,4 +31,5 @@ object NcsIcons {
     val Search = Icons.Rounded.Search
     val ArrowDropDown = Icons.Filled.ArrowDropDown
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
+    val MoreVertical = Icons.Rounded.MoreVert
 }
