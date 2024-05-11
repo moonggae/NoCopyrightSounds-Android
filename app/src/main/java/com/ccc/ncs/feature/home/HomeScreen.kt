@@ -6,8 +6,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -28,12 +26,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
@@ -95,13 +97,23 @@ internal fun HomeScreen(
     onClickSearchBar: (String?) -> Unit
 ) {
     val listState = rememberLazyListState()
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    LaunchedEffect(testMusics.loadState.refresh) {
+        if (testMusics.loadState.refresh is LoadState.Loading) {
+            listState.scrollToItem(0)
+        }
+    }
 
     Box {
         Column {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-            SearchAppBar(scrollBehavior = scrollBehavior) {
+
+            var appbarHeight by remember { mutableStateOf(120.dp) }
+            SearchAppBar(
+                containerHeight = appbarHeight,
+                scrollBehavior = scrollBehavior
+            ) {
                 SearchBox(
                     uiState = homeUiState.searchUiState,
                     genres = homeUiState.genres,
@@ -109,7 +121,13 @@ internal fun HomeScreen(
                     updateSearchQuery = updateSearchQuery,
                     updateSearchGenre = updateSearchGenre,
                     updateSearchMood = updateSearchMood,
-                    onClickSearchBar = onClickSearchBar
+                    onClickSearchBar = onClickSearchBar,
+                    onMenuLineCountChanged = {
+                        when (it) {
+                            1 -> appbarHeight = 120.dp
+                            2 -> appbarHeight = 168.dp
+                        }
+                    }
                 )
             }
 
@@ -178,7 +196,6 @@ fun SearchAppBar(
     containerColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit
 ) {
-    val density = LocalDensity.current
     val heightOffsetLimit =
         with(LocalDensity.current) { -containerHeight.toPx() }
     SideEffect {
@@ -191,8 +208,6 @@ fun SearchAppBar(
         containerHeight.toPx() + (scrollBehavior?.state?.heightOffset ?: 0f)
     }
 
-    // todo height 변화 대응하기
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,7 +218,6 @@ fun SearchAppBar(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchBox(
     uiState: SearchUiState,
@@ -213,13 +227,14 @@ fun SearchBox(
     updateSearchQuery: (query: String?) -> Unit,
     updateSearchGenre: (Genre?) -> Unit,
     updateSearchMood: (Mood?) -> Unit,
+    onMenuLineCountChanged: (Int) -> Unit = {}
 ) {
-    var showGenreBottomSheet by remember { mutableStateOf(false) }
-    var showMoodBottomSheet by remember { mutableStateOf(false) }
+    var showGenreBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var showMoodBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(12.dp)
     ) {
         ClickableSearchBar(
             query = uiState.query,
@@ -228,9 +243,8 @@ fun SearchBox(
             onClickDelete = { updateSearchQuery(null) }
         )
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        CustomFlowRow(
+            onLineCountChanged = onMenuLineCountChanged
         ) {
             DropDownButton(
                 label = "${stringResource(R.string.Genre)}${uiState.genre?.let { ": " + it.name } ?: ""}",
@@ -262,6 +276,53 @@ fun SearchBox(
     }
 }
 
+@Composable
+fun CustomFlowRow(
+    modifier: Modifier = Modifier,
+    horizontalSpacing: Dp = 8.dp,
+    verticalSpacing: Dp = 8.dp,
+    onLineCountChanged: (Int) -> Unit = {},
+    content: @Composable () -> Unit
+) {
+    var lineCount: Int by remember { mutableIntStateOf(0) }
+
+    Layout(
+        content = content
+    ) { measurables, constraints ->
+        val placeables = measurables.map { measurable ->
+            measurable.measure(constraints)
+        }
+
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            var xPosition = 0
+            var yPosition = 0
+            var maxHeightInLine = 0
+            var line = 1
+
+            placeables.forEach { placeable ->
+                if (xPosition + placeable.width > constraints.maxWidth) {
+                    xPosition = 0
+                    yPosition += maxHeightInLine
+//                    yPosition += maxHeightInLine + verticalSpacing.roundToPx()
+                    maxHeightInLine = 0
+                    line += 1
+                }
+
+                placeable.placeRelative(x = xPosition, y = yPosition)
+
+                xPosition += placeable.width + horizontalSpacing.roundToPx()
+                maxHeightInLine = maxOf(maxHeightInLine, placeable.height)
+            }
+
+            if (lineCount != line) {
+                lineCount = line
+                onLineCountChanged(lineCount)
+            }
+        }
+    }
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -290,7 +351,17 @@ fun SearchAppBarQueryPreview() {
     NcsTheme(darkTheme = true) {
         SearchAppBar(scrollBehavior = null) {
             SearchBox(
-                uiState = SearchUiState(query = "Alan Walker"),
+                uiState = SearchUiState(
+                    query = "Alan Walker",
+                    genre = Genre(
+                        id = 1,
+                        name = "Long name genre"
+                    ),
+                    mood = Mood(
+                        id = 1,
+                        name = "Long name Mood"
+                    )
+                ),
                 genres = emptyList(),
                 moods = emptyList(),
                 onClickSearchBar = {},
