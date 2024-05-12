@@ -51,6 +51,7 @@ import java.util.UUID
 fun MusicCard(
     modifier: Modifier = Modifier,
     item: Music,
+    isSelectMode: Boolean = false,
     selected: Boolean = false,
     onClick: (Music) -> Unit = {},
     onLongClick: (Music) -> Unit = {},
@@ -64,8 +65,8 @@ fun MusicCard(
                 onClick = { onClick(item) },
                 onLongClick = { onLongClick(item) }
             )
-            .height(58.dp)
-            .then(modifier),
+            .then(modifier)
+            .height(58.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -85,7 +86,9 @@ fun MusicCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = item.title,
                     style = NcsTypography.Music.Title.medium.copy(
@@ -102,14 +105,16 @@ fun MusicCard(
                 )
             }
 
-            Icon(
-                imageVector = NcsIcons.MoreVertical,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable { onClickMore(item) }
-            )
+            if (!isSelectMode) {
+                Icon(
+                    imageVector = NcsIcons.MoreVertical,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable { onClickMore(item) }
+                )
+            }
         }
     }
 }
@@ -123,7 +128,8 @@ fun MusicCardList(
     updateSelectMusic: (Music) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
     onClickMore: (Music) -> Unit,
-    state: LazyListState
+    state: LazyListState,
+    isSelectMode: Boolean = false
 ) {
     LazyColumn(
         state = state,
@@ -150,7 +156,8 @@ fun MusicCardList(
                             onLongClick = {
                                 updateSelectMode(true)
                                 updateSelectMusic(it)
-                            }
+                            },
+                            isSelectMode = isSelectMode
                         )
 
                         HorizontalDivider(
@@ -230,7 +237,7 @@ fun MusicCardListPreview() {
                 ),
                 Music(
                     id = UUID.randomUUID(),
-                    title = "Title 3",
+                    title = "Long Long Title Long Long Title Long Long Title",
                     artist = "Artist 3",
                     coverThumbnailUrl = "",
                     moods = setOf(),

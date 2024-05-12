@@ -1,6 +1,5 @@
 package com.ccc.ncs.feature.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -80,7 +79,7 @@ fun HomeRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -95,6 +94,7 @@ internal fun HomeScreen(
 ) {
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var appbarHeight by remember { mutableStateOf(120.dp) }
 
     LaunchedEffect(testMusics.loadState.refresh) {
         if (testMusics.loadState.refresh is LoadState.Loading) {
@@ -106,33 +106,10 @@ internal fun HomeScreen(
         Column {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
-            var appbarHeight by remember { mutableStateOf(120.dp) }
-            SearchAppBar(
-                containerHeight = appbarHeight,
-                scrollBehavior = scrollBehavior
-            ) {
-                SearchBox(
-                    uiState = homeUiState.searchUiState,
-                    genres = homeUiState.genres,
-                    moods = homeUiState.moods,
-                    updateSearchQuery = updateSearchQuery,
-                    updateSearchGenre = updateSearchGenre,
-                    updateSearchMood = updateSearchMood,
-                    onClickSearchBar = onClickSearchBar,
-                    onMenuLineCountChanged = {
-                        when (it) {
-                            1 -> appbarHeight = 120.dp
-                            2 -> appbarHeight = 168.dp
-                        }
-                    }
-                )
-            }
-
             if (homeUiState.isSelectMode) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(onClick = {
@@ -151,8 +128,28 @@ internal fun HomeScreen(
                         Icon(imageVector = NcsIcons.Close, contentDescription = null)
                     }
                 }
+            } else {
+                SearchAppBar(
+                    containerHeight = appbarHeight,
+                    scrollBehavior = scrollBehavior
+                ) {
+                    SearchBox(
+                        uiState = homeUiState.searchUiState,
+                        genres = homeUiState.genres,
+                        moods = homeUiState.moods,
+                        updateSearchQuery = updateSearchQuery,
+                        updateSearchGenre = updateSearchGenre,
+                        updateSearchMood = updateSearchMood,
+                        onClickSearchBar = onClickSearchBar,
+                        onMenuLineCountChanged = {
+                            when (it) {
+                                1 -> appbarHeight = 120.dp
+                                2 -> appbarHeight = 168.dp
+                            }
+                        }
+                    )
+                }
             }
-
 
             MusicCardList(
                 musicItems = testMusics,
@@ -162,6 +159,7 @@ internal fun HomeScreen(
                 updateSelectMode = updateSelectMode,
                 onClickMore = {},
                 state = listState,
+                isSelectMode = homeUiState.isSelectMode
             )
         }
     }
