@@ -15,7 +15,7 @@ abstract class OptionsConverter<T, T2> : Converter<ResponseBody, Pair<List<T>, L
         return options.map {
             Genre(
                 id = it.attr("value").toIntOrNull() ?: return@map null,
-                name = it.html()
+                name = it.text()
             )
         }.filterNotNull()
     }
@@ -25,7 +25,7 @@ abstract class OptionsConverter<T, T2> : Converter<ResponseBody, Pair<List<T>, L
         return options.map {
             Mood(
                 id = it.attr("value").toIntOrNull() ?: return@map null,
-                name = it.html()
+                name = it.text()
             )
         }.filterNotNull()
     }
