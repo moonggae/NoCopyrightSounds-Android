@@ -17,3 +17,5 @@ val DarkBlue70 = Color(0xFF2B313A)
 val Grey50 = Color(0xFF778497)
 val LightBlue10 = Color(0xFFE3EDF3)
 val White = Color(0xFFFFFFFF)
+
+val DarkPrimary = Color(0xFF8ED6F7)

@@ -8,7 +8,6 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.util.UUID
@@ -26,13 +25,8 @@ class DefaultPlayListRepository @Inject constructor(
         .getPlayList(id)
         .map { it?.asModel() }
 
-    override fun insertPlayList(name: String): Flow<PlayList> = flow {
-        val rowId = playListDao.insertPlayList(PlayListEntity(name = name))
-        val playList = playListDao.getPlayListByRowId(rowId)
-            .firstOrNull()
-            ?: throw IllegalStateException("Failed to insert playlist: No playlist found with row ID $rowId")
-
-        emit(playList.asModel())
+    override suspend fun insertPlayList(name: String) {
+        playListDao.insertPlayList(PlayListEntity(name = name))
     }
 
     override fun setPlayListMusics(playListId: UUID, musics: List<Music>): Flow<PlayList> = flow {

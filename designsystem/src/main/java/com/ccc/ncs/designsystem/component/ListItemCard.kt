@@ -1,6 +1,7 @@
 package com.ccc.ncs.designsystem.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -26,7 +27,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
@@ -57,8 +58,7 @@ object ListItemCardDefaults {
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
-    thumbnailUrl: String,
-    thumbnailPlaceholder: Painter? = null,
+    thumbnail: Painter,
     label: String,
     description: String,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
@@ -68,17 +68,12 @@ fun ListItemCard(
         modifier = Modifier
             .background(color.backgroundColor)
             .then(modifier.height(58.dp)),
-
-//        modifier = modifier
-//            .background(color.backgroundColor)
-//            .height(58.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = thumbnailUrl,
+        Image(
+            painter = thumbnail,
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            placeholder = thumbnailPlaceholder,
             modifier = Modifier
                 .padding(end = 16.dp)
                 .fillMaxHeight()
@@ -122,4 +117,27 @@ fun ListItemCard(
             }
         }
     }
+}
+
+@Composable
+fun ListItemCard(
+    modifier: Modifier = Modifier,
+    thumbnail: String,
+    thumbnailPlaceholder: Painter? = null,
+    label: String,
+    description: String,
+    color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
+    onMoreClick: (() -> Unit)? = null
+) {
+    ListItemCard(
+        modifier = modifier,
+        thumbnail = rememberAsyncImagePainter(
+            model = thumbnail,
+            placeholder = thumbnailPlaceholder
+        ),
+        label = label,
+        description = description,
+        color = color,
+        onMoreClick = onMoreClick
+    )
 }

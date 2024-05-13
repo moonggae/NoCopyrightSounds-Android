@@ -45,7 +45,7 @@ fun MusicCard(
     onClickMore: (Music) -> Unit = {}
 ) {
     ListItemCard(
-        thumbnailUrl = item.coverThumbnailUrl,
+        thumbnail = item.coverThumbnailUrl,
         label = item.title,
         description = item.artist,
         onMoreClick = if (isSelectMode) null else {

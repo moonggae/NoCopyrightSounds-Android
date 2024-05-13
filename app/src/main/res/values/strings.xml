@@ -9,4 +9,6 @@
     <string name="home_search_placeholder"><![CDATA[Search Tracks & Artists]]></string>
     <string name="Genre">Genre</string>
     <string name="Mood">Mood</string>
+    <string name="songs_count">%1$s songs</string>
+    <string name="add_new_playlist">Add New Playlist</string>
 </resources>

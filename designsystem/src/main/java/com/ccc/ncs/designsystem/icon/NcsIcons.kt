@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.PeopleOutline
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
@@ -32,4 +33,5 @@ object NcsIcons {
     val ArrowDropDown = Icons.Filled.ArrowDropDown
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MoreVertical = Icons.Rounded.MoreVert
+    val AddCircle = Icons.Rounded.AddCircle
 }
