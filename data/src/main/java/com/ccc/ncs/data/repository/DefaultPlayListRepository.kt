@@ -42,9 +42,8 @@ class DefaultPlayListRepository @Inject constructor(
         emit(playListDao.getPlayList(playListId).first()?.asModel() ?: throw Exception("fail to set play list musics"))
     }
 
-    override fun updatePlayListName(playListId: UUID, name: String): Flow<PlayList> = flow {
+    override suspend fun updatePlayListName(playListId: UUID, name: String) {
         playListDao.updatePlayList(PlayListEntity(playListId, name))
-        emit(playListDao.getPlayList(playListId).first()?.asModel() ?: throw Exception("fail to update play list name"))
     }
 
     override suspend fun deletePlayList(id: UUID) = playListDao.deletePlayList(id)

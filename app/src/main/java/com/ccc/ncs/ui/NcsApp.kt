@@ -50,12 +50,14 @@ fun NcsApp(
         contentWindowInsets = WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            NcsBottomBar(
-                destinations = appState.topLevelDestinations,
-                onNavigateToDestination = appState::navigateToTopLevelDestination,
-                currentDestination = appState.currentDestination,
-                visibility = 1 - playingScreenHeightWeight
-            )
+            if (appState.currentTopLevelDestination != null) {
+                NcsBottomBar(
+                    destinations = appState.topLevelDestinations,
+                    onNavigateToDestination = appState::navigateToTopLevelDestination,
+                    currentDestination = appState.currentDestination,
+                    visibility = 1 - playingScreenHeightWeight
+                )
+            }
         }
     ) { padding ->
         Box(
@@ -67,12 +69,14 @@ fun NcsApp(
                 NcsNavHost(appState = appState)
             }
 
-            PlayingScreen(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                onUpdateScreenSize = { percentage ->
-                    playingScreenHeightWeight = percentage
-                }
-            )
+            if (appState.currentTopLevelDestination != null) {
+                PlayingScreen(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    onUpdateScreenSize = { percentage ->
+                        playingScreenHeightWeight = percentage
+                    }
+                )
+            }
         }
     }
 }

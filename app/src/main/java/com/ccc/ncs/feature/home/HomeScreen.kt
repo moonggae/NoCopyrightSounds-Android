@@ -113,15 +113,9 @@ internal fun HomeScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(onClick = {
-//                        playerViewModel.setPlayList(
-//                            PlayList(
-//                                id = UUID.randomUUID(),
-//                                name = "PlayList",
-//                                musics = uiState.selectedMusics
-//                            )
-//                        )
+                        
                     }) {
-                        Icon(imageVector = NcsIcons.Play, contentDescription = null)
+                        Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
                     }
 
                     IconButton(onClick = { updateSelectMode(false) }) {
@@ -163,6 +157,9 @@ internal fun HomeScreen(
             )
         }
     }
+    
+    
+    
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

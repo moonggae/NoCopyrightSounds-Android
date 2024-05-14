@@ -14,7 +14,7 @@ interface PlayListRepository {
 
     fun setPlayListMusics(playListId: UUID, musics: List<Music>): Flow<PlayList>
 
-    fun updatePlayListName(playListId: UUID, name: String): Flow<PlayList>
+    suspend fun updatePlayListName(playListId: UUID, name: String)
 
     suspend fun deletePlayList(id: UUID)
 }

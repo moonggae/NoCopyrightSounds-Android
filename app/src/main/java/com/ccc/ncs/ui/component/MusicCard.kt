@@ -52,8 +52,8 @@ fun MusicCard(
             { onClickMore(item) }
         },
         color = ListItemCardDefaults.listItemCardColors(
-            backgroundColor = if (selected) MaterialTheme.colorScheme.secondary else Color.Transparent,
-            labelColor = if (selected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+            backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+            labelColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             descriptionColor = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
             moreIconColor = MaterialTheme.colorScheme.onSurface
         ),

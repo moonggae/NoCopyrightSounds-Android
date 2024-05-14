@@ -9,8 +9,12 @@ const val LIBRARY_ROUTE = "library"
 
 fun NavController.navigateToLibrary(navOptions: NavOptions) = navigate(LIBRARY_ROUTE, navOptions)
 
-fun NavGraphBuilder.libraryScreen() {
+fun NavGraphBuilder.libraryScreen(
+    navigationToEditPlaylist: () -> Unit
+) {
     composable(route = LIBRARY_ROUTE) {
-        LibraryRoute()
+        LibraryRoute(
+            onClickAddPlaylist = navigationToEditPlaylist
+        )
     }
 }

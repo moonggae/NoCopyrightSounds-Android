@@ -35,23 +35,23 @@ import java.util.UUID
 @Composable
 fun LibraryRoute(
     modifier: Modifier = Modifier,
-    viewModel: LibraryViewModel = hiltViewModel()
+    viewModel: LibraryViewModel = hiltViewModel(),
+    onClickAddPlaylist: () -> Unit
 ) {
     val playListUiState by viewModel.playListUiState.collectAsStateWithLifecycle()
 
     LibraryScreen(
         modifier = modifier,
         playListUiState = playListUiState,
-        onAddPlayList = viewModel::addPlayList
+        onClickAddPlaylist = onClickAddPlaylist
     )
-
 }
 
 @Composable
 internal fun LibraryScreen(
     modifier: Modifier = Modifier,
     playListUiState: PlayListUiState,
-    onAddPlayList: (String) -> Unit
+    onClickAddPlaylist: () -> Unit
 ) {
     Column(
         Modifier
@@ -64,12 +64,7 @@ internal fun LibraryScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(bottom = 4.dp)
         ) {
-            IconButton(
-                onClick = {
-                    // TODO
-                    onAddPlayList("New Playlist ${System.currentTimeMillis()}")
-                }
-            ) {
+            IconButton(onClick = onClickAddPlaylist) {
                 Icon(
                     imageVector = NcsIcons.AddCircle,
                     contentDescription = null,
@@ -126,7 +121,7 @@ fun LibraryScreenPreview() {
                         )
                     )
                 ),
-                onAddPlayList = {}
+                onClickAddPlaylist = {}
             )
         }
     }

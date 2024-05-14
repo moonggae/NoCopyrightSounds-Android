@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import com.ccc.ncs.feature.artist.artistScreen
 import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.homeScreen
+import com.ccc.ncs.feature.library.edit.editPlaylistScreen
+import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.library.libraryScreen
 import com.ccc.ncs.feature.menu.menuScreen
 import com.ccc.ncs.feature.search.backFromSearch
@@ -28,8 +30,9 @@ fun NcsNavHost(
     ) {
         homeScreen(onMoveToSearchScreen = { navController.navigateToSearch(it) })
         artistScreen()
-        libraryScreen()
+        libraryScreen(navigationToEditPlaylist = navController::navigateToEditPlaylist)
         menuScreen()
         searchScreen(onSearch = navController::backFromSearch)
+        editPlaylistScreen(onBack = navController::popBackStack)
     }
 }
