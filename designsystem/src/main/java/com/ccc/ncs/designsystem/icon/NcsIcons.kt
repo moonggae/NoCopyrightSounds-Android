@@ -2,6 +2,7 @@ package com.ccc.ncs.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Home
@@ -9,12 +10,14 @@ import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.BookmarkAdd
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.People
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Search
 
 object NcsIcons {
@@ -34,4 +37,7 @@ object NcsIcons {
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MoreVertical = Icons.Rounded.MoreVert
     val AddCircle = Icons.Rounded.AddCircle
+    val BookmarkAdd = Icons.Rounded.BookmarkAdd
+    val PlaylistAdd = Icons.AutoMirrored.Rounded.PlaylistAdd
+    val PlayCircle = Icons.Rounded.PlayCircle
 }

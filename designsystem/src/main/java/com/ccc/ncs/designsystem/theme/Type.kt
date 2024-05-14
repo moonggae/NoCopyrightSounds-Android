@@ -82,6 +82,14 @@ object NcsTypography {
             textAlign = TextAlign.Center
         )
 
+        val bottomSheetItem = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 20.sp,
+            letterSpacing = 0.1.sp,
+            textAlign = TextAlign.Center
+        )
+
         val navigationLabel = TextStyle(
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,

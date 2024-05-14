@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -47,6 +48,7 @@ import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.GenreModalBottomSheet
@@ -95,6 +97,7 @@ internal fun HomeScreen(
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var appbarHeight by remember { mutableStateOf(120.dp) }
+    var showSelectMusicMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(testMusics.loadState.refresh) {
         if (testMusics.loadState.refresh is LoadState.Loading) {
@@ -107,21 +110,10 @@ internal fun HomeScreen(
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
             if (homeUiState.isSelectMode) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    IconButton(onClick = {
-                        
-                    }) {
-                        Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
-                    }
-
-                    IconButton(onClick = { updateSelectMode(false) }) {
-                        Icon(imageVector = NcsIcons.Close, contentDescription = null)
-                    }
-                }
+                SelectMusicAppBar(
+                    onClickMenu = { showSelectMusicMenu = true },
+                    onClickClose = { updateSelectMode(false) }
+                )
             } else {
                 SearchAppBar(
                     containerHeight = appbarHeight,
@@ -158,8 +150,85 @@ internal fun HomeScreen(
         }
     }
     
-    
-    
+    SelectMusicMenuBottomSheet(
+        show = showSelectMusicMenu,
+        onDismissRequest = { showSelectMusicMenu = false },
+        onClickPlayNow = {},
+        onClickAddToPlayList = {},
+        onClickAddToQueue = {}
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectMusicMenuBottomSheet(
+    modifier: Modifier = Modifier,
+    show: Boolean,
+    onDismissRequest: () -> Unit,
+    onClickPlayNow: () -> Unit,
+    onClickAddToPlayList: () -> Unit,
+    onClickAddToQueue: () -> Unit
+) {
+    if (show) {
+        ModalBottomSheet(onDismissRequest = onDismissRequest) {
+            SelectMusicMenuBottomSheetContent(
+                onClickPlayNow = onClickPlayNow,
+                onClickAddToPlayList = onClickAddToPlayList,
+                onClickAddToQueue = onClickAddToQueue
+            )
+        }
+    }
+}
+
+@Composable
+fun SelectMusicMenuBottomSheetContent(
+    modifier: Modifier = Modifier,
+    onClickPlayNow: () -> Unit,
+    onClickAddToPlayList: () -> Unit,
+    onClickAddToQueue: () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+    ) {
+        BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = "Play now", onClick = onClickPlayNow)
+        BottomSheetMenuItem(icon = NcsIcons.BookmarkAdd, label = "Add to playlist", onClick = onClickAddToPlayList)
+        BottomSheetMenuItem(icon = NcsIcons.PlaylistAdd, label = "Add to queue", onClick = onClickAddToQueue)
+    }
+}
+
+@Preview()
+@Composable
+fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        SelectMusicMenuBottomSheetContent(
+            onClickPlayNow = {},
+            onClickAddToPlayList = {},
+            onClickAddToQueue = {}
+        )
+    }
+}
+
+@Composable
+fun SelectMusicAppBar(
+    modifier: Modifier = Modifier,
+    onClickMenu: () -> Unit,
+    onClickClose: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        IconButton(onClick = onClickMenu) {
+            Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
+        }
+
+        IconButton(onClick = onClickClose) {
+            Icon(imageVector = NcsIcons.Close, contentDescription = null)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
