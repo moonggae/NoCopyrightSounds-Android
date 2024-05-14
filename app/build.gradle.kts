@@ -106,4 +106,5 @@ dependencies {
     implementation(libs.paing.compose)
 
     implementation(libs.bundles.media3)
+    implementation(libs.reorderable)
 }

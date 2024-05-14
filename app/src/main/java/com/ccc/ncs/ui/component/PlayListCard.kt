@@ -45,7 +45,6 @@ fun PlayListCard(
         thumbnail = thumbnail,
         label = item.name,
         description = stringResource(R.string.songs_count, item.musics.size),
-        onMoreClick = null,
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
@@ -103,7 +102,7 @@ fun PlayListColumn(
 
 
 
-private val mockMusics = listOf(
+val mockMusics = listOf(
     Music(
         id = UUID.randomUUID(),
         title = "Title 1",

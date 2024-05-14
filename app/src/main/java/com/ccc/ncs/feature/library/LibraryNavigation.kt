@@ -4,17 +4,20 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.ccc.ncs.model.PlayList
 
 const val LIBRARY_ROUTE = "library"
 
 fun NavController.navigateToLibrary(navOptions: NavOptions) = navigate(LIBRARY_ROUTE, navOptions)
 
 fun NavGraphBuilder.libraryScreen(
-    navigationToEditPlaylist: () -> Unit
+    navigateToEdit: () -> Unit,
+    navigateToDetail: (PlayList) -> Unit
 ) {
     composable(route = LIBRARY_ROUTE) {
         LibraryRoute(
-            onClickAddPlaylist = navigationToEditPlaylist
+            onClickAddPlaylist = navigateToEdit,
+            onClickPlaylist = navigateToDetail
         )
     }
 }

@@ -104,5 +104,21 @@ object NcsTypography {
             letterSpacing = 0.1.sp,
             textAlign = TextAlign.Center
         )
+
+        val appbarTitle = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 20.sp,
+            letterSpacing = 0.2.sp
+        )
+    }
+
+    object PlaylistDetailTypography {
+        val name = TextStyle(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 28.sp,
+            letterSpacing = 0.4.sp
+        )
     }
 }

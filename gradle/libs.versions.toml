@@ -28,6 +28,7 @@ androidxHiltNavigationCompose = "1.2.0"
 media3 = "1.3.0"
 room = "2.6.1"
 androidXTestVersion = "1.5.0"
+reorderable = "2.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -84,6 +85,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-testing = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+
 
 [bundles]
 media3 = [

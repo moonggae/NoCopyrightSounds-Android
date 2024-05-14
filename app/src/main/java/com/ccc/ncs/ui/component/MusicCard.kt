@@ -2,15 +2,18 @@ package com.ccc.ncs.ui.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,6 +30,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
+import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Music
 import kotlinx.coroutines.flow.flowOf
@@ -48,8 +52,17 @@ fun MusicCard(
         thumbnail = item.coverThumbnailUrl,
         label = item.title,
         description = item.artist,
-        onMoreClick = if (isSelectMode) null else {
-            { onClickMore(item) }
+        suffix = {
+            if (!isSelectMode) {
+                Icon(
+                    imageVector = NcsIcons.MoreVertical,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable { onClickMore(item) }
+                )
+            }
         },
         color = ListItemCardDefaults.listItemCardColors(
             backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,

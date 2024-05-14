@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
 data class ListItemCardColors(
@@ -36,6 +34,12 @@ data class ListItemCardColors(
     val descriptionColor: Color,
     val moreIconColor: Color,
     val backgroundColor: Color
+)
+
+data class ListItemCardStyle(
+    val thumbnailSize: Dp,
+    val labelTextStyle: TextStyle,
+    val descriptionTextStyle: TextStyle
 )
 
 object ListItemCardDefaults {
@@ -52,6 +56,24 @@ object ListItemCardDefaults {
             moreIconColor = moreIconColor.takeOrElse { MaterialTheme.colorScheme.onSurface },
             backgroundColor = backgroundColor.takeOrElse { Color.Transparent }
         )
+
+    object listItemCardStyle {
+        @Composable
+        fun small(): ListItemCardStyle =
+            ListItemCardStyle(
+                thumbnailSize = 40.dp,
+                labelTextStyle = NcsTypography.MusicTypography.TitleTypography.small,
+                descriptionTextStyle = NcsTypography.MusicTypography.ArtistTypography.small
+            )
+
+        @Composable
+        fun medium(): ListItemCardStyle =
+            ListItemCardStyle(
+                thumbnailSize = 58.dp,
+                labelTextStyle = NcsTypography.MusicTypography.TitleTypography.medium,
+                descriptionTextStyle = NcsTypography.MusicTypography.ArtistTypography.medium
+            )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -62,12 +84,13 @@ fun ListItemCard(
     label: String,
     description: String,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
-    onMoreClick: (() -> Unit)? = null
+    style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
+    suffix: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .background(color.backgroundColor)
-            .then(modifier.height(58.dp)),
+            .then(modifier.height(style.thumbnailSize)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -91,30 +114,22 @@ fun ListItemCard(
             ) {
                 Text(
                     text = label,
-                    style = NcsTypography.MusicTypography.TitleTypography.medium.copy(
+                    style =
+                    style.labelTextStyle.copy(
                         color = color.labelColor,
                     ),
                     modifier = Modifier.basicMarquee()
                 )
                 Text(
                     text = description,
-                    style = NcsTypography.MusicTypography.ArtistTypography.medium.copy(
+                    style = style.descriptionTextStyle.copy(
                         color = color.descriptionColor
                     ),
                     modifier = Modifier.basicMarquee()
                 )
             }
 
-            onMoreClick?.let {
-                Icon(
-                    imageVector = NcsIcons.MoreVertical,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clickable { it.invoke() }
-                )
-            }
+            suffix?.invoke()
         }
     }
 }
@@ -127,7 +142,8 @@ fun ListItemCard(
     label: String,
     description: String,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
-    onMoreClick: (() -> Unit)? = null
+    style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
+    suffix: (@Composable () -> Unit)? = null
 ) {
     ListItemCard(
         modifier = modifier,
@@ -138,6 +154,7 @@ fun ListItemCard(
         label = label,
         description = description,
         color = color,
-        onMoreClick = onMoreClick
+        style = style,
+        suffix = suffix
     )
 }

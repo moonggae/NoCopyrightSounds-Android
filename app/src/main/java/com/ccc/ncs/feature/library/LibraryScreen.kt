@@ -36,14 +36,16 @@ import java.util.UUID
 fun LibraryRoute(
     modifier: Modifier = Modifier,
     viewModel: LibraryViewModel = hiltViewModel(),
-    onClickAddPlaylist: () -> Unit
+    onClickAddPlaylist: () -> Unit,
+    onClickPlaylist: (PlayList) -> Unit
 ) {
     val playListUiState by viewModel.playListUiState.collectAsStateWithLifecycle()
 
     LibraryScreen(
         modifier = modifier,
         playListUiState = playListUiState,
-        onClickAddPlaylist = onClickAddPlaylist
+        onClickAddPlaylist = onClickAddPlaylist,
+        onClickPlaylist = onClickPlaylist
     )
 }
 
@@ -51,7 +53,8 @@ fun LibraryRoute(
 internal fun LibraryScreen(
     modifier: Modifier = Modifier,
     playListUiState: PlayListUiState,
-    onClickAddPlaylist: () -> Unit
+    onClickAddPlaylist: () -> Unit,
+    onClickPlaylist: (PlayList) -> Unit
 ) {
     Column(
         Modifier
@@ -87,9 +90,7 @@ internal fun LibraryScreen(
             is PlayListUiState.Success -> {
                 PlayListColumn(
                     playListItems = playListUiState.playLists,
-                    onClick = {
-                        // TODO
-                    }
+                    onClick = onClickPlaylist
                 )
             }
         }
@@ -121,7 +122,8 @@ fun LibraryScreenPreview() {
                         )
                     )
                 ),
-                onClickAddPlaylist = {}
+                onClickAddPlaylist = {},
+                onClickPlaylist = {}
             )
         }
     }
