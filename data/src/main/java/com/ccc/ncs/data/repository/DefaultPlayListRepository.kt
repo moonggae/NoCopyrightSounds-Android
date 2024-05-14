@@ -8,7 +8,6 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class DefaultPlayListRepository @Inject constructor(
         playListDao.insertPlayList(PlayListEntity(name = name))
     }
 
-    override fun setPlayListMusics(playListId: UUID, musics: List<Music>): Flow<PlayList> = flow {
+    override suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>) {
         playListDao.unLinkAllMusic(playListId)
         val insertedMusics = musicRepository.insertMusics(musics).first()
         playListDao.linkMusicToPlayList(insertedMusics.map {
@@ -38,8 +37,6 @@ class DefaultPlayListRepository @Inject constructor(
                 musicId = it.id
             )
         })
-
-        emit(playListDao.getPlayList(playListId).first()?.asModel() ?: throw Exception("fail to set play list musics"))
     }
 
     override suspend fun updatePlayListName(playListId: UUID, name: String) {

@@ -12,7 +12,7 @@ interface PlayListRepository {
 
     suspend fun insertPlayList(name: String)
 
-    fun setPlayListMusics(playListId: UUID, musics: List<Music>): Flow<PlayList>
+    suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>)
 
     suspend fun updatePlayListName(playListId: UUID, name: String)
 

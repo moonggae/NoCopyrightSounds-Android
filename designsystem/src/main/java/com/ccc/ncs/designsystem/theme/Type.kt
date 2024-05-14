@@ -82,6 +82,13 @@ object NcsTypography {
             textAlign = TextAlign.Center
         )
 
+        val textButton = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+
         val bottomSheetItem = TextStyle(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,

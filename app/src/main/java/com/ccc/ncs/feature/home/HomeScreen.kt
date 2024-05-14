@@ -45,6 +45,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
+import com.ccc.ncs.feature.home.addmusictoplaylistdialog.AddMusicsToPlaylistDialog
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -98,6 +99,7 @@ internal fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var appbarHeight by remember { mutableStateOf(120.dp) }
     var showSelectMusicMenu by remember { mutableStateOf(false) }
+    var showAddMusicsToPlaylistDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(testMusics.loadState.refresh) {
         if (testMusics.loadState.refresh is LoadState.Loading) {
@@ -154,8 +156,14 @@ internal fun HomeScreen(
         show = showSelectMusicMenu,
         onDismissRequest = { showSelectMusicMenu = false },
         onClickPlayNow = {},
-        onClickAddToPlayList = {},
+        onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
         onClickAddToQueue = {}
+    )
+
+    AddMusicsToPlaylistDialog(
+        show = showAddMusicsToPlaylistDialog,
+        onDismissRequest = { showAddMusicsToPlaylistDialog = false },
+        musics = homeUiState.selectedMusics
     )
 }
 
@@ -199,7 +207,7 @@ fun SelectMusicMenuBottomSheetContent(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
     NcsTheme(darkTheme = true) {

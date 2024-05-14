@@ -11,4 +11,5 @@
     <string name="Mood">Mood</string>
     <string name="songs_count">%1$s songs</string>
     <string name="add_new_playlist">Add New Playlist</string>
+    <string name="cancel">Cancel</string>
 </resources>
