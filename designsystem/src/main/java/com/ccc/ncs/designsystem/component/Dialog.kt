@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,79 @@ fun AlertDialog(
     confirmLabel: String = "Confirm",
     onConfirm: () -> Unit,
     onCancel: (() -> Unit)? = null
+) {
+    NcsDialog(
+        show = show,
+        onDismissRequest = onDismissRequest,
+        title = title,
+        message = message,
+        bottomContent = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+            ) {
+                NcsDialogTextButton(
+                    label = confirmLabel,
+                    onClick = onConfirm,
+                    color = MaterialTheme.colorScheme.error
+                )
+
+                VerticalDivider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+
+                NcsDialogTextButton(
+                    label = "Cancel",
+                    onClick = { (onCancel ?: onDismissRequest).invoke() },
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun NcsDialog(
+    modifier: Modifier = Modifier,
+    show: Boolean,
+    onDismissRequest: () -> Unit,
+    title: String,
+    message: String,
+    bottomContent: @Composable () -> Unit,
+) {
+    NcsDialog(
+        modifier = modifier,
+        show = show,
+        onDismissRequest = onDismissRequest,
+        title = title,
+        content = {
+            Text(
+                text = message,
+                style = NcsTypography.Dialog.message.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 12.dp,
+                    bottom = 12.dp
+                )
+            )
+        },
+        bottomContent = bottomContent
+    )
+}
+
+@Composable
+fun NcsDialog(
+    modifier: Modifier = Modifier,
+    show: Boolean,
+    onDismissRequest: () -> Unit,
+    title: String,
+    content: @Composable () -> Unit,
+    bottomContent: @Composable () -> Unit,
 ) {
     if (show) {
         Dialog(onDismissRequest = onDismissRequest) {
@@ -67,66 +142,39 @@ fun AlertDialog(
                         color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     )
 
-                    Text(
-                        text = message,
-                        style = NcsTypography.Dialog.message.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 12.dp,
-                            bottom = 12.dp
-                        )
-                    )
+                    content()
                 }
 
                 HorizontalDivider(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                ) {
-                    Text(
-                        text = confirmLabel,
-                        style = NcsTypography.Dialog.button.copy(
-                            color = MaterialTheme.colorScheme.error
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .clickable(onClick = onConfirm)
-                            .fillMaxHeight()
-                            .wrapContentHeight()
-                            .weight(1f)
-                    )
-
-                    VerticalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh
-                    )
-
-
-                    Text(
-                        text = "Cancel",
-                        style = NcsTypography.Dialog.button.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .clickable { (onCancel ?: onDismissRequest).invoke() }
-                            .fillMaxHeight()
-                            .wrapContentHeight()
-                            .weight(1f)
-                    )
-                }
+                bottomContent()
             }
         }
     }
 }
 
+@Composable
+fun RowScope.NcsDialogTextButton(
+    modifier: Modifier = Modifier,
+    label: String,
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    onClick: () -> Unit
+) {
+    Text(
+        text = label,
+        style = NcsTypography.Dialog.button.copy(
+            color = color
+        ),
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .fillMaxHeight()
+            .wrapContentHeight()
+            .weight(1f)
+    )
+}
 
 @Preview
 @Composable

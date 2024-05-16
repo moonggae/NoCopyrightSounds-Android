@@ -163,7 +163,12 @@ internal fun HomeScreen(
     AddMusicsToPlaylistDialog(
         show = showAddMusicsToPlaylistDialog,
         onDismissRequest = { showAddMusicsToPlaylistDialog = false },
-        musics = homeUiState.selectedMusics
+        musics = homeUiState.selectedMusics,
+        onFinish = {
+            showAddMusicsToPlaylistDialog = false
+            showSelectMusicMenu = false
+            updateSelectMode(false)
+        }
     )
 }
 

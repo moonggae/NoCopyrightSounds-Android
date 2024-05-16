@@ -10,6 +10,8 @@
     <string name="home_select_musics_menu_add_to_playlist">Add to playlist</string>
     <string name="home_select_musics_menu_add_to_queue">Add to queue</string>
     <string name="home_search_placeholder"><![CDATA[Search Tracks & Artists]]></string>
+    <string name="select_playlist_dialog_title">Select Playlist</string>
+    <string name="select_playlist_dialog_no_playlist_available">No playlist available</string>
 
     <string name="add_new_playlist">Add New Playlist</string>
     <string name="songs_count">%1$s songs</string>

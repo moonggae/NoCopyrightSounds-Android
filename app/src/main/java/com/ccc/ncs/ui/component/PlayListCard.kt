@@ -88,11 +88,10 @@ fun PlayListColumn(
     onClick: (PlayList) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.then(modifier)
+        modifier = modifier
     ) {
         items(count = playListItems.size) { index ->
             PlayListColumnItem(
-                modifier = modifier,
                 playList = playListItems[index],
                 onClick = onClick
             )
