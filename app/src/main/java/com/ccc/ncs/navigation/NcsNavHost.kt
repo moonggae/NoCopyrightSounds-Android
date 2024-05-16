@@ -39,6 +39,9 @@ fun NcsNavHost(
         menuScreen()
         searchScreen(onSearch = navController::backFromSearch)
         editPlaylistScreen(onBack = navController::popBackStack)
-        playlistDetailScreen()
+        playlistDetailScreen(
+            onBack = navController::popBackStack,
+            navigateToEditPlaylist = { navController.navigateToEditPlaylist(it) }
+        )
     }
 }

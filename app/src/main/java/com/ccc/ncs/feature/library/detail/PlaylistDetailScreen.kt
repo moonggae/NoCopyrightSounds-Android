@@ -3,6 +3,7 @@ package com.ccc.ncs.feature.library.detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +19,10 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,12 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.component.AlertDialog
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
@@ -44,6 +49,7 @@ import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.mockMusics
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -53,7 +59,9 @@ import java.util.UUID
 @Composable
 fun PlaylistDetailRoute(
     modifier: Modifier = Modifier,
-    viewModel: PlaylistDetailViewModel = hiltViewModel()
+    viewModel: PlaylistDetailViewModel = hiltViewModel(),
+    onBack: () -> Unit,
+    onClickModifyName: (UUID) -> Unit
 ) {
     val playListUiState by viewModel.playListUiState.collectAsStateWithLifecycle()
 
@@ -64,7 +72,13 @@ fun PlaylistDetailRoute(
             PlaylistDetailScreen(
                 modifier = modifier,
                 playlist = uiState.playlist,
-                onMusicOrderChanged = { viewModel.updateMusicList(uiState.playlist.id, it) }
+                onMusicOrderChanged = { viewModel.updateMusicList(uiState.playlist.id, it) },
+                onBack = onBack,
+                onClickModifyName = { onClickModifyName(uiState.playlist.id) },
+                onDeletePlaylist = {
+                    viewModel.deletePlaylist(uiState.playlist.id)
+                    onBack()
+                }
             )
         }
     }
@@ -74,8 +88,14 @@ fun PlaylistDetailRoute(
 internal fun PlaylistDetailScreen(
     modifier: Modifier = Modifier,
     playlist: PlayList,
-    onMusicOrderChanged: (List<Music>) -> Unit
+    onMusicOrderChanged: (List<Music>) -> Unit,
+    onBack: () -> Unit,
+    onClickModifyName: () -> Unit,
+    onDeletePlaylist: () -> Unit
 ) {
+    var showMenuBottomSheet by remember { mutableStateOf(false) }
+    var showDeleteAlertDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,7 +108,9 @@ internal fun PlaylistDetailScreen(
                     horizontal = 16.dp,
                     vertical = 20.dp
                 )
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            onBack = onBack,
+            onClickMenu = { showMenuBottomSheet = true }
         )
 
         PlaylistDetailContent(
@@ -108,6 +130,27 @@ internal fun PlaylistDetailScreen(
             onMusicOrderChanged = onMusicOrderChanged
         )
     }
+
+
+    PlaylistDetailMenuBottomSheet(
+        show = showMenuBottomSheet,
+        onDismissRequest = { showMenuBottomSheet = false },
+        onClickModifyName = onClickModifyName,
+        onClickDelete = { showDeleteAlertDialog = true }
+    )
+
+    AlertDialog(
+        show = showDeleteAlertDialog,
+        onDismissRequest = { showDeleteAlertDialog = false },
+        title = stringResource(R.string.delete_playlist_alert_title),
+        message = stringResource(R.string.delete_playlist_alert_message),
+        confirmLabel = stringResource(R.string.Delete),
+        onConfirm = {
+            showMenuBottomSheet = false
+            showDeleteAlertDialog = false
+            onDeletePlaylist()
+        }
+    )
 }
 
 fun <T> List<T>.swap(index1: Int, index2: Int): List<T> {
@@ -199,7 +242,11 @@ fun PlaylistDetailContent(
 }
 
 @Composable
-fun PlaylistDetailAppBar(modifier: Modifier = Modifier) {
+fun PlaylistDetailAppBar(
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit,
+    onClickMenu: () -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -208,7 +255,8 @@ fun PlaylistDetailAppBar(modifier: Modifier = Modifier) {
         Icon(
             imageVector = NcsIcons.ArrowBack,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.clickable(onClick = onBack)
         )
 
         Text(
@@ -221,8 +269,45 @@ fun PlaylistDetailAppBar(modifier: Modifier = Modifier) {
         Icon(
             imageVector = NcsIcons.MoreVertical,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.clickable(onClick = onClickMenu)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PlaylistDetailMenuBottomSheet(
+    modifier: Modifier = Modifier,
+    show: Boolean,
+    onDismissRequest: () -> Unit,
+    onClickModifyName: () -> Unit,
+    onClickDelete: () -> Unit,
+) {
+    if (show) {
+        ModalBottomSheet(onDismissRequest = onDismissRequest) {
+            PlaylistDetailMenuBottomSheetContent(
+                onClickModifyName = onClickModifyName,
+                onClickDelete = onClickDelete
+            )
+        }
+    }
+}
+
+@Composable
+fun PlaylistDetailMenuBottomSheetContent(
+    modifier: Modifier = Modifier,
+    onClickModifyName: () -> Unit,
+    onClickDelete: () -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+    ) {
+        BottomSheetMenuItem(icon = NcsIcons.Edit, label = stringResource(R.string.playlist_detail_menu_modify_name), onClick = onClickModifyName)
+        BottomSheetMenuItem(icon = NcsIcons.Delete, label = stringResource(R.string.playlist_detail_menu_delete_playlist), onClick = onClickDelete)
     }
 }
 
@@ -241,8 +326,22 @@ fun PlaylistDetailContentPreview() {
                     name = "My Playlist",
                     musics = mockMusics
                 ),
-                onMusicOrderChanged = {}
+                onMusicOrderChanged = {},
+                onBack = {},
+                onClickModifyName = {},
+                onDeletePlaylist = {}
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun PlaylistDetailMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        PlaylistDetailMenuBottomSheetContent(
+            onClickModifyName = {},
+            onClickDelete = {}
+        )
     }
 }

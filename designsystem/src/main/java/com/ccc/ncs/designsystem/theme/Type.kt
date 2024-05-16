@@ -10,6 +10,7 @@ object NcsTypography {
     val Music = MusicTypography
     val Search = SearchTypography
     val Label = LabelTypography
+    val Dialog = DialogTypography
 
     object MusicTypography {
         val Title = TitleTypography
@@ -119,6 +120,27 @@ object NcsTypography {
             fontWeight = FontWeight.SemiBold,
             lineHeight = 28.sp,
             letterSpacing = 0.4.sp
+        )
+    }
+
+    object DialogTypography {
+        val title = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            letterSpacing = 0.4.sp
+        )
+
+        val message = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 24.sp,
+            letterSpacing = 0.1.sp
+        )
+
+        val button = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = 0.5.sp
         )
     }
 }

@@ -6,10 +6,22 @@
     <string name="feature_library_title">Library</string>
     <string name="feature_menu_title">Menu</string>
 
+    <string name="home_select_musics_menu_play_now">Play now</string>
+    <string name="home_select_musics_menu_add_to_playlist">Add to playlist</string>
+    <string name="home_select_musics_menu_add_to_queue">Add to queue</string>
     <string name="home_search_placeholder"><![CDATA[Search Tracks & Artists]]></string>
+
+    <string name="add_new_playlist">Add New Playlist</string>
+    <string name="songs_count">%1$s songs</string>
+
+    <string name="delete_playlist_alert_title">Delete Playlist</string>
+    <string name="delete_playlist_alert_message">Are you sure\nyou want to delete this playlist?</string>
+
+    <string name="playlist_detail_menu_modify_name">Modify name</string>
+    <string name="playlist_detail_menu_delete_playlist">Delete Playlist</string>
+
     <string name="Genre">Genre</string>
     <string name="Mood">Mood</string>
-    <string name="songs_count">%1$s songs</string>
-    <string name="add_new_playlist">Add New Playlist</string>
-    <string name="cancel">Cancel</string>
+    <string name="Delete">Delete</string>
+    <string name="Cancel">Cancel</string>
 </resources>

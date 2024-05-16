@@ -85,7 +85,7 @@ fun AddMusicsToPlaylistDialogContent(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.cancel),
+                text = stringResource(R.string.Cancel),
                 style = NcsTypography.Label.textButton,
                 color = MaterialTheme.colorScheme.onSurface
             )

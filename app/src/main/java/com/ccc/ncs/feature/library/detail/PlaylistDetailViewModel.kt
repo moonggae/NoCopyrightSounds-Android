@@ -47,6 +47,12 @@ class PlaylistDetailViewModel @Inject constructor(
         }
     }
 
+    fun deletePlaylist(playlistId: UUID) {
+        viewModelScope.launch {
+            playlistRepository.deletePlayList(playlistId)
+        }
+    }
+
     companion object {
         private const val TAG = "PlaylistDetailViewModel"
     }

@@ -201,21 +201,9 @@ fun SelectMusicMenuBottomSheetContent(
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
-        BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = "Play now", onClick = onClickPlayNow)
-        BottomSheetMenuItem(icon = NcsIcons.BookmarkAdd, label = "Add to playlist", onClick = onClickAddToPlayList)
-        BottomSheetMenuItem(icon = NcsIcons.PlaylistAdd, label = "Add to queue", onClick = onClickAddToQueue)
-    }
-}
-
-@Preview
-@Composable
-fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
-    NcsTheme(darkTheme = true) {
-        SelectMusicMenuBottomSheetContent(
-            onClickPlayNow = {},
-            onClickAddToPlayList = {},
-            onClickAddToQueue = {}
-        )
+        BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = stringResource(R.string.home_select_musics_menu_play_now), onClick = onClickPlayNow)
+        BottomSheetMenuItem(icon = NcsIcons.BookmarkAdd, label = stringResource(R.string.home_select_musics_menu_add_to_playlist), onClick = onClickAddToPlayList)
+        BottomSheetMenuItem(icon = NcsIcons.PlaylistAdd, label = stringResource(R.string.home_select_musics_menu_add_to_queue), onClick = onClickAddToQueue)
     }
 }
 
@@ -421,5 +409,17 @@ fun SearchAppBarQueryPreview() {
                 updateSearchQuery = {}
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        SelectMusicMenuBottomSheetContent(
+            onClickPlayNow = {},
+            onClickAddToPlayList = {},
+            onClickAddToQueue = {}
+        )
     }
 }

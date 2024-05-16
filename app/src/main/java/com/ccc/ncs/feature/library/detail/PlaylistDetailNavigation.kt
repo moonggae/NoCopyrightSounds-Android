@@ -15,7 +15,10 @@ private const val PLAYLIST_DETAIL_ROUTE = "$PLAYLIST_DETAIL_BASE_ROUTE?$PLAYLIST
 fun NavController.navigateToPlaylistDetail(playlistId: UUID) =
     navigate("$PLAYLIST_DETAIL_BASE_ROUTE?$PLAYLIST_DETAIL_ID_ARG=$playlistId")
 
-fun NavGraphBuilder.playlistDetailScreen() {
+fun NavGraphBuilder.playlistDetailScreen(
+    onBack: () -> Unit,
+    navigateToEditPlaylist: (UUID) -> Unit
+) {
     composable(
         route = PLAYLIST_DETAIL_ROUTE,
         arguments = listOf(
@@ -25,6 +28,9 @@ fun NavGraphBuilder.playlistDetailScreen() {
             }
         )
     ) {
-        PlaylistDetailRoute()
+        PlaylistDetailRoute(
+            onBack = onBack,
+            onClickModifyName = navigateToEditPlaylist
+        )
     }
 }
