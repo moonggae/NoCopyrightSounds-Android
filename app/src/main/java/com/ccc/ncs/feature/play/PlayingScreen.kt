@@ -9,13 +9,13 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -31,9 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 
 
@@ -62,11 +64,7 @@ fun PlayingScreen(
         Log.d("TAG", "PlayingScreen - music: ${music}")
     }
 
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val imageMaxSize = screenWidth - (16.dp * 2)
-
-
-    Column(
+    Row(
         modifier = modifier.then(
             Modifier
                 .fillMaxWidth()
@@ -77,29 +75,50 @@ fun PlayingScreen(
                     reverseDirection = true
                 )
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-        )
+        ),
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            playerUiState.currentMusic?.coverUrl?.let { url ->
-                AsyncImage(
-                    model = url,
-                    contentDescription = null,
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier
-                        .padding(horizontal = (16.dp * draggableState.percentage))
-                        .heightIn(0.dp, imageMaxSize),
+        playerUiState.currentMusic?.coverUrl?.let { url ->
+            Column(
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                PlayingScreenCoverImage(
+                    url = url,
+                    draggableStatePercentage = draggableState.percentage
                 )
             }
 
+        }
+
+        Row(
+            modifier = modifier.fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = NcsIcons.Play,
                 contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
                     .clickable(onClick = onPlay)
             )
         }
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun PlayingScreenCoverImage(
+    modifier: Modifier = Modifier,
+    url: String,
+    draggableStatePercentage: Float
+) {
+    val horizontalPadding = 16.dp
+
+    AsyncImage(
+        model = url,
+        placeholder = painterResource(R.drawable.ncs_cover),
+        contentDescription = null,
+        contentScale = ContentScale.FillHeight,
+        modifier = modifier.padding(horizontal = (horizontalPadding * draggableStatePercentage))
+    )
 }
 
 private enum class SwipeAnchors {

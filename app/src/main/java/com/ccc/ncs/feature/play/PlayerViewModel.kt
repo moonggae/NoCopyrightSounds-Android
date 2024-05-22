@@ -58,6 +58,7 @@ class PlayerViewModel @Inject constructor(
                             is PlayerUiState.Loading -> {
                                 val musicIndex = playerRepository.musicIndex.first() ?: 0
                                 val position = playerRepository.position.first() ?: 0
+                                playerController.prepare(playlist.musics, musicIndex, position)
                                 PlayerUiState.Success(
                                     playlist = playlist,
                                     currentIndex = musicIndex,
@@ -77,6 +78,9 @@ class PlayerViewModel @Inject constructor(
                 _playerUiState
                     .takeIf { it.value is PlayerUiState.Success }
                     ?.update {
+                        playerRepository.updateMusicIndex(playbackState.currentIndex)
+                        playerRepository.updatePosition(playbackState.position)
+
                         (it as PlayerUiState.Success).copy(
                             isPlaying = playbackState.isPlaying,
                             currentIndex = playbackState.currentIndex,
@@ -87,14 +91,9 @@ class PlayerViewModel @Inject constructor(
                             speed = playbackState.speed
                         )
                     }
-                if (playbackState.isPlaying && playbackState.currentIndex != -1) {
-                    playerRepository.updateMusicIndex(playbackState.currentIndex)
-                    playerRepository.updatePosition(playbackState.position)
-                }
             }
         }
     }
-
 
     fun playPause() {
         playerController.playPause()

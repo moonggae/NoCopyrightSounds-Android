@@ -29,11 +29,9 @@ internal class PlaybackStateListener @Inject constructor(
             playbackStateManager.flow
                 .map { it.isPlaying }
                 .collectLatest { isPlaying ->
-                    if (isPlaying) {
-                        while (true) {
-                            updatePlayState()
-                            delay(400.milliseconds)
-                        }
+                    while (true) {
+                        updatePlayState()
+                        delay(400.milliseconds)
                     }
                 }
         }
