@@ -4,11 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.PlayListRepository
+import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.playback.PlayerController
+import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -20,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaylistDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val playlistRepository: PlayListRepository
+    private val playlistRepository: PlayListRepository,
+    private val playerController: PlayerController,
+    private val playerRepository: PlayerRepository
 ) : ViewModel() {
     val playListUiState: StateFlow<PlaylistDetailUiState> = savedStateHandle.getStateFlow(PLAYLIST_DETAIL_ID_ARG, "")
         .flatMapLatest { id ->
@@ -41,9 +47,24 @@ class PlaylistDetailViewModel @Inject constructor(
         )
 
     fun updateMusicList(playlistId: UUID, musicList: List<Music>) {
-        playListUiState
         viewModelScope.launch {
             playlistRepository.setPlayListMusics(playlistId, musicList)
+        }
+    }
+
+    fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
+        viewModelScope.launch {
+            playListUiState
+                .value
+                .takeIf { it is PlaylistDetailUiState.Success }
+                ?.let {
+                    val playlist = (it as PlaylistDetailUiState.Success).playlist
+                    if (playlist.id == playerRepository.playlist.first()?.id) {
+                        val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
+                        updateMusicList(playlist.id, reorderedMusicList)
+                        playerController.moveMediaItem(prevIndex, currentIndex)
+                    }
+                }
         }
     }
 

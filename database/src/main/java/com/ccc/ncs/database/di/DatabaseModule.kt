@@ -2,6 +2,7 @@ package com.ccc.ncs.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ccc.ncs.database.MIGRATION_1_2_AddIsUserCreatedPlaylistColumn
 import com.ccc.ncs.database.NcsDatabase
 import dagger.Module
 import dagger.Provides
@@ -21,5 +22,7 @@ object DatabaseModule {
         context,
         NcsDatabase::class.java,
         "ncs-database"
-    ).build()
+    )
+        .addMigrations(MIGRATION_1_2_AddIsUserCreatedPlaylistColumn)
+        .build()
 }

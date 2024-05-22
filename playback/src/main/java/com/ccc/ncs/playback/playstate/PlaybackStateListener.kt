@@ -1,8 +1,8 @@
 package com.ccc.ncs.playback.playstate
 
+import android.util.Log
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
-import androidx.media3.common.VideoSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -40,10 +40,12 @@ internal class PlaybackStateListener @Inject constructor(
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
+        Log.d("TAG", "PlaybackStateListener - onPlaybackStateChanged")
         updatePlayState()
     }
 
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+        Log.d("TAG", "PlaybackStateListener - onPlayWhenReadyChanged")
         updatePlayState()
     }
 
@@ -52,20 +54,20 @@ internal class PlaybackStateListener @Inject constructor(
         newPosition: Player.PositionInfo,
         reason: Int
     ) {
+        Log.d("TAG", "PlaybackStateListener - onPositionDiscontinuity")
         updatePlayState()
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
+        Log.d("TAG", "PlaybackStateListener - onIsPlayingChanged")
         updatePlayState()
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+        Log.d("TAG", "PlaybackStateListener - onPlaybackParametersChanged")
         updatePlayState()
     }
 
-    override fun onVideoSizeChanged(videoSize: VideoSize) {
-        updatePlayState()
-    }
 
     private fun updatePlayState() {
         val playbackState = player.playbackState
@@ -75,14 +77,12 @@ internal class PlaybackStateListener @Inject constructor(
                 player.playWhenReady -> true
                 else -> false
             },
-            hasPrevious = player.currentMediaItemIndex == 0 && player.hasPreviousMediaItem(),
+            currentIndex = player.currentMediaItemIndex,
+            hasPrevious = player.hasPreviousMediaItem(),
             hasNext = player.hasNextMediaItem(),
             position = player.contentPosition,
             duration = player.duration,
             speed = player.playbackParameters.speed,
-            aspectRatio = with(player.videoSize) {
-                if (height == 0 || width == 0) 16F / 9F else width * pixelWidthHeightRatio / height
-            },
             title = player.currentMediaItem?.mediaMetadata?.title?.toString(),
             artist = player.currentMediaItem?.mediaMetadata?.artist?.toString(),
             artworkUri = player.currentMediaItem?.mediaMetadata?.artworkUri

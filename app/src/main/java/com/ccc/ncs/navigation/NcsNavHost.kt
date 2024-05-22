@@ -15,13 +15,15 @@ import com.ccc.ncs.feature.menu.menuScreen
 import com.ccc.ncs.feature.search.backFromSearch
 import com.ccc.ncs.feature.search.navigateToSearch
 import com.ccc.ncs.feature.search.searchScreen
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.ui.NcsAppState
 
 @Composable
 fun NcsNavHost(
     appState: NcsAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = HOME_ROUTE
+    startDestination: String = HOME_ROUTE,
+    onPlayMusics: (List<Music>) -> Unit
 ) {
     val navController = appState.navController
 
@@ -30,7 +32,10 @@ fun NcsNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        homeScreen(onMoveToSearchScreen = { navController.navigateToSearch(it) })
+        homeScreen(
+            onMoveToSearchScreen = { navController.navigateToSearch(it) },
+            onPlayMusics = onPlayMusics
+        )
         artistScreen()
         libraryScreen(
             navigateToEdit = navController::navigateToEditPlaylist,

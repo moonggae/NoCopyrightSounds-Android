@@ -34,6 +34,7 @@ dependencies {
     implementation(project(":model"))
     implementation(project(":network"))
     implementation(project(":database"))
+    implementation(project(":datastore"))
     testImplementation(project(":database-test"))
     androidTestImplementation(project(":network"))
 

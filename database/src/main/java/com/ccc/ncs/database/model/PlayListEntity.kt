@@ -9,5 +9,6 @@ import java.util.UUID
 data class PlayListEntity(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
-    val name: String
+    val name: String,
+    val isUserCreated: Boolean
 )

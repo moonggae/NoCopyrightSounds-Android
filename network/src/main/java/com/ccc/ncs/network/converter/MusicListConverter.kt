@@ -52,7 +52,7 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
             dataUrl = titleTag.attribute("data-url").value,
             artistDetailUrl = WEB_URL + artistDetailUrl,
             coverThumbnailUrl = titleTag.attribute("data-cover").value,
-            coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "325x325"),
+            coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "1000x0"),
             detailUrl = WEB_URL + (row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: ""),
             releaseDate = releaseDate,
             genres = genres.toSet(),

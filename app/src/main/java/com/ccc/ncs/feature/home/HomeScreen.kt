@@ -61,7 +61,8 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     onClickSearchBar: (String?) -> Unit,
-    searchQuery: String?
+    searchQuery: String?,
+    onPlayMusics: (List<Music>) -> Unit
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -78,7 +79,8 @@ fun HomeRoute(
         updateSearchMood = viewModel::onSearchMoodChanged,
         updateSelectMode = viewModel::updateSelectMode,
         updateSelectMusic = viewModel::updateSelectMusic,
-        onClickSearchBar = onClickSearchBar
+        onClickSearchBar = onClickSearchBar,
+        onPlayMusics = onPlayMusics
     )
 }
 
@@ -93,7 +95,8 @@ internal fun HomeScreen(
     updateSearchMood: (Mood?) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
     updateSelectMusic: (Music) -> Unit,
-    onClickSearchBar: (String?) -> Unit
+    onClickSearchBar: (String?) -> Unit,
+    onPlayMusics: (List<Music>) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -155,7 +158,7 @@ internal fun HomeScreen(
     SelectMusicMenuBottomSheet(
         show = showSelectMusicMenu,
         onDismissRequest = { showSelectMusicMenu = false },
-        onClickPlayNow = {},
+        onClickPlayNow = { onPlayMusics(homeUiState.selectedMusics) },
         onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
         onClickAddToQueue = {}
     )

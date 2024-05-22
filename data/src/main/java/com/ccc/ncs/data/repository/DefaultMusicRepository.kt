@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 import javax.inject.Inject
 
 internal class DefaultMusicRepository @Inject constructor(
@@ -50,6 +51,14 @@ internal class DefaultMusicRepository @Inject constructor(
             version = version
         )
     }.flow
+
+    override fun getMusics(musicIds: List<UUID>): Flow<List<Music>> = musicDao
+        .getMusics(musicIds)
+        .map {
+            it.map { musicWithGenreAndMood ->
+                musicWithGenreAndMood.asModel()
+            }
+        }
 
     override suspend fun initGenreAndMood() {
         val (genres, moods) = network.getAllGenreAndMood()

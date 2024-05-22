@@ -5,6 +5,7 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 interface MusicRepository {
     fun getSearchResultStream(
@@ -13,6 +14,8 @@ interface MusicRepository {
         moodId: Int? = null,
         version: String? = null
     ): Flow<PagingData<Music>>
+
+    fun getMusics(musicIds: List<UUID>): Flow<List<Music>>
 
     suspend fun initGenreAndMood()
 

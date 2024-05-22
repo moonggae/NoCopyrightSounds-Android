@@ -55,6 +55,7 @@ fun NcsNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        content = content
+        content = content,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer
     )
 }

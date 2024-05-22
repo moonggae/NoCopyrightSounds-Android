@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,12 +27,6 @@ class LibraryViewModel @Inject constructor(
             initialValue = PlayListUiState.Loading,
             started = SharingStarted.WhileSubscribed(5000)
         )
-
-    fun addPlayList(name: String) {
-        viewModelScope.launch {
-            playListRepository.insertPlayList(name)
-        }
-    }
 
     companion object {
         private const val TAG = "LibraryViewModel"

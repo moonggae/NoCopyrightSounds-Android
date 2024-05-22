@@ -2,13 +2,9 @@ package com.ccc.ncs.playback
 
 import android.content.ComponentName
 import android.content.Context
-import android.util.Log
-import androidx.media3.common.C
-import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.playback.session.PlaybackService
 import com.ccc.ncs.playback.session.asMediaItem
 import kotlinx.coroutines.CoroutineScope
@@ -68,6 +64,10 @@ class PlayerController @Inject constructor(
         controller.play()
     }
 
+    fun moveMediaItem(currentIndex: Int, newIndex: Int) = executeAfterPrepare { controller ->
+        controller.moveMediaItem(currentIndex, newIndex)
+    }
+
     fun playPause() = executeAfterPrepare { controller ->
         if (controller.isPlaying) {
             controller.pause()
@@ -80,12 +80,9 @@ class PlayerController @Inject constructor(
         controller.setPlaybackSpeed(speed)
     }
 
-    fun setPlayList(playList: PlayList) = executeAfterPrepare { controller ->
-        controller.setMediaItems(
-            playList.musics.map { it.asMediaItem() },
-            C.INDEX_UNSET,
-            C.TIME_UNSET
-        )
+    fun playMusics(musics: List<Music>) = executeAfterPrepare { controller ->
+        controller.setMediaItems(musics.map { it.asMediaItem() })
+
         controller.prepare()
         controller.play()
     }

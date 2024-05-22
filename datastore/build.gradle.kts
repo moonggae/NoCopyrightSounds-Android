@@ -2,11 +2,10 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.ccc.ncs.playback"
+    namespace = "com.ccc.ncs.datastore"
     compileSdk = 34
 
     defaultConfig {
@@ -32,12 +31,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":model"))
-    implementation(project(":data"))
-
     implementation(libs.androidx.core.ktx)
-    implementation(libs.coroutines.guava)
+    implementation(libs.datastore.preferences)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.bundles.media3)
 }

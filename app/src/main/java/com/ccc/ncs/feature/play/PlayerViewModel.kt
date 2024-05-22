@@ -2,12 +2,17 @@ package com.ccc.ncs.feature.play
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ccc.ncs.data.repository.PlayListRepository
+import com.ccc.ncs.data.repository.PlayerRepository
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,24 +20,77 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val playerController: PlayerController,
-): ViewModel() {
-    private val _playerUiState =
-        MutableStateFlow<PlayerUiState>(PlayerUiState.Loading)
+    private val playerRepository: PlayerRepository,
+    private val playlistRepository: PlayListRepository
+) : ViewModel() {
+    private val _playerUiState: MutableStateFlow<PlayerUiState> = MutableStateFlow(PlayerUiState.Loading)
     val playerUiState: StateFlow<PlayerUiState> = _playerUiState
+//    private val playbackState: StateFlow<PlaybackState> = playbackStateManager.flow
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5000),
+//            initialValue = PlaybackState()
+//        )
 
+//    private val playList = playerRepository.playlist
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5000),
+//            initialValue = null
+//        )
 
     init {
+        observePlaylistState()
+        observePlaybackState()
+    }
+
+    private fun observePlaylistState() {
         viewModelScope.launch {
-            playbackStateManager.flow.collect {
-                _playerUiState.value = PlayerUiState.Success(
-                    it.isPlaying,
-                    it.hasPrevious,
-                    it.hasNext,
-                    it.position,
-                    it.duration,
-                    it.speed,
-                    it.aspectRatio
-                )
+            playerRepository.playlist.collect { playlist ->
+                if (playlist != null) {
+                    _playerUiState.update { playerState ->
+                        when (playerState) {
+                            is PlayerUiState.Success -> {
+                                playerState.copy(
+                                    playlist = playlist
+                                )
+                            }
+                            is PlayerUiState.Loading -> {
+                                val musicIndex = playerRepository.musicIndex.first() ?: 0
+                                val position = playerRepository.position.first() ?: 0
+                                PlayerUiState.Success(
+                                    playlist = playlist,
+                                    currentIndex = musicIndex,
+                                    position = position
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observePlaybackState() {
+        viewModelScope.launch {
+            playbackStateManager.flow.collect { playbackState ->
+                _playerUiState
+                    .takeIf { it.value is PlayerUiState.Success }
+                    ?.update {
+                        (it as PlayerUiState.Success).copy(
+                            isPlaying = playbackState.isPlaying,
+                            currentIndex = playbackState.currentIndex,
+                            hasPrevious = playbackState.hasPrevious,
+                            hasNext = playbackState.hasNext,
+                            position = playbackState.position,
+                            duration = playbackState.duration,
+                            speed = playbackState.speed
+                        )
+                    }
+                if (playbackState.isPlaying && playbackState.currentIndex != -1) {
+                    playerRepository.updateMusicIndex(playbackState.currentIndex)
+                    playerRepository.updatePosition(playbackState.position)
+                }
             }
         }
     }
@@ -54,5 +112,37 @@ class PlayerViewModel @Inject constructor(
         playerController.setPosition(position)
     }
 
-    fun setPlayList(playList: PlayList) = playerController.setPlayList(playList)
+    fun playPlayList(playList: PlayList) {
+        viewModelScope.launch {
+            playerRepository.setPlaylist(playList.id)
+            playerController.playMusics(playList.musics)
+        }
+    }
+
+    fun playMusics(musics: List<Music>) {
+        viewModelScope.launch {
+            val playlist = playlistRepository.getAutoGeneratedPlayList().copy(musics = musics)
+            playlistRepository.setPlayListMusics(playListId = playlist.id, musics = playlist.musics)
+            playPlayList(playlist)
+        }
+    }
+}
+
+sealed interface PlayerUiState {
+    data object Loading : PlayerUiState
+    data class Success(
+        val playlist: PlayList,
+        val isPlaying: Boolean = false,
+        val currentIndex: Int = -1,
+        val hasPrevious: Boolean = false,
+        val hasNext: Boolean = false,
+        val position: Long = 0,
+        val duration: Long = 0,
+        val speed: Float = 1f,
+    ) : PlayerUiState {
+        val currentMusic: Music?
+            get() =
+                if (currentIndex == -1) null
+                else playlist.musics.getOrNull(currentIndex)
+    }
 }

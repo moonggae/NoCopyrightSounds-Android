@@ -43,7 +43,7 @@ class EditPlaylistViewModel @Inject constructor(
 
     fun addPlaylist(name: String) {
         viewModelScope.launch {
-            playlistRepository.insertPlayList(name)
+            playlistRepository.insertPlayList(name, true)
         }
     }
 

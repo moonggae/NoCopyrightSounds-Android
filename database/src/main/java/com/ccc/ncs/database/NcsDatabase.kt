@@ -3,6 +3,8 @@ package com.ccc.ncs.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
@@ -29,7 +31,7 @@ import com.ccc.ncs.database.util.InstantConverter
         PlayListMusicCrossRef::class,
         RecentSearchQueryEntity::class
     ],
-    version = 1
+    version = 2
 )
 @TypeConverters(
     InstantConverter::class,
@@ -40,4 +42,10 @@ abstract class NcsDatabase : RoomDatabase() {
     abstract fun musicDao(): MusicDao
     abstract fun playListDao(): PlayListDao
     abstract fun recentSearchQueryDao(): RecentSearchQueryDao
+}
+
+val MIGRATION_1_2_AddIsUserCreatedPlaylistColumn = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE play_list ADD COLUMN isUserCreated INTEGER NOT NULL DEFAULT 1")
+    }
 }

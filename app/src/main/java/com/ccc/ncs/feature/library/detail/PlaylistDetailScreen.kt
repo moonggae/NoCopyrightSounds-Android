@@ -51,6 +51,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.mockMusics
+import com.ccc.ncs.util.swap
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.UUID
@@ -72,7 +73,7 @@ fun PlaylistDetailRoute(
             PlaylistDetailScreen(
                 modifier = modifier,
                 playlist = uiState.playlist,
-                onMusicOrderChanged = { viewModel.updateMusicList(uiState.playlist.id, it) },
+                onMusicOrderChanged = viewModel::updateMusicOrder,
                 onBack = onBack,
                 onClickModifyName = { onClickModifyName(uiState.playlist.id) },
                 onDeletePlaylist = {
@@ -88,7 +89,7 @@ fun PlaylistDetailRoute(
 internal fun PlaylistDetailScreen(
     modifier: Modifier = Modifier,
     playlist: PlayList,
-    onMusicOrderChanged: (List<Music>) -> Unit,
+    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
     onBack: () -> Unit,
     onClickModifyName: () -> Unit,
     onDeletePlaylist: () -> Unit
@@ -153,27 +154,19 @@ internal fun PlaylistDetailScreen(
     )
 }
 
-fun <T> List<T>.swap(index1: Int, index2: Int): List<T> {
-    return this.toMutableList().apply {
-        val tmp = this[index1]
-        this[index1] = this[index2]
-        this[index2] = tmp
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDetailMusicList(
     modifier: Modifier = Modifier,
     musics: List<Music>,
-    onMusicOrderChanged: (List<Music>) -> Unit
+    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit
 ) {
     var currentMusics by remember { mutableStateOf(musics) }
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         currentMusics = currentMusics.swap(from.index, to.index)
-        onMusicOrderChanged(currentMusics)
+        onMusicOrderChanged(from.index, to.index)
     }
 
     LazyColumn(
@@ -326,7 +319,7 @@ fun PlaylistDetailContentPreview() {
                     name = "My Playlist",
                     musics = mockMusics
                 ),
-                onMusicOrderChanged = {},
+                onMusicOrderChanged = {_, _ ->},
                 onBack = {},
                 onClickModifyName = {},
                 onDeletePlaylist = {}

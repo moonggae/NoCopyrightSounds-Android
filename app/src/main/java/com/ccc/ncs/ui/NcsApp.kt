@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -32,16 +33,20 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.feature.play.PlayerUiState
+import com.ccc.ncs.feature.play.PlayerViewModel
 import com.ccc.ncs.feature.play.PlayingScreen
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
 
 @Composable
 fun NcsApp(
-    appState: NcsAppState
+    appState: NcsAppState,
+    playerViewModel: PlayerViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var playingScreenHeightWeight by remember { mutableFloatStateOf(0f) }
+    val playerUiState by playerViewModel.playerUiState.collectAsStateWithLifecycle()
 
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     HandleOfflineStatus(isOffline, snackbarHostState)
@@ -66,15 +71,20 @@ fun NcsApp(
                 .padding(padding)
         ) {
             Row(Modifier.fillMaxSize()) {
-                NcsNavHost(appState = appState)
+                NcsNavHost(
+                    appState = appState,
+                    onPlayMusics = playerViewModel::playMusics,
+                )
             }
 
-            if (appState.currentTopLevelDestination != null) {
+            if (appState.currentTopLevelDestination != null && playerUiState is PlayerUiState.Success) {
                 PlayingScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     onUpdateScreenSize = { percentage ->
                         playingScreenHeightWeight = percentage
-                    }
+                    },
+                    playerUiState = playerUiState as PlayerUiState.Success,
+                    onPlay = playerViewModel::playPause
                 )
             }
         }
