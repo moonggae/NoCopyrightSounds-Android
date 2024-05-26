@@ -25,19 +25,6 @@ class PlayerViewModel @Inject constructor(
 ) : ViewModel() {
     private val _playerUiState: MutableStateFlow<PlayerUiState> = MutableStateFlow(PlayerUiState.Loading)
     val playerUiState: StateFlow<PlayerUiState> = _playerUiState
-//    private val playbackState: StateFlow<PlaybackState> = playbackStateManager.flow
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000),
-//            initialValue = PlaybackState()
-//        )
-
-//    private val playList = playerRepository.playlist
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000),
-//            initialValue = null
-//        )
 
     init {
         observePlaylistState()

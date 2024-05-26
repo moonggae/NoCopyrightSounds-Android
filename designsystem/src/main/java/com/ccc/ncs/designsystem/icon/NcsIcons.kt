@@ -18,9 +18,12 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.SkipPrevious
 
 object NcsIcons {
     val Home = Icons.Rounded.Home
@@ -34,6 +37,9 @@ object NcsIcons {
 
     val Close = Icons.Rounded.Close
     val Play = Icons.Filled.PlayArrow
+    val Pause = Icons.Rounded.Pause
+    val SkipNext = Icons.Rounded.SkipNext
+    val SkipPrevious = Icons.Rounded.SkipPrevious
     val Search = Icons.Rounded.Search
     val ArrowDropDown = Icons.Filled.ArrowDropDown
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
