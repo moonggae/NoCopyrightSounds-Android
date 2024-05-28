@@ -154,11 +154,15 @@ internal fun HomeScreen(
             )
         }
     }
-    
+
     SelectMusicMenuBottomSheet(
         show = showSelectMusicMenu,
         onDismissRequest = { showSelectMusicMenu = false },
-        onClickPlayNow = { onPlayMusics(homeUiState.selectedMusics) },
+        onClickPlayNow = {
+            onPlayMusics(homeUiState.selectedMusics)
+            showSelectMusicMenu = false
+            updateSelectMode(false)
+        },
         onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
         onClickAddToQueue = {}
     )
@@ -210,8 +214,16 @@ fun SelectMusicMenuBottomSheetContent(
             .padding(horizontal = 24.dp)
     ) {
         BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = stringResource(R.string.home_select_musics_menu_play_now), onClick = onClickPlayNow)
-        BottomSheetMenuItem(icon = NcsIcons.BookmarkAdd, label = stringResource(R.string.home_select_musics_menu_add_to_playlist), onClick = onClickAddToPlayList)
-        BottomSheetMenuItem(icon = NcsIcons.PlaylistAdd, label = stringResource(R.string.home_select_musics_menu_add_to_queue), onClick = onClickAddToQueue)
+        BottomSheetMenuItem(
+            icon = NcsIcons.BookmarkAdd,
+            label = stringResource(R.string.home_select_musics_menu_add_to_playlist),
+            onClick = onClickAddToPlayList
+        )
+        BottomSheetMenuItem(
+            icon = NcsIcons.PlaylistAdd,
+            label = stringResource(R.string.home_select_musics_menu_add_to_queue),
+            onClick = onClickAddToQueue
+        )
     }
 }
 
@@ -368,7 +380,6 @@ fun CustomFlowRow(
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
