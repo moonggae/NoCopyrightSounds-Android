@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.play
 
+import android.view.MotionEvent
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -9,9 +10,11 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,27 +24,42 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
+import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.util.conditional
 
 
@@ -55,6 +73,7 @@ fun PlayingScreen(
     onPlay: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
+    onSeekTo: (position: Long) -> Unit
 ) {
     val maxHeight = calculateScreenHeight()
     val draggableState = rememberDraggableState(
@@ -82,71 +101,41 @@ fun PlayingScreen(
         playerUiState.currentMusic?.let { music ->
             Column {
                 Row(Modifier.weight(1f)) {
-                    PlayingScreenCoverImage(
-                        url = music.coverUrl,
-                        draggableStatePercentage = draggableState.percentage
-                    )
+                    Column {
+                        PlayingScreenCoverImage(
+                            url = music.coverUrl,
+                            draggableStatePercentage = draggableState.percentage
+                        )
 
-                    Column(
-                        verticalArrangement = Arrangement.Center,
+                        PlayingScreenBigContent(
+                            music = music,
+                            draggableStatePercentage = draggableState.percentage,
+                            uiState = playerUiState,
+                            onSeekTo = onSeekTo,
+                            modifier = Modifier
+                                .padding(top = 12.dp)
+                        )
+                    }
+
+                    PlayingScreenSmallInformation(
+                        title = music.title,
+                        artist = music.artist,
                         modifier = Modifier
                             .padding(start = 16.dp)
                             .fillMaxHeight()
-                            .weight(1f),
-                    ) {
-                        Text(
-                            text = music.title,
-                            style = ListItemCardDefaults.listItemCardStyle.medium().labelTextStyle.copy(
-                                color = ListItemCardDefaults.listItemCardColors().labelColor,
-                            ),
-                            modifier = Modifier.basicMarquee()
-                        )
-                        Text(
-                            text = music.artist,
-                            style = ListItemCardDefaults.listItemCardStyle.medium().descriptionTextStyle.copy(
-                                color = ListItemCardDefaults.listItemCardColors().descriptionColor,
-                            ),
-                            modifier = Modifier.basicMarquee()
-                        )
-                    }
+                            .weight(1f)
+                    )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    PlayingScreenSmallController(
+                        isPlaying = playerUiState.isPlaying,
+                        hasNext = playerUiState.hasNext,
+                        onPlay = onPlay,
+                        onSkipPrevious = onSkipPrevious,
+                        onSkipNext = onSkipNext,
                         modifier = Modifier
                             .fillMaxHeight()
-                            .padding(horizontal = 12.dp),
-                    ) {
-                        Icon(
-                            imageVector = NcsIcons.SkipPrevious,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(28.dp)
-                                .clickable(onClick = onSkipPrevious)
-                        )
-
-                        Icon(
-                            imageVector = if (playerUiState.isPlaying) NcsIcons.Pause else NcsIcons.Play,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable(onClick = onPlay)
-                                .size(28.dp)
-                        )
-
-                        Icon(
-                            imageVector = NcsIcons.SkipNext,
-                            contentDescription = null,
-                            tint = if (playerUiState.hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(28.dp)
-                                .conditional(playerUiState.hasNext) {
-                                    clickable(onClick = onSkipNext)
-                                }
-                        )
-                    }
+                            .padding(horizontal = 12.dp)
+                    )
                 }
 
                 LinearProgressIndicator(
@@ -159,6 +148,7 @@ fun PlayingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
+                        .alpha(1 - draggableState.percentage)
                 )
             }
 
@@ -167,7 +157,125 @@ fun PlayingScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun PlayingScreenBigContent(
+    modifier: Modifier = Modifier,
+    draggableStatePercentage: Float,
+    music: Music,
+    uiState: PlayerUiState.Success,
+    onSeekTo: (position: Long) -> Unit
+) {
+    val localConfiguration = LocalConfiguration.current
+    val screenWidth = remember { localConfiguration.screenWidthDp.dp }
+
+    Column(
+        modifier = modifier
+            .widthIn(0.dp, screenWidth)
+            .width(screenWidth * draggableStatePercentage * 2),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = music.title,
+            style = NcsTypography.Music.Title.large.copy(
+                color = ListItemCardDefaults.listItemCardColors().labelColor,
+            ),
+            modifier = Modifier.basicMarquee()
+        )
+
+        Text(
+            text = music.artist,
+            style = NcsTypography.Music.Artist.large.copy(
+                color = ListItemCardDefaults.listItemCardColors().descriptionColor,
+            ),
+            modifier = Modifier.basicMarquee()
+        )
+
+        PlayerProgressBar(
+            duration = uiState.duration,
+            position = uiState.position,
+            onSeekTo = onSeekTo,
+            modifier = Modifier.padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp
+            )
+        )
+    }
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun PlayerProgressBar(
+    modifier: Modifier = Modifier,
+    duration: Long,
+    position: Long,
+    onSeekTo: (position: Long) -> Unit
+) {
+    var isUserDrag by remember { mutableStateOf(false) }
+    var currentPosition by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(position) {
+        if (!isUserDrag) {
+            currentPosition = position.toFloat()
+        }
+    }
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val colors = SliderDefaults.colors(
+        activeTrackColor = MaterialTheme.colorScheme.onSurface,
+        thumbColor = MaterialTheme.colorScheme.onSurface
+    )
+
+    val thumbSize = 16.dp
+    val trackHeight = 4.dp
+
+    Slider(
+        value = currentPosition,
+        onValueChange = { value ->
+            if (isUserDrag) {
+                currentPosition = value
+            }
+        },
+        valueRange = 0f..duration.coerceAtLeast(0).toFloat(),
+        onValueChangeFinished = {
+            if (isUserDrag) {
+                onSeekTo(currentPosition.toLong())
+                isUserDrag = false
+            }
+        },
+        colors = colors,
+        interactionSource = interactionSource,
+        thumb = {
+            SliderDefaults.Thumb(
+                interactionSource = interactionSource,
+                colors = colors,
+                thumbSize = DpSize(thumbSize, thumbSize)
+            )
+        },
+        track = { sliderState ->
+            Column {
+                SliderDefaults.Track(
+                    sliderState = sliderState,
+                    colors = colors,
+                    enabled = true,
+                )
+                Spacer(Modifier.height(trackHeight).fillMaxWidth())
+            }
+        },
+        modifier = modifier
+            .height(16.dp)
+            .pointerInteropFilter { event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    isUserDrag = true
+                }
+                false
+            }
+    )
+}
+
 @Composable
 private fun PlayingScreenCoverImage(
     modifier: Modifier = Modifier,
@@ -183,6 +291,80 @@ private fun PlayingScreenCoverImage(
         contentScale = ContentScale.FillHeight,
         modifier = modifier.padding(horizontal = (horizontalPadding * draggableStatePercentage))
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun PlayingScreenSmallInformation(
+    modifier: Modifier = Modifier,
+    title: String,
+    artist: String
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier,
+    ) {
+        Text(
+            text = title,
+            style = ListItemCardDefaults.listItemCardStyle.medium().labelTextStyle.copy(
+                color = ListItemCardDefaults.listItemCardColors().labelColor,
+            ),
+            modifier = Modifier.basicMarquee()
+        )
+        Text(
+            text = artist,
+            style = ListItemCardDefaults.listItemCardStyle.medium().descriptionTextStyle.copy(
+                color = ListItemCardDefaults.listItemCardColors().descriptionColor,
+            ),
+            modifier = Modifier.basicMarquee()
+        )
+    }
+}
+
+@Composable
+fun PlayingScreenSmallController(
+    modifier: Modifier = Modifier,
+    isPlaying: Boolean,
+    hasNext: Boolean,
+    onPlay: () -> Unit,
+    onSkipPrevious: () -> Unit,
+    onSkipNext: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = NcsIcons.SkipPrevious,
+            contentDescription = null,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(28.dp)
+                .clickable(onClick = onSkipPrevious)
+        )
+
+        Icon(
+            imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
+            contentDescription = null,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onPlay)
+                .size(28.dp)
+        )
+
+        Icon(
+            imageVector = NcsIcons.SkipNext,
+            contentDescription = null,
+            tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(28.dp)
+                .conditional(hasNext) {
+                    clickable(onClick = onSkipNext)
+                }
+        )
+    }
 }
 
 private enum class SwipeAnchors {

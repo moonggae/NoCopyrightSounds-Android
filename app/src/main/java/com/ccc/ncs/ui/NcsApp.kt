@@ -86,7 +86,8 @@ fun NcsApp(
                     playerUiState = playerUiState as PlayerUiState.Success,
                     onPlay = playerViewModel::playPause,
                     onSkipPrevious = playerViewModel::prev,
-                    onSkipNext = playerViewModel::next
+                    onSkipNext = playerViewModel::next,
+                    onSeekTo = playerViewModel::setPosition
                 )
             }
         }
