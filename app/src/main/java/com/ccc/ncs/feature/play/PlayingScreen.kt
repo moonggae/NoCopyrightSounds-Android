@@ -61,6 +61,7 @@ import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.util.conditional
+import com.ccc.ncs.util.toTimestampMMSS
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -232,48 +233,73 @@ fun PlayerProgressBar(
     val thumbSize = 16.dp
     val trackHeight = 4.dp
 
-    Slider(
-        value = currentPosition,
-        onValueChange = { value ->
-            if (isUserDrag) {
-                currentPosition = value
-            }
-        },
-        valueRange = 0f..duration.coerceAtLeast(0).toFloat(),
-        onValueChangeFinished = {
-            if (isUserDrag) {
-                onSeekTo(currentPosition.toLong())
-                isUserDrag = false
-            }
-        },
-        colors = colors,
-        interactionSource = interactionSource,
-        thumb = {
-            SliderDefaults.Thumb(
-                interactionSource = interactionSource,
-                colors = colors,
-                thumbSize = DpSize(thumbSize, thumbSize)
-            )
-        },
-        track = { sliderState ->
-            Column {
-                SliderDefaults.Track(
-                    sliderState = sliderState,
-                    colors = colors,
-                    enabled = true,
-                )
-                Spacer(Modifier.height(trackHeight).fillMaxWidth())
-            }
-        },
-        modifier = modifier
-            .height(16.dp)
-            .pointerInteropFilter { event ->
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    isUserDrag = true
+    Column(modifier) {
+        Slider(
+            value = currentPosition,
+            onValueChange = { value ->
+                if (isUserDrag) {
+                    currentPosition = value
                 }
-                false
-            }
-    )
+            },
+            valueRange = 0f..duration.coerceAtLeast(0).toFloat(),
+            onValueChangeFinished = {
+                if (isUserDrag) {
+                    onSeekTo(currentPosition.toLong())
+                    isUserDrag = false
+                }
+            },
+            colors = colors,
+            interactionSource = interactionSource,
+            thumb = {
+                SliderDefaults.Thumb(
+                    interactionSource = interactionSource,
+                    colors = colors,
+                    thumbSize = DpSize(thumbSize, thumbSize)
+                )
+            },
+            track = { sliderState ->
+                Column {
+                    SliderDefaults.Track(
+                        sliderState = sliderState,
+                        colors = colors,
+                        enabled = true,
+                    )
+                    Spacer(
+                        Modifier
+                            .height(trackHeight)
+                            .fillMaxWidth())
+                }
+            },
+            modifier = Modifier
+                .height(16.dp)
+                .pointerInteropFilter { event ->
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        isUserDrag = true
+                    }
+                    false
+                }
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = position.toTimestampMMSS(),
+                style = NcsTypography.Player.timestamp.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+            Text(
+                text = duration.toTimestampMMSS(),
+                style = NcsTypography.Player.timestamp.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+        }
+    }
 }
 
 @Composable

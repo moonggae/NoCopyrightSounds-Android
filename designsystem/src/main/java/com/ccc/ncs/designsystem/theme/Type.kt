@@ -11,6 +11,7 @@ object NcsTypography {
     val Search = SearchTypography
     val Label = LabelTypography
     val Dialog = DialogTypography
+    val Player = PlayerTypography
 
     object MusicTypography {
         val Title = TitleTypography
@@ -141,6 +142,15 @@ object NcsTypography {
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.5.sp
+        )
+    }
+
+    object PlayerTypography {
+        val timestamp = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 20.sp,
+            letterSpacing = 0.1.sp
         )
     }
 }

@@ -17,3 +17,9 @@ fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier
         this
     }
 }
+
+fun Long.toTimestampMMSS(): String {
+    val minutes = this / 1000 / 60
+    val seconds = this / 1000 % 60
+    return "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+}
