@@ -12,12 +12,15 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -51,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -58,10 +62,14 @@ import coil.compose.AsyncImage
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
+import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toTimestampMMSS
+import java.util.UUID
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -74,7 +82,9 @@ fun PlayingScreen(
     onPlay: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
-    onSeekTo: (position: Long) -> Unit
+    onSeekTo: (position: Long) -> Unit,
+    onShuffle: (Boolean) -> Unit,
+    onRepeat: (Boolean) -> Unit,
 ) {
     val maxHeight = calculateScreenHeight()
     val draggableState = rememberDraggableState(
@@ -102,21 +112,34 @@ fun PlayingScreen(
         playerUiState.currentMusic?.let { music ->
             Column {
                 Row(Modifier.weight(1f)) {
-                    Column {
-                        PlayingScreenCoverImage(
-                            url = music.coverUrl,
-                            draggableStatePercentage = draggableState.percentage
-                        )
+//                    Column {
+//                        PlayingScreenCoverImage(
+//                            url = music.coverUrl,
+//                            draggableStatePercentage = draggableState.percentage
+//                        )
+//
+//                        PlayingScreenBigContent(
+//                            music = music,
+//                            draggableStatePercentage = draggableState.percentage,
+//                            uiState = playerUiState,
+//                            onSeekTo = onSeekTo,
+//                            modifier = Modifier
+//                                .padding(top = 12.dp)
+//                        )
+//                    }
 
-                        PlayingScreenBigContent(
-                            music = music,
-                            draggableStatePercentage = draggableState.percentage,
-                            uiState = playerUiState,
-                            onSeekTo = onSeekTo,
-                            modifier = Modifier
-                                .padding(top = 12.dp)
-                        )
-                    }
+                    PlayingScreenBigContent(
+                        music = music,
+                        draggableStatePercentage = draggableState.percentage,
+                        uiState = playerUiState,
+                        onSeekTo = onSeekTo,
+                        onPlay = onPlay,
+                        onSkipPrevious = onSkipPrevious,
+                        onSkipNext = onSkipNext,
+                        onShuffle = onShuffle,
+                        onRepeat = onRepeat,
+                        modifier = Modifier
+                    )
 
                     PlayingScreenSmallInformation(
                         title = music.title,
@@ -159,53 +182,155 @@ fun PlayingScreen(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayingScreenBigContent(
     modifier: Modifier = Modifier,
     draggableStatePercentage: Float,
     music: Music,
     uiState: PlayerUiState.Success,
-    onSeekTo: (position: Long) -> Unit
+    onSeekTo: (position: Long) -> Unit,
+    onPlay: () -> Unit,
+    onSkipPrevious: () -> Unit,
+    onSkipNext: () -> Unit,
+    onShuffle: (Boolean) -> Unit,
+    onRepeat: (Boolean) -> Unit,
 ) {
     val localConfiguration = LocalConfiguration.current
     val screenWidth = remember { localConfiguration.screenWidthDp.dp }
 
-    Column(
-        modifier = modifier
-            .widthIn(0.dp, screenWidth)
-            .width(screenWidth * draggableStatePercentage * 2),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = music.title,
-            style = NcsTypography.Music.Title.large.copy(
-                color = ListItemCardDefaults.listItemCardColors().labelColor,
-            ),
-            modifier = Modifier.basicMarquee()
+    Column(modifier) {
+        PlayingScreenCoverImage(
+            url = music.coverUrl,
+            draggableStatePercentage = draggableStatePercentage
         )
 
-        Text(
-            text = music.artist,
-            style = NcsTypography.Music.Artist.large.copy(
-                color = ListItemCardDefaults.listItemCardColors().descriptionColor,
-            ),
-            modifier = Modifier.basicMarquee()
-        )
-
-        PlayerProgressBar(
-            duration = uiState.duration,
-            position = uiState.position,
-            onSeekTo = onSeekTo,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 16.dp
+        Column(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .widthIn(0.dp, screenWidth)
+                .width(screenWidth * draggableStatePercentage * 2),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = music.title,
+                style = NcsTypography.Music.Title.large.copy(
+                    color = ListItemCardDefaults.listItemCardColors().labelColor,
+                ),
+                modifier = Modifier.basicMarquee()
             )
-        )
+
+            Text(
+                text = music.artist,
+                style = NcsTypography.Music.Artist.large.copy(
+                    color = ListItemCardDefaults.listItemCardColors().descriptionColor,
+                ),
+                modifier = Modifier.basicMarquee()
+            )
+
+            PlayerProgressBar(
+                duration = uiState.duration,
+                position = uiState.position,
+                onSeekTo = onSeekTo,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 16.dp
+                )
+            )
+
+            PlayingScreenBigController(
+                isPlaying = uiState.isPlaying,
+                hasNext = uiState.hasNext,
+                isOnRepeat = uiState.isRepeatOn,
+                isOnShuffle = uiState.isShuffleOn,
+                onPlay = onPlay,
+                onSkipPrevious = onSkipPrevious,
+                onSkipNext = onSkipNext,
+                onShuffle = onShuffle,
+                onRepeat = onRepeat,
+                modifier = Modifier.padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = 20.dp
+                )
+            )
+        }
     }
 }
 
+
+@Composable
+fun PlayingScreenBigController(
+    modifier: Modifier = Modifier,
+    isPlaying: Boolean,
+    isOnShuffle: Boolean,
+    isOnRepeat: Boolean,
+    hasNext: Boolean,
+    onPlay: () -> Unit,
+    onSkipPrevious: () -> Unit,
+    onSkipNext: () -> Unit,
+    onShuffle: (Boolean) -> Unit,
+    onRepeat: (Boolean) -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Icon(
+            imageVector = NcsIcons.Shuffle,
+            contentDescription = null,
+            tint = if (isOnShuffle) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(32.dp)
+                .clickable(onClick = { onShuffle(!isOnShuffle) })
+        )
+
+        Icon(
+            imageVector = NcsIcons.SkipPrevious,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(32.dp)
+                .clickable(onClick = onSkipPrevious)
+        )
+
+        Icon(
+            imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onPlay)
+                .size(40.dp)
+        )
+
+        Icon(
+            imageVector = NcsIcons.SkipNext,
+            contentDescription = null,
+            tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(32.dp)
+                .conditional(hasNext) {
+                    clickable(onClick = onSkipNext)
+                }
+        )
+
+        Icon(
+            imageVector = NcsIcons.Repeat,
+            contentDescription = null,
+            tint = if (isOnRepeat) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(32.dp)
+                .clickable(onClick = { onRepeat(!isOnRepeat) })
+        )
+    }
+}
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -315,7 +440,9 @@ private fun PlayingScreenCoverImage(
         placeholder = painterResource(R.drawable.ncs_cover),
         contentDescription = null,
         contentScale = ContentScale.FillHeight,
-        modifier = modifier.padding(horizontal = (horizontalPadding * draggableStatePercentage))
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(horizontal = (horizontalPadding * draggableStatePercentage))
     )
 }
 
@@ -366,7 +493,7 @@ fun PlayingScreenSmallController(
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(28.dp)
+                .size(20.dp)
                 .clickable(onClick = onSkipPrevious)
         )
 
@@ -385,7 +512,7 @@ fun PlayingScreenSmallController(
             tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(28.dp)
+                .size(20.dp)
                 .conditional(hasNext) {
                     clickable(onClick = onSkipNext)
                 }
@@ -433,4 +560,38 @@ private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDragga
             )
         }
     }
+}
+
+
+@Preview
+@Composable
+fun PlayingScreenBigContentPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        Box(modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxSize()
+        ) {
+            PlayingScreenBigContent(
+                draggableStatePercentage = 1f,
+                music = mockMusics.first(),
+                uiState = PlayerUiState.Success(
+                    isPlaying = true,
+                    currentIndex = 0,
+                    playlist = PlayList(
+                        id = UUID.randomUUID(),
+                        name = "My Playlist",
+                        musics = mockMusics
+                    )
+                ),
+                onSeekTo = {},
+                onPlay = {},
+                onSkipPrevious = {},
+                onSkipNext = {},
+                onShuffle = {},
+                onRepeat = {},
+                modifier = modifier
+            )
+        }
+    }
+
 }

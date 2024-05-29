@@ -2,6 +2,7 @@ package com.ccc.ncs.playback
 
 import android.content.ComponentName
 import android.content.Context
+import android.util.Log
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.ccc.ncs.model.Music
@@ -50,6 +51,18 @@ class PlayerController @Inject constructor(
 
     fun rewind() = executeAfterPrepare { controller ->
         controller.seekBack()
+    }
+
+    fun setRepeatMode(isOn: Boolean) = executeAfterPrepare { controller ->
+        when (isOn) {
+            true -> controller.setRepeatMode(MediaController.REPEAT_MODE_ALL)
+            false -> controller.setRepeatMode(MediaController.REPEAT_MODE_OFF)
+        }
+    }
+
+    fun setShuffleMode(isOn: Boolean) = executeAfterPrepare { controller ->
+        Log.d("TAG", "PlayerController - setShuffleMode - isOn: ${isOn}")
+        controller.setShuffleModeEnabled(isOn)
     }
 
     fun previous() = executeAfterPrepare { controller ->

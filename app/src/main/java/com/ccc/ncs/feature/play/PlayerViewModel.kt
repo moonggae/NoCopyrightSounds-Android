@@ -75,7 +75,9 @@ class PlayerViewModel @Inject constructor(
                             hasNext = playbackState.hasNext,
                             position = playbackState.position,
                             duration = playbackState.duration,
-                            speed = playbackState.speed
+                            speed = playbackState.speed,
+                            isShuffleOn = playbackState.isShuffleEnabled,
+                            isRepeatOn = playbackState.isRepeatMode
                         )
                     }
             }
@@ -96,6 +98,14 @@ class PlayerViewModel @Inject constructor(
 
     fun setPosition(position: Long) {
         playerController.setPosition(position)
+    }
+
+    fun setShuffleMode(isOn: Boolean) {
+        playerController.setShuffleMode(isOn)
+    }
+
+    fun setRepeatMode(isOn: Boolean) {
+        playerController.setRepeatMode(isOn)
     }
 
     fun playPlayList(playList: PlayList) {
@@ -125,6 +135,8 @@ sealed interface PlayerUiState {
         val position: Long = 0,
         val duration: Long = 0,
         val speed: Float = 1f,
+        val isShuffleOn: Boolean = false,
+        val isRepeatOn: Boolean = false,
     ) : PlayerUiState {
         val currentMusic: Music?
             get() =

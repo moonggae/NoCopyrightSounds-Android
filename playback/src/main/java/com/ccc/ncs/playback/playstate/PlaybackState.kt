@@ -14,4 +14,6 @@ data class PlaybackState(
     val title: String? = null,
     val artist: String? = null,
     val artworkUri: Uri? = null,
+    val isShuffleEnabled: Boolean = false,
+    val isRepeatMode: Boolean = false
 )

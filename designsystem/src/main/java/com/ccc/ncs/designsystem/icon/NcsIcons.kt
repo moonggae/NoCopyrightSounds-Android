@@ -4,11 +4,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.PeopleOutline
+import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.Shuffle
+import androidx.compose.material.icons.outlined.SkipNext
+import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.BookmarkAdd
 import androidx.compose.material.icons.rounded.Close
@@ -18,12 +23,9 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LibraryMusic
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.SkipNext
-import androidx.compose.material.icons.rounded.SkipPrevious
 
 object NcsIcons {
     val Home = Icons.Rounded.Home
@@ -37,9 +39,11 @@ object NcsIcons {
 
     val Close = Icons.Rounded.Close
     val Play = Icons.Filled.PlayArrow
-    val Pause = Icons.Rounded.Pause
-    val SkipNext = Icons.Rounded.SkipNext
-    val SkipPrevious = Icons.Rounded.SkipPrevious
+    val Pause = Icons.Filled.Pause
+    val SkipNext = Icons.Outlined.SkipNext
+    val SkipPrevious = Icons.Outlined.SkipPrevious
+    val Shuffle = Icons.Outlined.Shuffle
+    val Repeat = Icons.Outlined.Repeat
     val Search = Icons.Rounded.Search
     val ArrowDropDown = Icons.Filled.ArrowDropDown
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack

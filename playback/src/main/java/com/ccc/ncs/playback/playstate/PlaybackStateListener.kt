@@ -69,6 +69,7 @@ internal class PlaybackStateListener @Inject constructor(
 
     private fun updatePlayState() {
         val playbackState = player.playbackState
+        Log.d("TAG", "PlaybackStateListener - updatePlayState - player.shuffleModeEnabled: ${player.shuffleModeEnabled}")
         playbackStateManager.playbackState = PlaybackState(
             isPlaying = when {
                 playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE -> false
@@ -83,7 +84,12 @@ internal class PlaybackStateListener @Inject constructor(
             speed = player.playbackParameters.speed,
             title = player.currentMediaItem?.mediaMetadata?.title?.toString(),
             artist = player.currentMediaItem?.mediaMetadata?.artist?.toString(),
-            artworkUri = player.currentMediaItem?.mediaMetadata?.artworkUri
+            artworkUri = player.currentMediaItem?.mediaMetadata?.artworkUri,
+            isShuffleEnabled = player.shuffleModeEnabled,
+            isRepeatMode = when (player.repeatMode) {
+                Player.REPEAT_MODE_ALL -> true
+                else -> false
+            }
         )
     }
 }

@@ -87,7 +87,9 @@ fun NcsApp(
                     onPlay = playerViewModel::playPause,
                     onSkipPrevious = playerViewModel::prev,
                     onSkipNext = playerViewModel::next,
-                    onSeekTo = playerViewModel::setPosition
+                    onSeekTo = playerViewModel::setPosition,
+                    onRepeat = playerViewModel::setRepeatMode,
+                    onShuffle = playerViewModel::setShuffleMode
                 )
             }
         }
