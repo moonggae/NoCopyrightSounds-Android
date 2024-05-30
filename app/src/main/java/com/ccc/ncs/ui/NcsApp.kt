@@ -89,7 +89,11 @@ fun NcsApp(
                     onSkipNext = playerViewModel::next,
                     onSeekTo = playerViewModel::setPosition,
                     onRepeat = playerViewModel::setRepeatMode,
-                    onShuffle = playerViewModel::setShuffleMode
+                    onShuffle = playerViewModel::setShuffleMode,
+                    onClose = {
+                        playerViewModel.closePlayer()
+                        playingScreenHeightWeight = 0f
+                    }
                 )
             }
         }

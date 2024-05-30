@@ -2,7 +2,6 @@ package com.ccc.ncs.playback
 
 import android.content.ComponentName
 import android.content.Context
-import android.util.Log
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.ccc.ncs.model.Music
@@ -61,7 +60,6 @@ class PlayerController @Inject constructor(
     }
 
     fun setShuffleMode(isOn: Boolean) = executeAfterPrepare { controller ->
-        Log.d("TAG", "PlayerController - setShuffleMode - isOn: ${isOn}")
         controller.setShuffleModeEnabled(isOn)
     }
 
@@ -99,10 +97,14 @@ class PlayerController @Inject constructor(
     }
 
     fun playMusics(musics: List<Music>) = executeAfterPrepare { controller ->
-        controller.setMediaItems(musics.map { it.asMediaItem() })
-
+        controller.setMediaItems(musics.map { it.asMediaItem() }, 0, 0)
         controller.prepare()
         controller.play()
+    }
+
+    fun stop() = executeAfterPrepare { controller ->
+        controller.stop()
+        controller.release()
     }
 
     private inline fun executeAfterPrepare(crossinline action: suspend (MediaController) -> Unit) {

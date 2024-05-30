@@ -34,14 +34,16 @@ class PlayerViewModel @Inject constructor(
     private fun observePlaylistState() {
         viewModelScope.launch {
             playerRepository.playlist.collect { playlist ->
-                if (playlist != null) {
-                    _playerUiState.update { playerState ->
+                when (playlist == null) {
+                    true -> _playerUiState.update { PlayerUiState.Loading }
+                    false -> _playerUiState.update { playerState ->
                         when (playerState) {
                             is PlayerUiState.Success -> {
                                 playerState.copy(
                                     playlist = playlist
                                 )
                             }
+
                             is PlayerUiState.Loading -> {
                                 val musicIndex = playerRepository.musicIndex.first() ?: 0
                                 val position = playerRepository.position.first() ?: 0
@@ -62,24 +64,24 @@ class PlayerViewModel @Inject constructor(
     private fun observePlaybackState() {
         viewModelScope.launch {
             playbackStateManager.flow.collect { playbackState ->
-                _playerUiState
-                    .takeIf { it.value is PlayerUiState.Success }
-                    ?.update {
-                        playerRepository.updateMusicIndex(playbackState.currentIndex)
-                        playerRepository.updatePosition(playbackState.position)
+                _playerUiState.update {
+                    if (it is PlayerUiState.Loading) return@update it
 
-                        (it as PlayerUiState.Success).copy(
-                            isPlaying = playbackState.isPlaying,
-                            currentIndex = playbackState.currentIndex,
-                            hasPrevious = playbackState.hasPrevious,
-                            hasNext = playbackState.hasNext,
-                            position = playbackState.position,
-                            duration = playbackState.duration,
-                            speed = playbackState.speed,
-                            isShuffleOn = playbackState.isShuffleEnabled,
-                            isRepeatOn = playbackState.isRepeatMode
-                        )
-                    }
+                    playerRepository.updateMusicIndex(playbackState.currentIndex)
+                    playerRepository.updatePosition(playbackState.position)
+
+                    (it as PlayerUiState.Success).copy(
+                        isPlaying = playbackState.isPlaying,
+                        currentIndex = playbackState.currentIndex,
+                        hasPrevious = playbackState.hasPrevious,
+                        hasNext = playbackState.hasNext,
+                        position = playbackState.position,
+                        duration = playbackState.duration,
+                        speed = playbackState.speed,
+                        isShuffleOn = playbackState.isShuffleEnabled,
+                        isRepeatOn = playbackState.isRepeatMode
+                    )
+                }
             }
         }
     }
@@ -112,6 +114,14 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             playerRepository.setPlaylist(playList.id)
             playerController.playMusics(playList.musics)
+        }
+    }
+
+    fun closePlayer() {
+        viewModelScope.launch {
+            _playerUiState.update { PlayerUiState.Loading }
+            playerController.stop()
+            playerRepository.clear()
         }
     }
 

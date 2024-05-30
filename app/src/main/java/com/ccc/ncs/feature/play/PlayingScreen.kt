@@ -23,12 +23,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -85,6 +88,7 @@ fun PlayingScreen(
     onSeekTo: (position: Long) -> Unit,
     onShuffle: (Boolean) -> Unit,
     onRepeat: (Boolean) -> Unit,
+    onClose: () -> Unit
 ) {
     val maxHeight = calculateScreenHeight()
     val draggableState = rememberDraggableState(
@@ -112,22 +116,6 @@ fun PlayingScreen(
         playerUiState.currentMusic?.let { music ->
             Column {
                 Row(Modifier.weight(1f)) {
-//                    Column {
-//                        PlayingScreenCoverImage(
-//                            url = music.coverUrl,
-//                            draggableStatePercentage = draggableState.percentage
-//                        )
-//
-//                        PlayingScreenBigContent(
-//                            music = music,
-//                            draggableStatePercentage = draggableState.percentage,
-//                            uiState = playerUiState,
-//                            onSeekTo = onSeekTo,
-//                            modifier = Modifier
-//                                .padding(top = 12.dp)
-//                        )
-//                    }
-
                     PlayingScreenBigContent(
                         music = music,
                         draggableStatePercentage = draggableState.percentage,
@@ -138,6 +126,7 @@ fun PlayingScreen(
                         onSkipNext = onSkipNext,
                         onShuffle = onShuffle,
                         onRepeat = onRepeat,
+                        onClose = onClose,
                         modifier = Modifier
                     )
 
@@ -175,8 +164,6 @@ fun PlayingScreen(
                         .alpha(1 - draggableState.percentage)
                 )
             }
-
-
         }
     }
 }
@@ -195,11 +182,47 @@ fun PlayingScreenBigContent(
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
     onRepeat: (Boolean) -> Unit,
+    onClose: () -> Unit
 ) {
     val localConfiguration = LocalConfiguration.current
     val screenWidth = remember { localConfiguration.screenWidthDp.dp }
 
-    Column(modifier) {
+    Column {
+        Column(modifier.heightIn(0.dp, (100.dp * draggableStatePercentage))) {
+            Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+
+            Row(
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 8.dp,
+                        top = 4.dp
+                    )
+                    .widthIn(0.dp, screenWidth)
+                    .width(screenWidth * draggableStatePercentage * 2),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    imageVector = NcsIcons.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = onClose)
+                )
+
+                Icon(
+                    imageVector = NcsIcons.MoreVertical,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = {})
+                )
+            }
+        }
+
         PlayingScreenCoverImage(
             url = music.coverUrl,
             draggableStatePercentage = draggableStatePercentage
@@ -392,7 +415,8 @@ fun PlayerProgressBar(
                     Spacer(
                         Modifier
                             .height(trackHeight)
-                            .fillMaxWidth())
+                            .fillMaxWidth()
+                    )
                 }
             },
             modifier = Modifier
@@ -567,9 +591,10 @@ private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDragga
 @Composable
 fun PlayingScreenBigContentPreview(modifier: Modifier = Modifier) {
     NcsTheme(darkTheme = true) {
-        Box(modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxSize()
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize()
         ) {
             PlayingScreenBigContent(
                 draggableStatePercentage = 1f,
@@ -589,9 +614,9 @@ fun PlayingScreenBigContentPreview(modifier: Modifier = Modifier) {
                 onSkipNext = {},
                 onShuffle = {},
                 onRepeat = {},
+                onClose = {},
                 modifier = modifier
             )
         }
     }
-
 }
