@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,6 +60,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Size
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
@@ -462,7 +465,11 @@ private fun PlayerScreenCoverImage(
     val horizontalPadding = 16.dp
 
     AsyncImage(
-        model = url,
+        model = ImageRequest
+            .Builder(LocalContext.current)
+            .data(url)
+            .size(Size.ORIGINAL)
+            .build(),
         placeholder = painterResource(R.drawable.ncs_cover),
         contentDescription = null,
         contentScale = ContentScale.FillHeight,
