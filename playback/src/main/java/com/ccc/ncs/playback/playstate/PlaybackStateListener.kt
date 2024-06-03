@@ -69,7 +69,6 @@ internal class PlaybackStateListener @Inject constructor(
 
     private fun updatePlayState() {
         val playbackState = player.playbackState
-        Log.d("TAG", "PlaybackStateListener - updatePlayState - player.shuffleModeEnabled: ${player.shuffleModeEnabled}")
         playbackStateManager.playbackState = PlaybackState(
             isPlaying = when {
                 playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE -> false

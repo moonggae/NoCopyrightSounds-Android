@@ -152,5 +152,12 @@ object NcsTypography {
             lineHeight = 20.sp,
             letterSpacing = 0.1.sp
         )
+
+        val bottomMenuText = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 20.sp,
+            letterSpacing = 0.1.sp
+        )
     }
 }
