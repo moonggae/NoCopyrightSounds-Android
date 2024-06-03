@@ -35,7 +35,7 @@ import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
-import com.ccc.ncs.feature.play.PlayingScreen
+import com.ccc.ncs.feature.play.PlayerScreen
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
 
@@ -78,7 +78,7 @@ fun NcsApp(
             }
 
             if (appState.currentTopLevelDestination != null && playerUiState is PlayerUiState.Success) {
-                PlayingScreen(
+                PlayerScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     onUpdateScreenSize = { percentage ->
                         playingScreenHeightWeight = percentage
