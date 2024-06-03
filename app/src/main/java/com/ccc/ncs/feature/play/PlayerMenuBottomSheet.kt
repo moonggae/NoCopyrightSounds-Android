@@ -82,7 +82,7 @@ fun PlayerMenuBottomSheet(
         sheetDragHandle = {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
                 divider = {},
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
@@ -110,7 +110,7 @@ fun PlayerMenuBottomSheet(
                             Text(
                                 text = tab.label,
                                 style = NcsTypography.PlayerTypography.bottomMenuText.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = draggableStatePercentage),
                                     textAlign = TextAlign.Center
                                 ),
                                 modifier = Modifier
@@ -122,8 +122,9 @@ fun PlayerMenuBottomSheet(
                 }
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        sheetShadowElevation = 0.dp,
+        sheetTonalElevation = 0.dp,
+        sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
         content = {}
     )
 }
