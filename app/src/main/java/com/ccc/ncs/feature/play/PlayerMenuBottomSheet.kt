@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.util.calculateScreenHeight
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +58,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlayerMenuBottomSheet(
     modifier: Modifier = Modifier,
-    draggableStatePercentage: Float
+    draggableStatePercentage: Float,
+    playlist: PlayList
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -111,7 +114,10 @@ fun PlayerMenuBottomSheet(
                 ) { index ->
                     Box(modifier = Modifier.alpha(menuSheetState.offsetProgress)) {
                         when (index) {
-                            PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView()
+                            PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView(
+                                playlist = playlist,
+                                onMusicOrderChanged = { _, _ -> }
+                            )
                             PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView()
                         }
                     }
@@ -241,24 +247,5 @@ fun rememberPlayerMenuSheetState(
             density = density,
             coroutineScope = coroutineScope
         )
-    }
-}
-
-
-@Composable
-fun PlayerMenuPlaylistTabView(
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "PlayerMenu Playlist TabView")
-    }
-}
-
-@Composable
-fun PlayerMenuLyricsTabView(
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "PlayerMenu Lyrics TabView")
     }
 }

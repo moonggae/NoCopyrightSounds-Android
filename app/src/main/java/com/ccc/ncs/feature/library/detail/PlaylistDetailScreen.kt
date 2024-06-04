@@ -44,6 +44,7 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.AlertDialog
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
+import com.ccc.ncs.designsystem.component.ListItemCardStyle
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
@@ -127,6 +128,7 @@ internal fun PlaylistDetailScreen(
                     vertical = 32.dp
                 )
                 .fillMaxWidth(),
+            playlistId = playlist.id,
             musics = playlist.musics,
             onMusicOrderChanged = onMusicOrderChanged
         )
@@ -158,10 +160,12 @@ internal fun PlaylistDetailScreen(
 @Composable
 fun PlaylistDetailMusicList(
     modifier: Modifier = Modifier,
+    playlistId: UUID? = null,
     musics: List<Music>,
+    cardStyle: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.small(),
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit
 ) {
-    var currentMusics by remember { mutableStateOf(musics) }
+    var currentMusics by remember(playlistId, musics.toSet()) { mutableStateOf(musics) }
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -181,7 +185,7 @@ fun PlaylistDetailMusicList(
                     label = item.title,
                     description = item.artist,
                     thumbnailPlaceholder = painterResource(R.drawable.ncs_cover),
-                    style = ListItemCardDefaults.listItemCardStyle.small(),
+                    style = cardStyle,
                     suffix = {
                         Icon(
                             imageVector = NcsIcons.Menu,

@@ -182,7 +182,8 @@ fun PlayerScreen(
     }
 
     PlayerMenuBottomSheet(
-        draggableStatePercentage = draggableState.percentage
+        draggableStatePercentage = draggableState.percentage,
+        playlist = playerUiState.playlist,
     )
 }
 
