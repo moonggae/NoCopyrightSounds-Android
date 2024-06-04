@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.play
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -61,6 +63,12 @@ fun PlayerMenuBottomSheet(
     )
 
     var selectedTabIndex by remember { mutableIntStateOf(PlayerBottomTabs.entries.first().index) }
+
+    BackHandler(enabled = menuSheetState.sheetState.bottomSheetState.targetValue == SheetValue.Expanded) {
+        scope.launch {
+            menuSheetState.sheetState.bottomSheetState.partialExpand()
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = menuSheetState.sheetState,

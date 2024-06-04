@@ -1,6 +1,7 @@
 package com.ccc.ncs.feature.play
 
 import android.view.MotionEvent
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -73,6 +76,7 @@ import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toTimestampMMSS
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -91,11 +95,19 @@ fun PlayerScreen(
     onRepeat: (Boolean) -> Unit,
     onClose: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     val maxHeight = calculateScreenHeight()
     val draggableState = rememberDraggableState(
         maxHeight = maxHeight,
         minHeight = minHeight
     )
+
+    BackHandler(enabled = draggableState.currentValue == SwipeAnchors.Big) {
+        scope.launch {
+            draggableState.animateTo(SwipeAnchors.Small)
+        }
+    }
 
     LaunchedEffect(draggableState.percentage) {
         onUpdateScreenSize(draggableState.percentage)
