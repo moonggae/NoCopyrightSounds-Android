@@ -1,6 +1,8 @@
 package com.ccc.ncs.feature.play
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +28,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +52,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PlayerMenuBottomSheet(
     modifier: Modifier = Modifier,
@@ -62,12 +69,29 @@ fun PlayerMenuBottomSheet(
         screenHeight = calculateScreenHeight()
     )
 
-    var selectedTabIndex by remember { mutableIntStateOf(PlayerBottomTabs.entries.first().index) }
+    val tabPagerState = rememberPagerState(
+        initialPage = PlayerMenuTabs.entries.first().index,
+        pageCount = PlayerMenuTabs.entries::count
+    )
+
+    var selectedTabIndex by remember { mutableIntStateOf(PlayerMenuTabs.entries.first().index) }
 
     BackHandler(enabled = menuSheetState.sheetState.bottomSheetState.targetValue == SheetValue.Expanded) {
         scope.launch {
             menuSheetState.sheetState.bottomSheetState.partialExpand()
         }
+    }
+
+    LaunchedEffect(selectedTabIndex) {
+        scope.launch {
+            if (PlayerMenuTabs.entries.any { it.index == selectedTabIndex }) {
+                tabPagerState.animateScrollToPage(selectedTabIndex)
+            }
+        }
+    }
+
+    LaunchedEffect(tabPagerState.targetPage) {
+        selectedTabIndex = tabPagerState.targetPage
     }
 
     BottomSheetScaffold(
@@ -78,12 +102,20 @@ fun PlayerMenuBottomSheet(
                     .heightIn(0.dp, menuSheetState.bodyHeight)
                     .fillMaxSize()
             ) {
-                Text(text = "text")
-                Text(text = "text")
-                Text(text = "text")
-                Text(text = "text")
-                Text(text = "text")
-                Text(text = "text")
+                HorizontalPager(
+                    state = tabPagerState,
+                    flingBehavior = PagerDefaults.flingBehavior(
+                        state = tabPagerState,
+                        snapPositionalThreshold = 0.3f
+                    )
+                ) { index ->
+                    Box(modifier = Modifier.alpha(menuSheetState.offsetProgress)) {
+                        when (index) {
+                            PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView()
+                            PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView()
+                        }
+                    }
+                }
             }
         },
         sheetPeekHeight = (menuSheetState.sheetPeekHeight) * draggableStatePercentage,
@@ -104,7 +136,7 @@ fun PlayerMenuBottomSheet(
                         sheetDragHandleHeight = with(density) { it.height.toDp() }
                     }
             ) {
-                PlayerBottomTabs.entries.forEach { tab ->
+                PlayerMenuTabs.entries.forEach { tab ->
                     Tab(
                         selected = selectedTabIndex == tab.index,
                         onClick = {
@@ -137,7 +169,7 @@ fun PlayerMenuBottomSheet(
     )
 }
 
-enum class PlayerBottomTabs(
+enum class PlayerMenuTabs(
     val index: Int,
     val label: String
 ) {
@@ -209,5 +241,24 @@ fun rememberPlayerMenuSheetState(
             density = density,
             coroutineScope = coroutineScope
         )
+    }
+}
+
+
+@Composable
+fun PlayerMenuPlaylistTabView(
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(text = "PlayerMenu Playlist TabView")
+    }
+}
+
+@Composable
+fun PlayerMenuLyricsTabView(
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(text = "PlayerMenu Lyrics TabView")
     }
 }
