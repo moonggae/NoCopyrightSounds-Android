@@ -113,6 +113,12 @@ fun PlayerScreen(
         onUpdateScreenSize(draggableState.percentage)
     }
 
+    val onClickSmallScreen: () -> Unit = {
+        scope.launch {
+            draggableState.animateTo(SwipeAnchors.Big)
+        }
+    }
+
 
     Row(
         modifier = modifier.then(
@@ -125,6 +131,9 @@ fun PlayerScreen(
                     reverseDirection = true
                 )
                 .background(MaterialTheme.colorScheme.surfaceContainer)
+                .conditional(draggableState.currentValue == SwipeAnchors.Small) {
+                    clickable(onClick = onClickSmallScreen)
+                }
         ),
     ) {
         playerUiState.currentMusic?.let { music ->
