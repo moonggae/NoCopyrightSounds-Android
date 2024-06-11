@@ -2,6 +2,7 @@ package com.ccc.ncs.feature.play
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.Music
@@ -9,9 +10,12 @@ import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +25,8 @@ class PlayerViewModel @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val playerController: PlayerController,
     private val playerRepository: PlayerRepository,
-    private val playlistRepository: PlayListRepository
+    private val playlistRepository: PlayListRepository,
+    private val lyricsRepository: LyricsRepository
 ) : ViewModel() {
     private val _playerUiState: MutableStateFlow<PlayerUiState> = MutableStateFlow(PlayerUiState.Loading)
     val playerUiState: StateFlow<PlayerUiState> = _playerUiState
@@ -29,6 +34,30 @@ class PlayerViewModel @Inject constructor(
     init {
         observePlaylistState()
         observePlaybackState()
+        observeLyrics()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeLyrics() {
+        viewModelScope.launch {
+            playerUiState.flatMapLatest { state ->
+                when (state) {
+                    is PlayerUiState.Success -> {
+                        val musicTitle = state.currentMusic?.title
+                        if (musicTitle == null) flowOf(null)
+                        else lyricsRepository.getLyrics(musicTitle)
+                    }
+
+                    is PlayerUiState.Loading -> flowOf(null)
+                }
+            }.collect { lyrics ->
+                _playerUiState.update {
+                    if (it is PlayerUiState.Success) {
+                        it.copy(lyrics = lyrics)
+                    } else { it }
+                }
+            }
+        }
     }
 
     private fun observePlaylistState() {
@@ -147,6 +176,7 @@ sealed interface PlayerUiState {
         val speed: Float = 1f,
         val isShuffleOn: Boolean = false,
         val isRepeatOn: Boolean = false,
+        val lyrics: String? = null
     ) : PlayerUiState {
         val currentMusic: Music?
             get() =

@@ -35,7 +35,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -47,6 +46,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.util.calculateScreenHeight
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +59,9 @@ import kotlinx.coroutines.launch
 fun PlayerMenuBottomSheet(
     modifier: Modifier = Modifier,
     draggableStatePercentage: Float,
-    playlist: PlayList
+    playlist: PlayList,
+    currentMusic: Music?,
+    lyrics: String?
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -118,7 +120,10 @@ fun PlayerMenuBottomSheet(
                                 playlist = playlist,
                                 onMusicOrderChanged = { _, _ -> }
                             )
-                            PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView()
+                            PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView(
+                                lyrics = lyrics,
+                                title = currentMusic?.title,
+                            )
                         }
                     }
                 }

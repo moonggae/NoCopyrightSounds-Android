@@ -22,6 +22,9 @@
     <string name="playlist_detail_menu_modify_name">Modify name</string>
     <string name="playlist_detail_menu_delete_playlist">Delete Playlist</string>
 
+    <string name="player_menu_lyrics_empty">There is no Lyrics</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[You can post the lyrics to click <annotation>here</annotation>]]></string>
+
     <string name="Genre">Genre</string>
     <string name="Mood">Mood</string>
     <string name="Delete">Delete</string>
