@@ -60,7 +60,10 @@ class PlaylistDetailViewModel @Inject constructor(
                 when (val state = _uiState.value) {
                     is PlaylistDetailUiState.Success -> {
                         if (state.playlist.id == playlist?.id) {
-                            state.copy(playingMusic = playlist.musics.getOrNull(musicIndex ?: 0))
+                            state.copy(
+                                playingMusic = playlist.musics.getOrNull(musicIndex ?: 0),
+                                isPlaying = true
+                            )
                         } else state
                     }
                     else -> state
@@ -92,6 +95,7 @@ sealed interface PlaylistDetailUiState {
     data object Fail : PlaylistDetailUiState
     data class Success(
         val playlist: PlayList,
+        val isPlaying: Boolean = false,
         val playingMusic: Music? = null
     ) : PlaylistDetailUiState
 }

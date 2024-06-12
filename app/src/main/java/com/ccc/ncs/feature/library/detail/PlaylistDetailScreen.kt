@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,7 +64,8 @@ fun PlaylistDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    onClickModifyName: (UUID) -> Unit
+    onClickModifyName: (UUID) -> Unit,
+    onPlay: (PlayList) -> Unit
 ) {
     val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -82,7 +84,9 @@ fun PlaylistDetailRoute(
                 onDeletePlaylist = {
                     viewModel.deletePlaylist(uiState.playlist.id)
                     onBack()
-                }
+                },
+                onPlay = { onPlay(uiState.playlist) },
+                isPlaying = uiState.isPlaying
             )
         }
     }
@@ -96,7 +100,9 @@ internal fun PlaylistDetailScreen(
     onBack: () -> Unit,
     onClickModifyName: () -> Unit,
     onDeletePlaylist: () -> Unit,
-    playingMusic: Music?
+    playingMusic: Music?,
+    onPlay: () -> Unit,
+    isPlaying: Boolean
 ) {
     var showMenuBottomSheet by remember { mutableStateOf(false) }
     var showDeleteAlertDialog by remember { mutableStateOf(false) }
@@ -121,7 +127,9 @@ internal fun PlaylistDetailScreen(
         PlaylistDetailContent(
             modifier = modifier,
             name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
-            coverUrl = playlist.musics.firstOrNull()?.coverUrl
+            coverUrl = playlist.musics.firstOrNull()?.coverUrl,
+            isPlaying = isPlaying,
+            onPlay = onPlay
         )
 
         PlaylistDetailMusicList(
@@ -211,7 +219,9 @@ fun PlaylistDetailMusicList(
 fun PlaylistDetailContent(
     modifier: Modifier = Modifier,
     name: String,
-    coverUrl: String?
+    coverUrl: String?,
+    onPlay: () -> Unit,
+    isPlaying: Boolean
 ) {
     val coverImage = if (coverUrl != null) rememberAsyncImagePainter(
         model = coverUrl,
@@ -221,16 +231,34 @@ fun PlaylistDetailContent(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = coverImage,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
+        Box(
+            Modifier
                 .padding(horizontal = 70.dp)
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(8.dp))
-        )
+        ) {
+            Image(
+                painter = coverImage,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+
+            if (!isPlaying) {
+                Icon(
+                    imageVector = NcsIcons.PlayCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                        .align(Alignment.Center)
+                        .padding(72.dp)
+                        .clip(CircleShape)
+                        .clickable(onClick = onPlay)
+                )
+            }
+        }
 
         Text(
             text = name,
@@ -339,7 +367,9 @@ fun PlaylistDetailContentPreview() {
                 onBack = {},
                 onClickModifyName = {},
                 onDeletePlaylist = {},
-                playingMusic = null
+                playingMusic = null,
+                onPlay = {},
+                isPlaying = true
             )
         }
     }

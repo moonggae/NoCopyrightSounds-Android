@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ccc.ncs.model.PlayList
 import java.util.UUID
 
 
@@ -17,7 +18,8 @@ fun NavController.navigateToPlaylistDetail(playlistId: UUID) =
 
 fun NavGraphBuilder.playlistDetailScreen(
     onBack: () -> Unit,
-    navigateToEditPlaylist: (UUID) -> Unit
+    navigateToEditPlaylist: (UUID) -> Unit,
+    onPlayPlaylist: (PlayList) -> Unit
 ) {
     composable(
         route = PLAYLIST_DETAIL_ROUTE,
@@ -30,7 +32,8 @@ fun NavGraphBuilder.playlistDetailScreen(
     ) {
         PlaylistDetailRoute(
             onBack = onBack,
-            onClickModifyName = navigateToEditPlaylist
+            onClickModifyName = navigateToEditPlaylist,
+            onPlay = onPlayPlaylist
         )
     }
 }

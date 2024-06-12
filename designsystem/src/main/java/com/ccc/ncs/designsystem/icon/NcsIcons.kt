@@ -25,6 +25,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.PlayCircleOutline
 import androidx.compose.material.icons.rounded.Search
 
 object NcsIcons {
@@ -52,6 +53,7 @@ object NcsIcons {
     val BookmarkAdd = Icons.Rounded.BookmarkAdd
     val PlaylistAdd = Icons.AutoMirrored.Rounded.PlaylistAdd
     val PlayCircle = Icons.Rounded.PlayCircle
+    val PlayCircleOutline = Icons.Rounded.PlayCircleOutline
     val Edit = Icons.Rounded.Edit
     val Delete = Icons.Rounded.Delete
 }
