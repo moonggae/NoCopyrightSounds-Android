@@ -28,5 +28,6 @@ data class PlayListWithMusics(
 fun PlayListWithMusics.asModel() = PlayList(
     id = playList.id,
     name = playList.name,
-    musics = musics.map { it.asModel() }
+    musics = musics.map { it.asModel() },
+    isUserCreated = playList.isUserCreated
 )

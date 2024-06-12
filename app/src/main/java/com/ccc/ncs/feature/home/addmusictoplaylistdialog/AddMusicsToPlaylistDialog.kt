@@ -107,12 +107,14 @@ fun AddMusicsToPlaylistDialogPreview(modifier: Modifier = Modifier) {
                 PlayList(
                     id = UUID.randomUUID(),
                     name = "PlayList 1",
-                    musics = listOf()
+                    musics = listOf(),
+                    isUserCreated = true
                 ),
                 PlayList(
                     id = UUID.randomUUID(),
                     name = "PlayList 2",
-                    musics = listOf()
+                    musics = listOf(),
+                    isUserCreated = true
                 )
             ),
             show = true,

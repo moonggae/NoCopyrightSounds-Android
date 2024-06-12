@@ -109,17 +109,20 @@ fun LibraryScreenPreview() {
                         PlayList(
                             id = UUID.randomUUID(),
                             name = "PlayList 1",
-                            musics = listOf()
+                            musics = listOf(),
+                            isUserCreated = true
                         ),
                         PlayList(
                             id = UUID.randomUUID(),
                             name = "PlayList 2",
-                            musics = listOf()
+                            musics = listOf(),
+                            isUserCreated = true
                         ),
                         PlayList(
                             id = UUID.randomUUID(),
                             name = "PlayList 3",
-                            musics = listOf()
+                            musics = listOf(),
+                            isUserCreated = true
                         )
                     )
                 ),

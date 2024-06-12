@@ -633,7 +633,8 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                     playlist = PlayList(
                         id = UUID.randomUUID(),
                         name = "My Playlist",
-                        musics = mockMusics
+                        musics = mockMusics,
+                        isUserCreated = true
                     )
                 ),
                 onSeekTo = {},

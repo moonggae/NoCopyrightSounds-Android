@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -47,7 +48,7 @@ fun PlayListCard(
                     .clip(RoundedCornerShape(4.dp))
             )
         },
-        label = item.name,
+        label = if (item.isUserCreated) item.name else stringResource(R.string.auto_generated_playlist_name),
         description = stringResource(R.string.songs_count, item.musics.size),
         modifier = Modifier
             .fillMaxWidth()
@@ -94,13 +95,20 @@ fun PlayListColumn(
     onClick: (PlayList) -> Unit,
     currentPlaylist: PlayList?,
 ) {
+    val sortedPlaylist = remember(playListItems) {
+        playListItems.sortedWith(
+            compareBy(PlayList::isUserCreated)
+                .thenBy(PlayList::name)
+        )
+    }
+
     LazyColumn(
         modifier = modifier
     ) {
-        items(count = playListItems.size) { index ->
+        items(count = sortedPlaylist.size) { index ->
             PlayListColumnItem(
-                playList = playListItems[index],
-                isPlaying = currentPlaylist?.id == playListItems[index].id,
+                playList = sortedPlaylist[index],
+                isPlaying = currentPlaylist?.id == sortedPlaylist[index].id,
                 onClick = onClick
             )
         }
@@ -161,7 +169,8 @@ fun PlayListPreview() {
             item = PlayList(
                 id = UUID.randomUUID(),
                 name = "PlayList",
-                musics = mockMusics
+                musics = mockMusics,
+                isUserCreated = true
             ),
             isPlaying = false,
             modifier = Modifier.background(MaterialTheme.colorScheme.surface)
@@ -181,17 +190,20 @@ fun PlayListsPreview() {
                 PlayList(
                     id = UUID.randomUUID(),
                     name = "PlayList 1",
-                    musics = mockMusics
+                    musics = mockMusics,
+                    isUserCreated = true
                 ),
                 PlayList(
                     id = UUID.randomUUID(),
                     name = "PlayList 2",
-                    musics = mockMusics
+                    musics = mockMusics,
+                    isUserCreated = true
                 ),
                 PlayList(
                     id = UUID.randomUUID(),
                     name = "PlayList 3",
-                    musics = mockMusics
+                    musics = mockMusics,
+                    isUserCreated = true
                 )
             ),
             onClick = {},

@@ -120,7 +120,7 @@ internal fun PlaylistDetailScreen(
 
         PlaylistDetailContent(
             modifier = modifier,
-            name = playlist.name,
+            name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
             coverUrl = playlist.musics.firstOrNull()?.coverUrl
         )
 
@@ -141,6 +141,7 @@ internal fun PlaylistDetailScreen(
 
     PlaylistDetailMenuBottomSheet(
         show = showMenuBottomSheet,
+        isUserCreated = playlist.isUserCreated,
         onDismissRequest = { showMenuBottomSheet = false },
         onClickModifyName = onClickModifyName,
         onClickDelete = { showDeleteAlertDialog = true }
@@ -283,10 +284,12 @@ fun PlaylistDetailMenuBottomSheet(
     onDismissRequest: () -> Unit,
     onClickModifyName: () -> Unit,
     onClickDelete: () -> Unit,
+    isUserCreated: Boolean,
 ) {
     if (show) {
         ModalBottomSheet(onDismissRequest = onDismissRequest) {
             PlaylistDetailMenuBottomSheetContent(
+                isUserCreated = isUserCreated,
                 onClickModifyName = onClickModifyName,
                 onClickDelete = onClickDelete
             )
@@ -299,6 +302,7 @@ fun PlaylistDetailMenuBottomSheetContent(
     modifier: Modifier = Modifier,
     onClickModifyName: () -> Unit,
     onClickDelete: () -> Unit,
+    isUserCreated: Boolean,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -306,7 +310,11 @@ fun PlaylistDetailMenuBottomSheetContent(
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
-        BottomSheetMenuItem(icon = NcsIcons.Edit, label = stringResource(R.string.playlist_detail_menu_modify_name), onClick = onClickModifyName)
+        BottomSheetMenuItem(
+            icon = NcsIcons.Edit,
+            label = stringResource(if (isUserCreated) R.string.playlist_detail_menu_modify_name else R.string.playlist_detail_menu_save_recent_playlist),
+            onClick = onClickModifyName
+        )
         BottomSheetMenuItem(icon = NcsIcons.Delete, label = stringResource(R.string.playlist_detail_menu_delete_playlist), onClick = onClickDelete)
     }
 }
@@ -324,7 +332,8 @@ fun PlaylistDetailContentPreview() {
                 playlist = PlayList(
                     id = UUID.randomUUID(),
                     name = "My Playlist",
-                    musics = mockMusics
+                    musics = mockMusics,
+                    isUserCreated = true
                 ),
                 onMusicOrderChanged = { _, _ -> },
                 onBack = {},
@@ -342,7 +351,8 @@ fun PlaylistDetailMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
     NcsTheme(darkTheme = true) {
         PlaylistDetailMenuBottomSheetContent(
             onClickModifyName = {},
-            onClickDelete = {}
+            onClickDelete = {},
+            isUserCreated = true
         )
     }
 }
