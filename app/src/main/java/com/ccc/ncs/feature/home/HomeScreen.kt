@@ -148,7 +148,11 @@ internal fun HomeScreen(
                 nestedScrollConnection = scrollBehavior.nestedScrollConnection,
                 updateSelectMusic = updateSelectMusic,
                 updateSelectMode = updateSelectMode,
-                onClickMore = {},
+                onClickMore = {
+                    updateSelectMode(true)
+                    updateSelectMusic(it)
+                    showSelectMusicMenu = true
+                },
                 state = listState,
                 isSelectMode = homeUiState.isSelectMode
             )

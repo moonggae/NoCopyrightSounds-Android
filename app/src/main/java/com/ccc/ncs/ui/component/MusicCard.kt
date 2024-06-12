@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -67,6 +68,7 @@ fun MusicCard(
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .size(28.dp)
+                        .clip(CircleShape)
                         .clickable { onClickMore(item) }
                 )
             }
