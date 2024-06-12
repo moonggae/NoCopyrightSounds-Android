@@ -73,9 +73,9 @@ class PlaylistDetailViewModel @Inject constructor(
         viewModelScope.launch {
             (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 val playlist = state.playlist
+                val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
+                playlistRepository.setPlayListMusics(playlist.id, reorderedMusicList)
                 if (playlist.id == playerRepository.playlist.first()?.id) {
-                    val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
-                    playlistRepository.setPlayListMusics(playlist.id, reorderedMusicList)
                     playerController.moveMediaItem(prevIndex, currentIndex)
                 }
             }
