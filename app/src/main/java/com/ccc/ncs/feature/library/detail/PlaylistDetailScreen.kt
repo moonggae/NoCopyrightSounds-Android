@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -315,12 +316,18 @@ fun PlaylistDetailMenuBottomSheet(
     isUserCreated: Boolean,
 ) {
     if (show) {
-        ModalBottomSheet(onDismissRequest = onDismissRequest) {
-            PlaylistDetailMenuBottomSheetContent(
-                isUserCreated = isUserCreated,
-                onClickModifyName = onClickModifyName,
-                onClickDelete = onClickDelete
-            )
+        ModalBottomSheet(
+            onDismissRequest = onDismissRequest,
+            windowInsets = WindowInsets(0)
+        ) {
+            Column {
+                PlaylistDetailMenuBottomSheetContent(
+                    isUserCreated = isUserCreated,
+                    onClickModifyName = onClickModifyName,
+                    onClickDelete = onClickDelete
+                )
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+            }
         }
     }
 }
