@@ -1,6 +1,5 @@
 package com.ccc.ncs.feature.library.detail
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,15 +67,10 @@ fun PlaylistDetailRoute(
 ) {
     val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(playListUiState) {
-        Log.d("TAG", "LaunchedEffect - playListUiState: ${playListUiState}")
-    }
-
     when (playListUiState) {
         is PlaylistDetailUiState.Loading -> {}
         is PlaylistDetailUiState.Fail -> {}
         is PlaylistDetailUiState.Success -> {
-            Log.d("TAG", "PlaylistDetailRoute - Success: ${"Success"}")
             val uiState = playListUiState as PlaylistDetailUiState.Success
             PlaylistDetailScreen(
                 modifier = modifier,
@@ -130,10 +123,6 @@ internal fun PlaylistDetailScreen(
             name = playlist.name,
             coverUrl = playlist.musics.firstOrNull()?.coverUrl
         )
-
-        LaunchedEffect(playingMusic?.id) {
-            Log.d("TAG", "PlaylistDetailScreen - playingMusic?.id: ${playingMusic?.id}")
-        }
 
         PlaylistDetailMusicList(
             modifier = Modifier
