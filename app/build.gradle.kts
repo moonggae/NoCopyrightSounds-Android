@@ -113,4 +113,5 @@ dependencies {
 
     implementation(libs.bundles.media3)
     implementation(libs.reorderable)
+    implementation(libs.lottie.compose)
 }

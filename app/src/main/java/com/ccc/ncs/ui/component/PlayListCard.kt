@@ -4,19 +4,21 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.theme.NcsTheme
@@ -30,19 +32,21 @@ import java.util.UUID
 fun PlayListCard(
     modifier: Modifier = Modifier,
     item: PlayList,
+    isPlaying: Boolean,
     onClick: (PlayList) -> Unit = {}
 ) {
-    val placeholder = painterResource(R.drawable.ncs_cover)
-
-    val thumbnail =
-        if (item.musics.isEmpty()) placeholder
-        else rememberAsyncImagePainter(
-            model = item.musics.first().coverThumbnailUrl,
-            placeholder = placeholder
-        )
-
     ListItemCard(
-        thumbnail = thumbnail,
+        prefix = {
+            PlayingMusicImage(
+                url = item.musics.firstOrNull()?.coverThumbnailUrl,
+                isPlaying = isPlaying,
+                placeholder = painterResource(R.drawable.ncs_cover),
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(4.dp))
+            )
+        },
         label = item.name,
         description = stringResource(R.string.songs_count, item.musics.size),
         modifier = Modifier
@@ -58,6 +62,7 @@ fun PlayListCard(
 fun PlayListColumnItem(
     modifier: Modifier = Modifier,
     playList: PlayList,
+    isPlaying: Boolean,
     onClick: (PlayList) -> Unit
 ) {
     Column {
@@ -69,6 +74,7 @@ fun PlayListColumnItem(
                     bottom = 12.dp
                 )
                 .height(58.dp),
+            isPlaying = isPlaying,
             onClick = onClick
         )
 
@@ -86,6 +92,7 @@ fun PlayListColumn(
     modifier: Modifier = Modifier,
     playListItems: List<PlayList>,
     onClick: (PlayList) -> Unit,
+    currentPlaylist: PlayList?,
 ) {
     LazyColumn(
         modifier = modifier
@@ -93,12 +100,12 @@ fun PlayListColumn(
         items(count = playListItems.size) { index ->
             PlayListColumnItem(
                 playList = playListItems[index],
+                isPlaying = currentPlaylist?.id == playListItems[index].id,
                 onClick = onClick
             )
         }
     }
 }
-
 
 
 val mockMusics = listOf(
@@ -156,6 +163,7 @@ fun PlayListPreview() {
                 name = "PlayList",
                 musics = mockMusics
             ),
+            isPlaying = false,
             modifier = Modifier.background(MaterialTheme.colorScheme.surface)
         )
     }
@@ -169,7 +177,6 @@ fun PlayListsPreview() {
     NcsTheme(darkTheme = true) {
         PlayListColumn(
             modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-            onClick = {},
             playListItems = listOf(
                 PlayList(
                     id = UUID.randomUUID(),
@@ -187,6 +194,8 @@ fun PlayListsPreview() {
                     musics = mockMusics
                 )
             ),
+            onClick = {},
+            currentPlaylist = null,
         )
     }
 }

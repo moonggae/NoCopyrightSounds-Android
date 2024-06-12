@@ -76,11 +76,43 @@ object ListItemCardDefaults {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
     thumbnail: Painter,
+    label: String,
+    description: String,
+    color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
+    style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
+    suffix: (@Composable () -> Unit)? = null
+) {
+    ListItemCard(
+        modifier = modifier,
+        label = label,
+        description = description,
+        color = color,
+        style = style,
+        suffix = suffix,
+        prefix = {
+            Image(
+                painter = thumbnail,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(4.dp))
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ListItemCard(
+    modifier: Modifier = Modifier,
+    prefix: (@Composable () -> Unit)? = null,
     label: String,
     description: String,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
@@ -93,16 +125,7 @@ fun ListItemCard(
             .then(modifier.height(style.thumbnailSize)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = thumbnail,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .padding(end = 16.dp)
-                .fillMaxHeight()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(4.dp))
-        )
+        prefix?.invoke()
 
         Row(
             modifier = Modifier.fillMaxWidth(),

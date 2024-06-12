@@ -9,13 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.feature.library.detail.PlaylistDetailMusicList
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 
 @Composable
 fun PlayerMenuPlaylistTabView(
     modifier: Modifier = Modifier,
     playlist: PlayList,
-    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit
+    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
+    currentMusic: Music?
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         PlaylistDetailMusicList(
@@ -27,6 +29,7 @@ fun PlayerMenuPlaylistTabView(
                 .fillMaxWidth(),
             playlistId = playlist.id,
             musics = playlist.musics,
+            playingMusicId = currentMusic?.id,
             cardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
             onMusicOrderChanged = onMusicOrderChanged
         )

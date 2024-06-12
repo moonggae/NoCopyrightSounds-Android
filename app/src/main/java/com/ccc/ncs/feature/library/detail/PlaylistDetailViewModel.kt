@@ -10,8 +10,11 @@ import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -20,62 +23,67 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
-
 @HiltViewModel
 class PlaylistDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
     private val playerController: PlayerController,
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
-    val playListUiState: StateFlow<PlaylistDetailUiState> = savedStateHandle.getStateFlow(PLAYLIST_DETAIL_ID_ARG, "")
-        .flatMapLatest { id ->
-            if (id.isEmpty()) {
-                flowOf(PlaylistDetailUiState.Loading)
-            } else {
-                playlistRepository.getPlayList(UUID.fromString(id))
-                    .map { playlist ->
-                        if (playlist == null) PlaylistDetailUiState.Fail
-                        else PlaylistDetailUiState.Success(playlist)
-                    }
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = PlaylistDetailUiState.Loading
-        )
+    private val _uiState: MutableStateFlow<PlaylistDetailUiState> = MutableStateFlow(PlaylistDetailUiState.Loading)
+    val uiState = _uiState as StateFlow<PlaylistDetailUiState>
 
-    fun updateMusicList(playlistId: UUID, musicList: List<Music>) {
-        viewModelScope.launch {
-            playlistRepository.setPlayListMusics(playlistId, musicList)
-        }
+    init {
+        observePlaylistDetail()
     }
 
-    fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
+    private fun observePlaylistDetail() {
         viewModelScope.launch {
-            playListUiState
-                .value
-                .takeIf { it is PlaylistDetailUiState.Success }
-                ?.let {
-                    val playlist = (it as PlaylistDetailUiState.Success).playlist
-                    if (playlist.id == playerRepository.playlist.first()?.id) {
-                        val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
-                        updateMusicList(playlist.id, reorderedMusicList)
-                        playerController.moveMediaItem(prevIndex, currentIndex)
+            savedStateHandle.getStateFlow(PLAYLIST_DETAIL_ID_ARG, "")
+                .flatMapLatest { id ->
+                    if (id.isEmpty()) flowOf(PlaylistDetailUiState.Loading)
+                    else playlistRepository.getPlayList(UUID.fromString(id))
+                        .map { playlist -> playlist?.let { PlaylistDetailUiState.Success(it) } ?: PlaylistDetailUiState.Fail }
+                }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), PlaylistDetailUiState.Loading)
+                .collectLatest {
+                    _uiState.value = it
+                    if (it is PlaylistDetailUiState.Success) {
+                        observePlayingMusic()
                     }
                 }
         }
     }
 
-    fun deletePlaylist(playlistId: UUID) {
+    private fun observePlayingMusic() {
         viewModelScope.launch {
-            playlistRepository.deletePlayList(playlistId)
+            playerRepository.playlist.combine(playerRepository.musicIndex) { playlist, musicIndex ->
+                when (val state = _uiState.value) {
+                    is PlaylistDetailUiState.Success -> {
+                        if (state.playlist.id == playlist?.id) {
+                            state.copy(playingMusic = playlist.musics.getOrNull(musicIndex ?: 0))
+                        } else state
+                    }
+                    else -> state
+                }
+            }.collectLatest { _uiState.value = it }
         }
     }
 
-    companion object {
-        private const val TAG = "PlaylistDetailViewModel"
+    fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
+        viewModelScope.launch {
+            (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
+                val playlist = state.playlist
+                if (playlist.id == playerRepository.playlist.first()?.id) {
+                    val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
+                    playlistRepository.setPlayListMusics(playlist.id, reorderedMusicList)
+                    playerController.moveMediaItem(prevIndex, currentIndex)
+                }
+            }
+        }
+    }
+
+    fun deletePlaylist(playlistId: UUID) {
+        viewModelScope.launch { playlistRepository.deletePlayList(playlistId) }
     }
 }
 
@@ -83,6 +91,7 @@ sealed interface PlaylistDetailUiState {
     data object Loading : PlaylistDetailUiState
     data object Fail : PlaylistDetailUiState
     data class Success(
-        val playlist: PlayList
+        val playlist: PlayList,
+        val playingMusic: Music? = null
     ) : PlaylistDetailUiState
 }

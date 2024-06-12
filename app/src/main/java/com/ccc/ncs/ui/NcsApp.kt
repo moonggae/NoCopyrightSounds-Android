@@ -33,9 +33,9 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.feature.play.PlayerScreen
 import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
-import com.ccc.ncs.feature.play.PlayerScreen
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
 
@@ -90,6 +90,7 @@ fun NcsApp(
                     onSeekTo = playerViewModel::setPosition,
                     onRepeat = playerViewModel::setRepeatMode,
                     onShuffle = playerViewModel::setShuffleMode,
+                    onUpdateMusicOrder = playerViewModel::updateMusicOrder,
                     onClose = {
                         playerViewModel.closePlayer()
                         playingScreenHeightWeight = 0f

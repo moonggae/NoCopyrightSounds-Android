@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.library.detail
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.AlertDialog
-import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.component.ListItemCardStyle
 import com.ccc.ncs.designsystem.icon.NcsIcons
@@ -51,6 +52,7 @@ import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
+import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.swap
 import sh.calvin.reorderable.ReorderableItem
@@ -65,15 +67,22 @@ fun PlaylistDetailRoute(
     onBack: () -> Unit,
     onClickModifyName: (UUID) -> Unit
 ) {
-    val playListUiState by viewModel.playListUiState.collectAsStateWithLifecycle()
+    val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when (val uiState = playListUiState) {
+    LaunchedEffect(playListUiState) {
+        Log.d("TAG", "LaunchedEffect - playListUiState: ${playListUiState}")
+    }
+
+    when (playListUiState) {
         is PlaylistDetailUiState.Loading -> {}
         is PlaylistDetailUiState.Fail -> {}
         is PlaylistDetailUiState.Success -> {
+            Log.d("TAG", "PlaylistDetailRoute - Success: ${"Success"}")
+            val uiState = playListUiState as PlaylistDetailUiState.Success
             PlaylistDetailScreen(
                 modifier = modifier,
                 playlist = uiState.playlist,
+                playingMusic = uiState.playingMusic,
                 onMusicOrderChanged = viewModel::updateMusicOrder,
                 onBack = onBack,
                 onClickModifyName = { onClickModifyName(uiState.playlist.id) },
@@ -93,7 +102,8 @@ internal fun PlaylistDetailScreen(
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
     onBack: () -> Unit,
     onClickModifyName: () -> Unit,
-    onDeletePlaylist: () -> Unit
+    onDeletePlaylist: () -> Unit,
+    playingMusic: Music?
 ) {
     var showMenuBottomSheet by remember { mutableStateOf(false) }
     var showDeleteAlertDialog by remember { mutableStateOf(false) }
@@ -121,6 +131,10 @@ internal fun PlaylistDetailScreen(
             coverUrl = playlist.musics.firstOrNull()?.coverUrl
         )
 
+        LaunchedEffect(playingMusic?.id) {
+            Log.d("TAG", "PlaylistDetailScreen - playingMusic?.id: ${playingMusic?.id}")
+        }
+
         PlaylistDetailMusicList(
             modifier = Modifier
                 .padding(
@@ -130,6 +144,7 @@ internal fun PlaylistDetailScreen(
                 .fillMaxWidth(),
             playlistId = playlist.id,
             musics = playlist.musics,
+            playingMusicId = playingMusic?.id,
             onMusicOrderChanged = onMusicOrderChanged
         )
     }
@@ -162,6 +177,7 @@ fun PlaylistDetailMusicList(
     modifier: Modifier = Modifier,
     playlistId: UUID? = null,
     musics: List<Music>,
+    playingMusicId: UUID? = null,
     cardStyle: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.small(),
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit
 ) {
@@ -180,12 +196,9 @@ fun PlaylistDetailMusicList(
         items(count = currentMusics.size, key = { currentMusics[it].id }) {
             val item = currentMusics[it]
             ReorderableItem(state = reorderableLazyListState, key = item.id) { isDragging ->
-                ListItemCard(
-                    thumbnail = item.coverThumbnailUrl,
-                    label = item.title,
-                    description = item.artist,
-                    thumbnailPlaceholder = painterResource(R.drawable.ncs_cover),
-                    style = cardStyle,
+                MusicCard(
+                    item = item,
+                    isPlaying = playingMusicId == item.id,
                     suffix = {
                         Icon(
                             imageVector = NcsIcons.Menu,
@@ -196,6 +209,7 @@ fun PlaylistDetailMusicList(
                                 .draggableHandle()
                         )
                     },
+                    style = cardStyle,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
@@ -209,10 +223,10 @@ fun PlaylistDetailContent(
     name: String,
     coverUrl: String?
 ) {
-    val coverImage = rememberAsyncImagePainter(
+    val coverImage = if (coverUrl != null) rememberAsyncImagePainter(
         model = coverUrl,
         placeholder = painterResource(id = R.drawable.ncs_cover)
-    )
+    ) else painterResource(id = R.drawable.ncs_cover)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -323,10 +337,11 @@ fun PlaylistDetailContentPreview() {
                     name = "My Playlist",
                     musics = mockMusics
                 ),
-                onMusicOrderChanged = {_, _ ->},
+                onMusicOrderChanged = { _, _ -> },
                 onBack = {},
                 onClickModifyName = {},
-                onDeletePlaylist = {}
+                onDeletePlaylist = {},
+                playingMusic = null
             )
         }
     }

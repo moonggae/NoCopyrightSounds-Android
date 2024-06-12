@@ -9,6 +9,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
+import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -137,6 +138,19 @@ class PlayerViewModel @Inject constructor(
 
     fun setRepeatMode(isOn: Boolean) {
         playerController.setRepeatMode(isOn)
+    }
+
+    // note: same feature as in PlaylistDetailViewModel.kt
+    fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
+        viewModelScope.launch {
+            _playerUiState.value.let { state ->
+                if (state is PlayerUiState.Success) {
+                    val reorderedMusicList = state.playlist.musics.swap(prevIndex, currentIndex)
+                    playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
+                    playerController.moveMediaItem(prevIndex, currentIndex)
+                }
+            }
+        }
     }
 
     fun playPlayList(playList: PlayList) {

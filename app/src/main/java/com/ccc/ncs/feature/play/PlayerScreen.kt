@@ -78,6 +78,7 @@ import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toTimestampMMSS
 import kotlinx.coroutines.launch
 import java.util.UUID
+import kotlin.reflect.KFunction2
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -93,7 +94,8 @@ fun PlayerScreen(
     onSeekTo: (position: Long) -> Unit,
     onShuffle: (Boolean) -> Unit,
     onRepeat: (Boolean) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onUpdateMusicOrder: KFunction2<Int, Int, Unit>
 ) {
     val scope = rememberCoroutineScope()
 
@@ -195,6 +197,7 @@ fun PlayerScreen(
         playlist = playerUiState.playlist,
         currentMusic = playerUiState.currentMusic,
         lyrics = playerUiState.lyrics,
+        onMusicOrderChanged = onUpdateMusicOrder
     )
 }
 

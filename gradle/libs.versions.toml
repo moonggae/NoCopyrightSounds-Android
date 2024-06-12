@@ -30,6 +30,7 @@ room = "2.6.1"
 androidXTestVersion = "1.5.0"
 reorderable = "2.1.1"
 datastore = "1.1.1"
+lottie = "6.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -91,6 +92,7 @@ room-testing = { group = "androidx.room", name = "room-runtime", version.ref = "
 
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 
 
 [bundles]

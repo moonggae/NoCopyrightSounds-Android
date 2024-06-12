@@ -90,6 +90,7 @@ internal fun LibraryScreen(
             is PlayListUiState.Success -> {
                 PlayListColumn(
                     playListItems = playListUiState.playLists,
+                    currentPlaylist = playListUiState.currentPlaylist,
                     onClick = onClickPlaylist
                 )
             }

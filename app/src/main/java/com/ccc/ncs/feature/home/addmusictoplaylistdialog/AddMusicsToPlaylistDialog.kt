@@ -41,6 +41,7 @@ fun AddMusicsToPlaylistDialog(
             AddMusicsToPlaylistDialogContent(
                 modifier = modifier,
                 playListItems = state.playlist,
+                currentPlaylist = state.currentPlaylist,
                 show = show,
                 onDismissRequest = onDismissRequest,
                 onClickPlayList = {
@@ -56,6 +57,7 @@ fun AddMusicsToPlaylistDialog(
 fun AddMusicsToPlaylistDialogContent(
     modifier: Modifier = Modifier,
     playListItems: List<PlayList>,
+    currentPlaylist: PlayList?,
     show: Boolean,
     onDismissRequest: () -> Unit,
     onClickPlayList: (PlayList) -> Unit
@@ -75,11 +77,12 @@ fun AddMusicsToPlaylistDialogContent(
                 )
             } else {
                 PlayListColumn(
-                    playListItems = playListItems,
-                    onClick = onClickPlayList,
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
-                        .heightIn(0.dp, 300.dp)
+                        .heightIn(0.dp, 300.dp),
+                    playListItems = playListItems,
+                    onClick = onClickPlayList,
+                    currentPlaylist = currentPlaylist
                 )
             }
         },
@@ -114,7 +117,8 @@ fun AddMusicsToPlaylistDialogPreview(modifier: Modifier = Modifier) {
             ),
             show = true,
             onDismissRequest = {},
-            onClickPlayList = {}
+            onClickPlayList = {},
+            currentPlaylist = null
         )
     }
 }
@@ -128,7 +132,8 @@ fun AddMusicsToPlaylistDialogEmptyPreview(modifier: Modifier = Modifier) {
             playListItems = listOf(),
             show = true,
             onDismissRequest = {},
-            onClickPlayList = {}
+            onClickPlayList = {},
+            currentPlaylist = null
         )
     }
 }
