@@ -1,7 +1,6 @@
 package com.ccc.ncs.feature.home
 
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,16 +15,16 @@ fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HOME_ROUTE, 
 
 fun NavGraphBuilder.homeScreen(
     onMoveToSearchScreen: (String?) -> Unit,
-    onPlayMusics: (List<Music>) -> Unit
+    onPlayMusics: (List<Music>) -> Unit,
+    onAddToQueue: (List<Music>) -> Unit
 ) {
     composable(route = HOME_ROUTE) {
-        val homeViewModel: HomeViewModel = hiltViewModel()
         val searchedQuery: String? by it.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
         HomeRoute(
             onClickSearchBar = onMoveToSearchScreen,
             searchQuery = searchedQuery,
-            viewModel = homeViewModel,
-            onPlayMusics = onPlayMusics
+            onPlayMusics = onPlayMusics,
+            onAddToQueue = onAddToQueue
         )
     }
 }

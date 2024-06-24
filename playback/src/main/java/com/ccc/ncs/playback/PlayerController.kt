@@ -107,6 +107,10 @@ class PlayerController @Inject constructor(
         controller.release()
     }
 
+    fun appendMusics(musics: List<Music>) = executeAfterPrepare { controller ->
+        controller.addMediaItems(musics.map { it.asMediaItem() })
+    }
+
     private inline fun executeAfterPrepare(crossinline action: suspend (MediaController) -> Unit) {
         scope.launch {
             val controller = awaitConnect() ?: return@launch

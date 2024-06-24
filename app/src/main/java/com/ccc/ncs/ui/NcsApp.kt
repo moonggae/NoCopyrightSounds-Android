@@ -74,7 +74,8 @@ fun NcsApp(
                 NcsNavHost(
                     appState = appState,
                     onPlayMusics = playerViewModel::playMusics,
-                    onPlayPlaylist = playerViewModel::playPlayList
+                    onPlayPlaylist = playerViewModel::playPlayList,
+                    onAddToQueue = playerViewModel::addToQueue
                 )
             }
 

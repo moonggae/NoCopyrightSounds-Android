@@ -25,7 +25,8 @@ fun NcsNavHost(
     modifier: Modifier = Modifier,
     startDestination: String = HOME_ROUTE,
     onPlayMusics: (List<Music>) -> Unit,
-    onPlayPlaylist: (PlayList) -> Unit
+    onPlayPlaylist: (PlayList) -> Unit,
+    onAddToQueue: (List<Music>) -> Unit
 ) {
     val navController = appState.navController
 
@@ -36,7 +37,8 @@ fun NcsNavHost(
     ) {
         homeScreen(
             onMoveToSearchScreen = { navController.navigateToSearch(it) },
-            onPlayMusics = onPlayMusics
+            onPlayMusics = onPlayMusics,
+            onAddToQueue = onAddToQueue
         )
         artistScreen()
         libraryScreen(
