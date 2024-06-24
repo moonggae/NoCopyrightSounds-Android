@@ -27,6 +27,8 @@ class RetrofitLyricsNetwork @Inject constructor(
             .split("(").first().trim()
             .replace(" ", "_")
 
-        return networkApi.getLyrics(pathTitle)
+        return try {
+            networkApi.getLyrics(pathTitle)
+        } catch (e: Exception) { "" }
     }
 }

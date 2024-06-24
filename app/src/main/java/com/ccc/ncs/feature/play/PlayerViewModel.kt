@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -41,7 +42,13 @@ class PlayerViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeLyrics() {
         viewModelScope.launch {
-            playerUiState.flatMapLatest { state ->
+            playerUiState
+                .distinctUntilChangedBy { state ->
+                    when (state) {
+                        is PlayerUiState.Success -> state.currentMusic
+                        else -> state
+                    }
+                }.flatMapLatest { state ->
                 when (state) {
                     is PlayerUiState.Success -> {
                         val musicTitle = state.currentMusic?.title
