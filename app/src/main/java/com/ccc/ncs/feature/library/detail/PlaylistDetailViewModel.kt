@@ -86,7 +86,11 @@ class PlaylistDetailViewModel @Inject constructor(
     }
 
     fun deletePlaylist(playlistId: UUID) {
-        viewModelScope.launch { playlistRepository.deletePlayList(playlistId) }
+        viewModelScope.launch {
+            playlistRepository.deletePlayList(playlistId)
+            playerRepository.clear()
+            playerController.stop()
+        }
     }
 }
 
