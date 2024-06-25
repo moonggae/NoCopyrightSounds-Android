@@ -8,15 +8,21 @@ import com.ccc.ncs.model.Genre
 data class GenreEntity(
     @PrimaryKey
     val id: Int,
-    val name: String
+    val name: String,
+    val colorInt: Int? = null,
+    val backgroundColorInt: Int? = null
 )
 
 fun Genre.asEntity() = GenreEntity(
     id = id,
-    name = name
+    name = name,
+    colorInt = colorInt,
+    backgroundColorInt = backgroundColorInt
 )
 
 fun GenreEntity.asModel() = Genre(
     id = id,
-    name = name
+    name = name,
+    colorInt = colorInt,
+    backgroundColorInt = backgroundColorInt
 )

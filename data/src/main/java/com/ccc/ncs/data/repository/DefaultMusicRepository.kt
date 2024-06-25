@@ -75,6 +75,8 @@ internal class DefaultMusicRepository @Inject constructor(
         val musicGenreCrossRefs = mutableListOf<MusicGenreCrossRef>()
         val musicMoodCrossRefs = mutableListOf<MusicMoodCrossRef>()
 
+        overrideMoodAndGenreColors(musics)
+
         musics.forEach { music ->
             music.genres.mapTo(musicGenreCrossRefs) { genre ->
                 MusicGenreCrossRef(
@@ -100,6 +102,14 @@ internal class DefaultMusicRepository @Inject constructor(
             .first()
 
         emit(insertedMusics)
+    }
+
+    private suspend fun overrideMoodAndGenreColors(musics: List<Music>) {
+        val moods = musics.map { it.moods }.flatten().distinctBy { it.id }
+        val genres = musics.map { it.genres }.flatten().distinctBy { it.id }
+
+        moodDao.insertAllMoods(moods.map { it.asEntity() })
+        genreDao.insertAllGenres(genres.map { it.asEntity() })
     }
 
     override fun getGenres(): Flow<List<Genre>> = genreDao

@@ -424,11 +424,15 @@ fun SearchAppBarQueryPreview() {
                     query = "Alan Walker",
                     genre = Genre(
                         id = 1,
-                        name = "Long name genre"
+                        name = "Long name genre",
+                        colorInt = null,
+                        backgroundColorInt = null
                     ),
                     mood = Mood(
                         id = 1,
-                        name = "Long name Mood"
+                        name = "Long name Mood",
+                        colorInt = null,
+                        backgroundColorInt = null
                     )
                 ),
                 genres = emptyList(),

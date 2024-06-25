@@ -8,15 +8,21 @@ import com.ccc.ncs.model.Mood
 data class MoodEntity(
     @PrimaryKey
     val id: Int,
-    val name: String
+    val name: String,
+    val colorInt: Int? = null,
+    val backgroundColorInt: Int? = null
 )
 
 fun Mood.asEntity() = MoodEntity(
     id = id,
-    name = name
+    name = name,
+    colorInt = colorInt,
+    backgroundColorInt = backgroundColorInt
 )
 
 fun MoodEntity.asModel() = Mood(
     id = id,
-    name = name
+    name = name,
+    colorInt = colorInt,
+    backgroundColorInt = backgroundColorInt
 )

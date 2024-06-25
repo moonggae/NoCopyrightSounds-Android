@@ -78,23 +78,55 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
     }
 
     private fun parseGenres(row: Element): Set<Genre> {
-        return parseTags(row, "genre") { id, name ->
-            Genre(id = id, name = name)
+        return parseTags(row, "genre") { id, name, colorInt, backgroundColorInt ->
+            Genre(
+                id = id,
+                name = name,
+                colorInt = colorInt,
+                backgroundColorInt = backgroundColorInt
+            )
         }.toSet()
     }
 
     private fun parseMoods(row: Element): Set<Mood> {
-        return parseTags(row, "mood") { id, name ->
-            Mood(id = id, name = name)
+        return parseTags(row, "mood") { id, name, colorInt, backgroundColorInt ->
+            Mood(
+                id = id,
+                name = name,
+                colorInt = colorInt,
+                backgroundColorInt = backgroundColorInt
+            )
         }.toSet()
     }
 
-    private fun <T> parseTags(row: Element, type: String, createInstance: (Int, String) -> T): List<T> {
+    private fun <T> parseTags(row: Element, type: String, createInstance: (Int, String, Int?, Int?) -> T): List<T> {
         return row.selectFirst("td:nth-child(5)")?.select("a")
             ?.filter { it -> it.attr("href").contains(type) }
             ?.mapNotNull { tag ->
+                /*
+                tag example:
+                <a class="tag" style="background-color:#ff32f7;color:#191d24" href="/music-search?genre=3">Drum &amp; Bass</a>
+                <a class="tag" style="background-color:#333333" href="/music-search?mood=2">Dark</a>
+                 */
                 val id = tag.attr("href").split("=").last().toIntOrNull() ?: return@mapNotNull null
-                createInstance(id, tag.html())
+                val styleAttr = tag.attr("style")
+
+                // Extract hex color values using regular expressions
+                val colorRegex = Regex("color:#([a-fA-F0-9]{6})")
+                val backgroundColorRegex = Regex("background-color:#([a-fA-F0-9]{6})")
+
+                val colorMatch = colorRegex.find(styleAttr)
+                val backgroundColorMatch = backgroundColorRegex.find(styleAttr)
+
+                val colorInt: Int? = colorMatch?.groups?.get(1)?.value?.let { hexString ->
+                    Integer.parseInt(hexString, 16)
+                }
+
+                val backgroundColorInt: Int? = backgroundColorMatch?.groups?.get(1)?.value?.let { hexString ->
+                    Integer.parseInt(hexString, 16)
+                }
+
+                createInstance(id, tag.html(), colorInt, backgroundColorInt)
             } ?: emptyList()
     }
 
