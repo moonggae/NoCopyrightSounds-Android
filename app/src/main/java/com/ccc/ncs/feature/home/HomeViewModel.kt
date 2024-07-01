@@ -113,6 +113,12 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun insertMusicToLocal(music: Music) {
+        viewModelScope.launch {
+            musicRepository.insertMusics(listOf(music)).collect {}
+        }
+    }
 }
 
 data class HomeUiState(

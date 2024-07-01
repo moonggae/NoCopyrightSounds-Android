@@ -17,6 +17,8 @@ interface MusicRepository {
 
     fun getMusics(musicIds: List<UUID>): Flow<List<Music>>
 
+    fun getMusic(musicId: UUID): Flow<Music?>
+
     suspend fun initGenreAndMood()
 
     fun insertMusics(musics: List<Music>): Flow<List<Music>>

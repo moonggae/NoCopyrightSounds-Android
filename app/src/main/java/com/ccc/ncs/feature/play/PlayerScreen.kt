@@ -258,7 +258,7 @@ fun PlayerScreenBigContent(
 
         PlayerScreenCoverImage(
             url = music.coverUrl,
-            draggableStatePercentage = draggableStatePercentage
+            progress = draggableStatePercentage
         )
 
         Column(
@@ -488,10 +488,9 @@ fun PlayerPositionProgressBar(
 private fun PlayerScreenCoverImage(
     modifier: Modifier = Modifier,
     url: String,
-    draggableStatePercentage: Float
+    progress: Float = 1f,
+    horizontalPadding: Dp = 16.dp
 ) {
-    val horizontalPadding = 16.dp
-
     AsyncImage(
         model = ImageRequest
             .Builder(LocalContext.current)
@@ -503,7 +502,7 @@ private fun PlayerScreenCoverImage(
         contentScale = ContentScale.FillHeight,
         modifier = modifier
             .aspectRatio(1f)
-            .padding(horizontal = (horizontalPadding * draggableStatePercentage))
+            .padding(horizontal = (horizontalPadding * progress))
     )
 }
 

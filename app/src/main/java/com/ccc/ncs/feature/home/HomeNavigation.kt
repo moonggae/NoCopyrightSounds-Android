@@ -8,6 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
 import com.ccc.ncs.model.Music
+import java.util.UUID
 
 const val HOME_ROUTE = "home"
 
@@ -16,15 +17,19 @@ fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HOME_ROUTE, 
 fun NavGraphBuilder.homeScreen(
     onMoveToSearchScreen: (String?) -> Unit,
     onPlayMusics: (List<Music>) -> Unit,
-    onAddToQueue: (List<Music>) -> Unit
+    onAddToQueue: (List<Music>) -> Unit,
+    navigateToMusicDetail: (UUID) -> Unit
 ) {
-    composable(route = HOME_ROUTE) {
+    composable(
+        route = HOME_ROUTE,
+    ) {
         val searchedQuery: String? by it.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
         HomeRoute(
             onClickSearchBar = onMoveToSearchScreen,
             searchQuery = searchedQuery,
             onPlayMusics = onPlayMusics,
-            onAddToQueue = onAddToQueue
+            onAddToQueue = onAddToQueue,
+            navigateToMusicDetail = { music -> navigateToMusicDetail(music.id) }
         )
     }
 }

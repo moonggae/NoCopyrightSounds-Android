@@ -12,6 +12,8 @@ import com.ccc.ncs.feature.library.edit.editPlaylistScreen
 import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.library.libraryScreen
 import com.ccc.ncs.feature.menu.menuScreen
+import com.ccc.ncs.feature.music.musicDetailScreen
+import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.search.backFromSearch
 import com.ccc.ncs.feature.search.navigateToSearch
 import com.ccc.ncs.feature.search.searchScreen
@@ -38,7 +40,8 @@ fun NcsNavHost(
         homeScreen(
             onMoveToSearchScreen = { navController.navigateToSearch(it) },
             onPlayMusics = onPlayMusics,
-            onAddToQueue = onAddToQueue
+            onAddToQueue = onAddToQueue,
+            navigateToMusicDetail = { navController.navigateToMusicDetail(it) }
         )
         artistScreen()
         libraryScreen(
@@ -47,11 +50,14 @@ fun NcsNavHost(
         )
         menuScreen()
         searchScreen(onSearch = navController::backFromSearch)
-        editPlaylistScreen(onBack = navController::popBackStack)
+        editPlaylistScreen(onBack = navController::navigateUp)
         playlistDetailScreen(
-            onBack = navController::popBackStack,
+            onBack = navController::navigateUp,
             navigateToEditPlaylist = { navController.navigateToEditPlaylist(it) },
             onPlayPlaylist = onPlayPlaylist
+        )
+        musicDetailScreen(
+            onBack = navController::navigateUp
         )
     }
 }

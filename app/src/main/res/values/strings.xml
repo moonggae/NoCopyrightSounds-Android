@@ -27,7 +27,10 @@
     <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[You can post the lyrics to click <annotation>here</annotation>]]></string>
 
     <string name="Genre">Genre</string>
+    <string name="Genres">Genres</string>
     <string name="Mood">Mood</string>
+    <string name="Moods">Moods</string>
+    <string name="Tags">Tags</string>
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
     <string name="auto_generated_playlist_name">Recent Playlist</string>

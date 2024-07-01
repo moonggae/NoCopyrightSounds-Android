@@ -60,6 +60,10 @@ internal class DefaultMusicRepository @Inject constructor(
             }
         }
 
+    override fun getMusic(musicId: UUID): Flow<Music?> = musicDao
+        .getMusic(musicId)
+        .map { it?.asModel() }
+
     override suspend fun initGenreAndMood() {
         val (genres, moods) = network.getAllGenreAndMood()
         moodDao.deleteAllMoods()

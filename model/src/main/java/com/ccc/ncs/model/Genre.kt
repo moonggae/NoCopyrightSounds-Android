@@ -1,8 +1,8 @@
 package com.ccc.ncs.model
 
 data class Genre(
-    val id: Int,
-    val name: String,
-    val colorInt: Int?,
-    val backgroundColorInt: Int?
-)
+    override val id: Int,
+    override val name: String,
+    override val colorInt: Int?,
+    override val backgroundColorInt: Int?
+): MusicTag

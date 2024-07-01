@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -115,12 +116,6 @@ internal fun PlaylistDetailScreen(
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
         PlaylistDetailAppBar(
-            modifier = Modifier
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 20.dp
-                )
-                .fillMaxWidth(),
             onBack = onBack,
             onClickMenu = { showMenuBottomSheet = true }
         )
@@ -224,11 +219,6 @@ fun PlaylistDetailContent(
     onPlay: () -> Unit,
     isPlaying: Boolean
 ) {
-    val coverImage = if (coverUrl != null) rememberAsyncImagePainter(
-        model = coverUrl,
-        placeholder = painterResource(id = R.drawable.ncs_cover)
-    ) else painterResource(id = R.drawable.ncs_cover)
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -239,11 +229,7 @@ fun PlaylistDetailContent(
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(8.dp))
         ) {
-            Image(
-                painter = coverImage,
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+            CoverImage(url = coverUrl)
 
             if (!isPlaying) {
                 Icon(
@@ -272,36 +258,89 @@ fun PlaylistDetailContent(
 }
 
 @Composable
+fun CoverImage(
+    modifier: Modifier = Modifier,
+    url: String?
+) {
+    val painter = if (url != null) rememberAsyncImagePainter(
+        model = url,
+        placeholder = painterResource(id = R.drawable.ncs_cover)
+    ) else painterResource(id = R.drawable.ncs_cover)
+
+    Image(
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(1f),
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Crop
+    )
+}
+
+@Composable
 fun PlaylistDetailAppBar(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
     onClickMenu: () -> Unit
 ) {
+    CommonAppBar(
+        modifier = modifier,
+        title = "Playlist",
+        onBack = onBack,
+        onClickMenu = onClickMenu
+    )
+}
+
+
+@Composable
+fun CommonAppBar(
+    modifier: Modifier = Modifier,
+    title: String?,
+    padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+    onBack: () -> Unit,
+    onClickMenu: (() -> Unit)? = null
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .padding(padding)
+            .fillMaxWidth()
     ) {
         Icon(
             imageVector = NcsIcons.ArrowBack,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.clickable(onClick = onBack)
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onBack)
         )
 
-        Text(
-            text = "Playlist",
-            style = NcsTypography.Label.appbarTitle.copy(
-                color = MaterialTheme.colorScheme.onSurface
+
+        if (title == null) {
+            Spacer(Modifier)
+        } else {
+            Text(
+                text = title,
+                style = NcsTypography.Label.appbarTitle.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
-        )
+        }
 
-        Icon(
-            imageVector = NcsIcons.MoreVertical,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.clickable(onClick = onClickMenu)
-        )
+
+        if (onClickMenu == null) {
+            Spacer(Modifier)
+        } else {
+            Icon(
+                imageVector = NcsIcons.MoreVertical,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = onClickMenu)
+            )
+        }
     }
 }
 

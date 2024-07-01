@@ -127,6 +127,7 @@ fun MusicCardListItem(
     updateSelectMusic: (Music) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
     onClickMore: (Music) -> Unit,
+    onClick: (Music) -> Unit,
     isSelectMode: Boolean = false
 ) {
     Column {
@@ -142,7 +143,7 @@ fun MusicCardListItem(
                     end = 16.dp
                 )
                 .height(58.dp),
-            onClick = updateSelectMusic,
+            onClick = if (isSelectMode) updateSelectMusic else onClick,
             onLongClick = {
                 updateSelectMode(true)
                 updateSelectMusic(it)
@@ -172,6 +173,7 @@ fun MusicCardList(
     updateSelectMusic: (Music) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
     onClickMore: (Music) -> Unit,
+    onClick: (Music) -> Unit,
     state: LazyListState,
     isSelectMode: Boolean = false
 ) {
@@ -189,6 +191,7 @@ fun MusicCardList(
                     updateSelectMusic = updateSelectMusic,
                     updateSelectMode = updateSelectMode,
                     onClickMore = onClickMore,
+                    onClick = onClick,
                     isSelectMode = isSelectMode,
                 )
             }
@@ -282,6 +285,7 @@ fun MusicCardListPreview() {
             updateSelectMode = {},
             nestedScrollConnection = rememberNestedScrollInteropConnection(),
             onClickMore = {},
+            onClick = {},
             modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
         )
     }

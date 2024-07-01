@@ -1,6 +1,7 @@
 package com.ccc.ncs.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -47,6 +48,7 @@ object NcsIcons {
     val Repeat = Icons.Outlined.Repeat
     val Search = Icons.Rounded.Search
     val ArrowDropDown = Icons.Filled.ArrowDropDown
+    val ArrowForwardNoTail = Icons.AutoMirrored.Outlined.ArrowForwardIos
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MoreVertical = Icons.Rounded.MoreVert
     val AddCircle = Icons.Rounded.AddCircle

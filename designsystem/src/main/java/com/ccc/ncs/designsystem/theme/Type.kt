@@ -91,7 +91,22 @@ object NcsTypography {
             letterSpacing = 0.5.sp
         )
 
+        val tagButton = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+
         val bottomSheetItem = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 20.sp,
+            letterSpacing = 0.1.sp,
+            textAlign = TextAlign.Center
+        )
+
+        val contentLabel = TextStyle(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             lineHeight = 20.sp,

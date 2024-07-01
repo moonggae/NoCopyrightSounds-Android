@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.theme.NcsTheme
+import com.ccc.ncs.model.Genre
+import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import java.time.LocalDate
@@ -119,17 +121,59 @@ fun PlayListColumn(
 val mockMusics = listOf(
     Music(
         id = UUID.randomUUID(),
-        title = "Title 1",
-        artist = "Artist 1",
-        coverThumbnailUrl = "",
-        moods = setOf(),
-        genres = setOf(),
-        coverUrl = "",
+        title = "Comet",
+        artist = "Keepsake, Skybreak",
+        coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/100x100/comet-1716422454-LbQTehJ3ek.jpg",
+        moods = setOf(
+            Mood(
+                id = 3,
+                name = "Dreamy",
+                colorInt = -15131356,
+                backgroundColorInt = -8201475
+            ),
+            Mood(
+                id = 4,
+                name = "Epic",
+                colorInt = -15131356,
+                backgroundColorInt = -11040
+            ),
+            Mood(
+                id = 5,
+                name = "Euphoric",
+                colorInt = -15131356,
+                backgroundColorInt = -5450
+            ),
+            Mood(
+                id = 11,
+                name = "Happy",
+                colorInt = -15131356,
+                backgroundColorInt = -10122
+            ),
+            Mood(
+                id = 12,
+                name = "Hopeful",
+                colorInt = -15131356,
+                backgroundColorInt = -8924685
+            ),
+            Mood(
+                id = 22,
+                name = "Sexy",
+                colorInt = null,
+                backgroundColorInt = -1964733
+            ),
+        ),
+        genres = setOf(Genre(
+            id = 4,
+            name = "Drumstep",
+            colorInt = null,
+            backgroundColorInt = -54757
+        )),
+        coverUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/1000x0/comet-1716422454-LbQTehJ3ek.jpg",
         versions = setOf(),
-        dataUrl = "",
-        detailUrl = "",
-        releaseDate = LocalDate.now(),
-        artistDetailUrl = ""
+        dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/comet-1716422457-Vd6pvNXfSt.mp3",
+        detailUrl = "https://ncs.io/Comet",
+        releaseDate = LocalDate.parse("2024-05-23"),
+        artistDetailUrl = "https://ncs.io/artist/1114/keepsake"
     ),
     Music(
         id = UUID.randomUUID(),

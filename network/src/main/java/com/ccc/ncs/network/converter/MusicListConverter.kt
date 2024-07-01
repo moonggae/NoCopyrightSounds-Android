@@ -111,22 +111,21 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
                 val id = tag.attr("href").split("=").last().toIntOrNull() ?: return@mapNotNull null
                 val styleAttr = tag.attr("style")
 
-                // Extract hex color values using regular expressions
-                val colorRegex = Regex("color:#([a-fA-F0-9]{6})")
+                val colorRegex = Regex("(?:^|;)\\s*color:#([a-fA-F0-9]{6})")
                 val backgroundColorRegex = Regex("background-color:#([a-fA-F0-9]{6})")
 
                 val colorMatch = colorRegex.find(styleAttr)
                 val backgroundColorMatch = backgroundColorRegex.find(styleAttr)
 
                 val colorInt: Int? = colorMatch?.groups?.get(1)?.value?.let { hexString ->
-                    Integer.parseInt(hexString, 16)
+                    Integer.parseInt(hexString, 16) or 0xFF000000.toInt()
                 }
 
                 val backgroundColorInt: Int? = backgroundColorMatch?.groups?.get(1)?.value?.let { hexString ->
-                    Integer.parseInt(hexString, 16)
+                    Integer.parseInt(hexString, 16) or 0xFF000000.toInt()
                 }
 
-                createInstance(id, tag.html(), colorInt, backgroundColorInt)
+                createInstance(id, tag.text(), colorInt, backgroundColorInt)
             } ?: emptyList()
     }
 
