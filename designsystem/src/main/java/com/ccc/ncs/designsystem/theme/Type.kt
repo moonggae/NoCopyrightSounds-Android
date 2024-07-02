@@ -16,6 +16,8 @@ object NcsTypography {
     object MusicTypography {
         val Title = TitleTypography
         val Artist = ArtistTypography
+        val ReleaseData = ReleaseDataTypography
+        val Lyrics = LyricsTypography
 
         object TitleTypography {
             val large = TextStyle(
@@ -58,6 +60,24 @@ object NcsTypography {
                 letterSpacing = 0.25.sp
             )
         }
+
+        object ReleaseDataTypography {
+            val large = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                lineHeight = 18.sp,
+                letterSpacing = 0.25.sp
+            )
+        }
+
+        object LyricsTypography {
+            val musicDetail = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                lineHeight = 18.sp,
+                letterSpacing = 0.25.sp
+            )
+        }
     }
 
     object SearchTypography {
@@ -92,10 +112,10 @@ object NcsTypography {
         )
 
         val tagButton = TextStyle(
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Normal,
-            lineHeight = 24.sp,
-            letterSpacing = 0.5.sp
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 20.sp,
+            letterSpacing = 0.24.sp
         )
 
         val bottomSheetItem = TextStyle(
@@ -107,11 +127,10 @@ object NcsTypography {
         )
 
         val contentLabel = TextStyle(
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            lineHeight = 20.sp,
-            letterSpacing = 0.1.sp,
-            textAlign = TextAlign.Center
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
         )
 
         val navigationLabel = TextStyle(

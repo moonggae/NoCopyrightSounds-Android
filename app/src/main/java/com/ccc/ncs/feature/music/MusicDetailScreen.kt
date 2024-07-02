@@ -1,41 +1,54 @@
 package com.ccc.ncs.feature.music
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.library.detail.CommonAppBar
@@ -44,8 +57,9 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.MusicTag
 import com.ccc.ncs.ui.component.mockMusics
-import com.ccc.ncs.ui.model.backgroundColor
-import com.ccc.ncs.ui.model.color
+import com.ccc.ncs.util.conditional
+import com.ccc.ncs.util.toString
+import java.time.LocalDate
 
 
 @Composable
@@ -77,7 +91,7 @@ internal fun MusicDetailScreen(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -87,8 +101,8 @@ internal fun MusicDetailScreen(
             onBack = onBack,
             title = null,
             padding = PaddingValues(
-                top = 4.dp,
-                bottom = 12.dp
+                top = 12.dp,
+                bottom = 16.dp
             ),
             onClickMenu = { }
         )
@@ -96,39 +110,114 @@ internal fun MusicDetailScreen(
         CoverImage(
             url = uiState.music.coverUrl,
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RoundedCornerShape(4.dp))
         )
 
         MusicDetailTitleText(
             title = uiState.music.title,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = 24.dp)
         )
 
-        MusicDetailArtistText(
-            artist = uiState.music.artist,
-            modifier = Modifier.padding(bottom = 12.dp)
+        MusicDetailArtistText(artist = uiState.music.artist)
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            modifier = Modifier.padding(
+                top = 8.dp,
+                bottom = 12.dp
+            )
         )
 
+        MusicDetailReleaseDateText(releaseDate = uiState.music.releaseDate)
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            modifier = Modifier.padding(
+                top = 12.dp,
+                bottom = 15.dp
+            )
+        )
+
+        uiState.lyrics?.let {
+            MusicDetailLyrics(
+                lyrics = uiState.lyrics,
+                modifier = Modifier.padding(bottom = 20.dp)
+            )
+        }
 
         MusicTagContent(
             musicTags = uiState.music.genres,
             onClick = { },
-            modifier = Modifier.padding(vertical = 12.dp)
+            modifier = Modifier.padding(bottom = 28.dp)
         )
 
         MusicTagContent(
             musicTags = uiState.music.moods,
             onClick = { },
-//            modifier = Modifier.padding(vertical = 12.dp)
+        )
+
+        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+        Spacer(Modifier.padding(bottom = 48.dp))
+    }
+}
+
+@Composable
+private fun MusicDetailLyrics(
+    modifier: Modifier = Modifier,
+    lyrics: String
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Column(modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            ContentLabelText(text = "Lyrics")
+            Icon(
+                imageVector = NcsIcons.ArrowDropDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { expanded = !expanded }
+                    .rotate(if (expanded) 180f else 0f)
+            )
+        }
+
+
+        Text(
+            text = lyrics,
+            style = NcsTypography.Music.Lyrics.musicDetail.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .animateContentSize()
+                .conditional(!expanded) {
+                    height(36.dp)
+                }
         )
     }
 }
 
+@Composable
+private fun ContentLabelText(
+    modifier: Modifier = Modifier,
+    text: String
+) {
+    Box(modifier = modifier.height(29.dp)) {
+        Text(
+            text = text,
+            style = NcsTypography.Label.contentLabel.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
+    }
+}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 @NonRestartableComposable
-fun MusicTagContent(
+private fun MusicTagContent(
     modifier: Modifier = Modifier,
     musicTags: Set<MusicTag>,
     onClick: (MusicTag) -> Unit
@@ -140,11 +229,8 @@ fun MusicTagContent(
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
+        ContentLabelText(
             text = label,
-            style = NcsTypography.Label.contentLabel.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -154,26 +240,13 @@ fun MusicTagContent(
         ) {
             musicTags.forEach { tag ->
                 Text(
-                    text = tag.name,
+                    text = "#${tag.name}",
                     style = NcsTypography.Label.tagButton.copy(
-                        color = tag.color()
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            tag
-                                .backgroundColor()
-                                .copy(alpha = 0.6f)
-                        )
-                        .clickable(
-                            onClick = { onClick(tag) },
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(color = tag.color())
-                        )
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 4.dp
-                        )
+                        .clickable(onClick = { onClick(tag) })
                 )
             }
         }
@@ -187,13 +260,17 @@ private fun MusicDetailTitleText(
     modifier: Modifier = Modifier,
     title: String
 ) {
-    Text(
-        text = title,
-        style = NcsTypography.Music.Title.large.copy(
-            color = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = modifier.basicMarquee()
-    )
+    Box(modifier = modifier.height(29.dp)) {
+        Text(
+            text = title,
+            style = NcsTypography.Music.Title.large.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier
+                .basicMarquee()
+                .align(Alignment.CenterStart)
+        )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -202,15 +279,33 @@ private fun MusicDetailArtistText(
     modifier: Modifier = Modifier,
     artist: String
 ) {
-    Text(
-        text = artist,
-        style = NcsTypography.Music.Artist.medium.copy(
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        modifier = modifier.basicMarquee()
-    )
+    Box(modifier = modifier.height(29.dp)) {
+        Text(
+            text = artist,
+            style = NcsTypography.Music.Artist.large.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            modifier = Modifier
+                .basicMarquee()
+                .align(Alignment.TopStart)
+        )
+    }
 }
 
+@Composable
+private fun MusicDetailReleaseDateText(
+    modifier: Modifier = Modifier,
+    releaseDate: LocalDate
+) {
+    Text(
+        text = releaseDate.toString("dd MMM yyyy"),
+        style = NcsTypography.Music.ReleaseData.large.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.End
+        ),
+        modifier = modifier.fillMaxWidth()
+    )
+}
 
 @Preview
 @Composable
@@ -218,7 +313,49 @@ private fun MusicDetailScreenPreview() {
     val successUiState = remember {
         MusicDetailUiState.Success(
             music = mockMusics.first(),
-            lyrics = null
+            lyrics = """
+                In the still of the night
+                Gazing up at the sky
+                When the stars began to fade
+                Dimming lanterns in our eyes
+                Thought there was nothing to find
+                I stopped searching for a reason
+                Just let the world embrace us
+                In the silence we are one
+                 
+                Can't escape from this feeling inside you
+                Released from heart ache, you'll be fine
+                When the cracks start to let your own light through
+                I'll be there to help you shine
+                 
+                I used to come here all the time in late July
+                To send a wish into the night
+                That maybe when one day when we leave the hurt behind
+                We'll fight our way to make our hearts burn bright
+                Like a comet in the sky
+                 
+                (I'll be there to help you—)
+                 
+                I'll promise you this
+                As long as you're looking, you'll see the signs
+                Just for a moment, a flash of light
+                You'll never forget, I heard you crying aloud
+                And a part of me cried with you
+                I'd finally see why all the meteors fall out of our view
+                 
+                Can't escape from this pressure inside you
+                But tonight the stars align
+                When the cracks start to let your own light through
+                I'll be there to help you shine
+                 
+                I used to come here all the time in late July (late July)
+                To send a wish into the night
+                That maybe when one day when we leave the hurt behind
+                We'll find a way to make our hearts burn bright
+                Like a comet in the sky
+                 
+                (Like a comet in the sky)
+            """.trimIndent()
         )
     }
 

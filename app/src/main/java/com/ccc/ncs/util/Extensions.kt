@@ -1,6 +1,8 @@
 package com.ccc.ncs.util
 
 import androidx.compose.ui.Modifier
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 fun <T> List<T>.swap(index1: Int, index2: Int): List<T> {
     return this.toMutableList().apply {
@@ -29,3 +31,5 @@ fun Long.toTimestampMMSS(): String {
     }
     return "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
 }
+
+fun LocalDate.toString(pattern: String): String = this.format(DateTimeFormatter.ofPattern(pattern))
