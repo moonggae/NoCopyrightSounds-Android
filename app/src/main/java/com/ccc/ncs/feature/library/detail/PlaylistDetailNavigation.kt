@@ -14,7 +14,7 @@ const val PLAYLIST_DETAIL_ID_ARG = "playlistId"
 private const val PLAYLIST_DETAIL_ROUTE = "$PLAYLIST_DETAIL_BASE_ROUTE?$PLAYLIST_DETAIL_ID_ARG={$PLAYLIST_DETAIL_ID_ARG}"
 
 fun NavController.navigateToPlaylistDetail(playlistId: UUID) =
-    navigate("$PLAYLIST_DETAIL_BASE_ROUTE?$PLAYLIST_DETAIL_ID_ARG=$playlistId")
+    navigate("$PLAYLIST_DETAIL_BASE_ROUTE?$PLAYLIST_DETAIL_ID_ARG=$playlistId") { launchSingleTop = true }
 
 fun NavGraphBuilder.playlistDetailScreen(
     onBack: () -> Unit,

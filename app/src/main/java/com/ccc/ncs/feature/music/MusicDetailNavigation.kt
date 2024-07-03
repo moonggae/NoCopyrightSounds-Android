@@ -11,7 +11,7 @@ const val MUSIC_DETAIL_ID_ARG = "musicId"
 private const val MUSIC_DETAIL_ROUTE = "$MUSIC_DETAIL_BASE_ROUTE?$MUSIC_DETAIL_ID_ARG={$MUSIC_DETAIL_ID_ARG}"
 
 fun NavController.navigateToMusicDetail(musicId: UUID) =
-    navigate("$MUSIC_DETAIL_BASE_ROUTE?$MUSIC_DETAIL_ID_ARG=$musicId")
+    navigate("$MUSIC_DETAIL_BASE_ROUTE?$MUSIC_DETAIL_ID_ARG=$musicId") { launchSingleTop = true }
 
 fun NavGraphBuilder.musicDetailScreen(
     onBack: () -> Unit

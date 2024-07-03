@@ -22,7 +22,7 @@ fun NavController.navigateToEditPlaylist(
         "$EDIT_PLAYLIST_BASE_ROUTE?$EDIT_PLAYLIST_ID_ARG=$id"
     }
 
-    navigate(route)
+    navigate(route) { launchSingleTop = true }
 }
 
 fun NavGraphBuilder.editPlaylistScreen(

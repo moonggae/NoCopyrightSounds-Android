@@ -16,16 +16,13 @@ const val SEARCHED_QUERY = "SEARCHED_QUERY"
 fun NavController.navigateToSearch(
     query: String? = null
 ) {
-    // 연속 클릭 방지
-    if (currentBackStackEntry?.destination?.route?.startsWith(SEARCH_BASE_ROUTE) == true) return
-
     val route = if (query.isNullOrEmpty()) {
         SEARCH_BASE_ROUTE
     } else {
         "$SEARCH_BASE_ROUTE?$SEARCH_QUERY_ARG=$query"
     }
 
-    navigate(route)
+    navigate(route) { launchSingleTop = true }
 }
 
 fun NavController.backFromSearch(
