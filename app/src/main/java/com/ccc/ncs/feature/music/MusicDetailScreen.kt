@@ -66,6 +66,8 @@ import java.time.LocalDate
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: MusicDetailViewModel = hiltViewModel(),
+    onClickMood: (Mood) -> Unit,
+    onClickGenre: (Genre) -> Unit,
     onBack: () -> Unit
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -74,6 +76,8 @@ fun MusicDetailRoute(
         is MusicDetailUiState.Success -> MusicDetailScreen(
             modifier = modifier,
             uiState = uiState,
+            onClickMood = onClickMood,
+            onClickGenre = onClickGenre,
             onBack = onBack
         )
 
@@ -87,6 +91,8 @@ fun MusicDetailRoute(
 internal fun MusicDetailScreen(
     modifier: Modifier = Modifier,
     uiState: MusicDetailUiState.Success,
+    onClickMood: (Mood) -> Unit,
+    onClickGenre: (Genre) -> Unit,
     onBack: () -> Unit
 ) {
     Column(
@@ -147,13 +153,13 @@ internal fun MusicDetailScreen(
 
         MusicTagContent(
             musicTags = uiState.music.genres,
-            onClick = { },
+            onClick = onClickGenre,
             modifier = Modifier.padding(bottom = 28.dp)
         )
 
         MusicTagContent(
             musicTags = uiState.music.moods,
-            onClick = { },
+            onClick = onClickMood
         )
 
         Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
@@ -217,10 +223,10 @@ private fun ContentLabelText(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 @NonRestartableComposable
-private fun MusicTagContent(
+private fun <T: MusicTag> MusicTagContent(
     modifier: Modifier = Modifier,
-    musicTags: Set<MusicTag>,
-    onClick: (MusicTag) -> Unit
+    musicTags: Set<T>,
+    onClick: (T) -> Unit
 ) {
     val label: String = when {
         musicTags.any { it is Genre } -> stringResource(R.string.Genres)
@@ -367,7 +373,9 @@ private fun MusicDetailScreenPreview() {
         ) {
             MusicDetailScreen(
                 uiState = successUiState,
-                onBack = {}
+                onBack = {},
+                onClickGenre = {},
+                onClickMood = {}
             )
         }
     }

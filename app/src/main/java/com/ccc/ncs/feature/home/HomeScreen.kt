@@ -62,9 +62,11 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     onClickSearchBar: (String?) -> Unit,
     searchQuery: String?,
+    selectedGenreId: Int?,
+    selectedMooId: Int?,
     onPlayMusics: (List<Music>) -> Unit,
     onAddToQueue: (List<Music>) -> Unit,
-    navigateToMusicDetail: (Music) -> Unit
+    navigateToMusicDetail: (Music) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -72,9 +74,25 @@ fun HomeRoute(
         viewModel.onSearchQueryChanged(query = searchQuery)
     }
 
+    LaunchedEffect(selectedGenreId) {
+        if (selectedGenreId != null) {
+            homeUiState.genres.find { it.id == selectedGenreId }?.let { genre ->
+                viewModel.onUpdateTagFromDetail(genre)
+            }
+        }
+    }
+
+    LaunchedEffect(selectedMooId) {
+        if (selectedMooId != null) {
+            homeUiState.moods.find { it.id == selectedMooId }?.let { mood ->
+                viewModel.onUpdateTagFromDetail(mood)
+            }
+        }
+    }
+
     HomeScreen(
         modifier = modifier,
-        testMusics = viewModel.musics.collectAsLazyPagingItems(),
+        musics = viewModel.musics.collectAsLazyPagingItems(),
         homeUiState = homeUiState,
         updateSearchQuery = viewModel::onSearchQueryChanged,
         updateSearchGenre = viewModel::onSearchGenreChanged,
@@ -95,7 +113,7 @@ fun HomeRoute(
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
-    testMusics: LazyPagingItems<Music>,
+    musics: LazyPagingItems<Music>,
     homeUiState: HomeUiState,
     updateSearchQuery: (query: String?) -> Unit,
     updateSearchGenre: (Genre?) -> Unit,
@@ -113,8 +131,8 @@ internal fun HomeScreen(
     var showSelectMusicMenu by remember { mutableStateOf(false) }
     var showAddMusicsToPlaylistDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(testMusics.loadState.refresh) {
-        if (testMusics.loadState.refresh is LoadState.Loading) {
+    LaunchedEffect(musics.loadState.refresh) {
+        if (musics.loadState.refresh is LoadState.Loading) {
             listState.scrollToItem(0)
         }
     }
@@ -152,7 +170,7 @@ internal fun HomeScreen(
             }
 
             MusicCardList(
-                musicItems = testMusics,
+                musicItems = musics,
                 selectedMusics = homeUiState.selectedMusics,
                 nestedScrollConnection = scrollBehavior.nestedScrollConnection,
                 updateSelectMusic = updateSelectMusic,

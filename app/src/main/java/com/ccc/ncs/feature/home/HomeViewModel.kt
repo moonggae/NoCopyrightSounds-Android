@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -7,6 +8,7 @@ import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicTag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> get() = _uiState
@@ -85,6 +88,31 @@ class HomeViewModel @Inject constructor(
                 state.copy(
                     searchUiState = state.searchUiState.copy(mood = mood)
                 )
+            }
+        }
+    }
+
+    fun <T: MusicTag> onUpdateTagFromDetail(tag: T) {
+        viewModelScope.launch {
+            _uiState.update { state ->
+                val updateState = when (tag) {
+                    is Genre -> state.copy(
+                        searchUiState = state.searchUiState.copy(
+                            genre = tag,
+                            mood = null,
+                            query = null
+                        )
+                    )
+                    is Mood -> state.copy(
+                        searchUiState = state.searchUiState.copy(
+                            mood = tag,
+                            genre = null,
+                            query = null
+                        )
+                    )
+                    else -> state
+                }
+                updateState
             }
         }
     }

@@ -12,6 +12,8 @@ import com.ccc.ncs.feature.library.edit.editPlaylistScreen
 import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.library.libraryScreen
 import com.ccc.ncs.feature.menu.menuScreen
+import com.ccc.ncs.feature.music.backWithGenre
+import com.ccc.ncs.feature.music.backWithMood
 import com.ccc.ncs.feature.music.musicDetailScreen
 import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.search.backFromSearch
@@ -57,7 +59,9 @@ fun NcsNavHost(
             onPlayPlaylist = onPlayPlaylist
         )
         musicDetailScreen(
-            onBack = navController::navigateUp
+            onBack = navController::navigateUp,
+            onClickGenre = { navController.backWithGenre(it.id) },
+            onClickMood = { navController.backWithMood(it.id) }
         )
     }
 }

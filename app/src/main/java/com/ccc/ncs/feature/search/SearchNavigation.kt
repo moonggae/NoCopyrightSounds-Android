@@ -31,7 +31,7 @@ fun NavController.backFromSearch(
     previousBackStackEntry
         ?.savedStateHandle
         ?.set(SEARCHED_QUERY, searchedQuery)
-    popBackStack()
+    navigateUp()
 }
 
 fun NavGraphBuilder.searchScreen(
