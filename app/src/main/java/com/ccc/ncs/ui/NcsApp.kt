@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,6 +75,13 @@ fun NcsApp(
             Row(Modifier.fillMaxSize()) {
                 NcsNavHost(
                     appState = appState,
+                    onShowSnackbar = { message, action ->
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            actionLabel = action,
+                            duration = Short,
+                        ) == ActionPerformed
+                    },
                     onPlayMusics = playerViewModel::playMusics,
                     onPlayPlaylist = playerViewModel::playPlayList,
                     onAddToQueue = playerViewModel::addToQueue

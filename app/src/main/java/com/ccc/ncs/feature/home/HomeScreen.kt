@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -55,11 +56,13 @@ import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.GenreModalBottomSheet
 import com.ccc.ncs.ui.component.MoodModalBottomSheet
 import com.ccc.ncs.ui.component.MusicCardList
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickSearchBar: (String?) -> Unit,
     searchQuery: String?,
     selectedGenreId: Int?,
@@ -94,6 +97,7 @@ fun HomeRoute(
         modifier = modifier,
         musics = viewModel.musics.collectAsLazyPagingItems(),
         homeUiState = homeUiState,
+        onShowSnackbar = onShowSnackbar,
         updateSearchQuery = viewModel::onSearchQueryChanged,
         updateSearchGenre = viewModel::onSearchGenreChanged,
         updateSearchMood = viewModel::onSearchMoodChanged,
@@ -115,6 +119,7 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     musics: LazyPagingItems<Music>,
     homeUiState: HomeUiState,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     updateSearchQuery: (query: String?) -> Unit,
     updateSearchGenre: (Genre?) -> Unit,
     updateSearchMood: (Mood?) -> Unit,
@@ -125,11 +130,16 @@ internal fun HomeScreen(
     onAddToQueue: (List<Music>) -> Unit,
     onClickMusic: (Music) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var appbarHeight by remember { mutableStateOf(120.dp) }
     var showSelectMusicMenu by remember { mutableStateOf(false) }
     var showAddMusicsToPlaylistDialog by remember { mutableStateOf(false) }
+
+    val addedToQueueMessage = stringResource(R.string.message_added_to_queue)
+    val addedToPlaylistMessage = stringResource(R.string.message_added_to_playlist)
 
     LaunchedEffect(musics.loadState.refresh) {
         if (musics.loadState.refresh is LoadState.Loading) {
@@ -200,6 +210,7 @@ internal fun HomeScreen(
             onAddToQueue(homeUiState.selectedMusics)
             showSelectMusicMenu = false
             updateSelectMode(false)
+            scope.launch { onShowSnackbar(addedToQueueMessage, null) }
         }
     )
 
@@ -211,6 +222,7 @@ internal fun HomeScreen(
             showAddMusicsToPlaylistDialog = false
             showSelectMusicMenu = false
             updateSelectMode(false)
+            scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
         }
     )
 }

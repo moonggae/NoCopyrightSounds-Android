@@ -34,6 +34,7 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,23 +52,30 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.feature.home.SelectMusicMenuBottomSheet
+import com.ccc.ncs.feature.home.addmusictoplaylistdialog.AddMusicsToPlaylistDialog
 import com.ccc.ncs.feature.library.detail.CommonAppBar
 import com.ccc.ncs.feature.library.detail.CoverImage
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
+import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicTag
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toString
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
 @Composable
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     viewModel: MusicDetailViewModel = hiltViewModel(),
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
+    onPlayMusic: (Music) -> Unit,
+    onAddToQueue: (Music) -> Unit,
     onBack: () -> Unit
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -76,8 +84,11 @@ fun MusicDetailRoute(
         is MusicDetailUiState.Success -> MusicDetailScreen(
             modifier = modifier,
             uiState = uiState,
+            onShowSnackbar = onShowSnackbar,
             onClickMood = onClickMood,
             onClickGenre = onClickGenre,
+            onPlayMusic = onPlayMusic,
+            onAddToQueue = onAddToQueue,
             onBack = onBack
         )
 
@@ -91,10 +102,21 @@ fun MusicDetailRoute(
 internal fun MusicDetailScreen(
     modifier: Modifier = Modifier,
     uiState: MusicDetailUiState.Success,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
+    onPlayMusic: (Music) -> Unit,
+    onAddToQueue: (Music) -> Unit,
     onBack: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
+    var showMenu by remember { mutableStateOf(false) }
+    var showAddMusicsToPlaylistDialog by remember { mutableStateOf(false) }
+
+    val addedToQueueMessage = stringResource(R.string.message_added_to_queue)
+    val addedToPlaylistMessage = stringResource(R.string.message_added_to_playlist)
+    
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -110,7 +132,7 @@ internal fun MusicDetailScreen(
                 top = 12.dp,
                 bottom = 16.dp
             ),
-            onClickMenu = { }
+            onClickMenu = { showMenu = true }
         )
 
         CoverImage(
@@ -165,6 +187,33 @@ internal fun MusicDetailScreen(
         Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
         Spacer(Modifier.padding(bottom = 48.dp))
     }
+
+
+    SelectMusicMenuBottomSheet(
+        show = showMenu,
+        onDismissRequest = { showMenu = false },
+        onClickPlayNow = {
+            onPlayMusic(uiState.music)
+            showMenu = false
+        },
+        onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
+        onClickAddToQueue = {
+            onAddToQueue(uiState.music)
+            showMenu = false
+            scope.launch { onShowSnackbar(addedToQueueMessage, null) }
+        }
+    )
+
+    AddMusicsToPlaylistDialog(
+        show = showAddMusicsToPlaylistDialog,
+        onDismissRequest = { showAddMusicsToPlaylistDialog = false },
+        musics = listOf(uiState.music),
+        onFinish = {
+            showAddMusicsToPlaylistDialog = false
+            showMenu = false
+            scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
+        }
+    )
 }
 
 @Composable
@@ -374,8 +423,11 @@ private fun MusicDetailScreenPreview() {
             MusicDetailScreen(
                 uiState = successUiState,
                 onBack = {},
+                onShowSnackbar = { _, _ -> true },
                 onClickGenre = {},
-                onClickMood = {}
+                onClickMood = {},
+                onPlayMusic = {},
+                onAddToQueue = {}
             )
         }
     }

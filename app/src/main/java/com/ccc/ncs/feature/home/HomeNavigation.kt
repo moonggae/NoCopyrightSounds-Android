@@ -19,6 +19,7 @@ fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HOME_ROUTE, 
 
 fun NavGraphBuilder.homeScreen(
     onMoveToSearchScreen: (String?) -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<Music>) -> Unit,
     onAddToQueue: (List<Music>) -> Unit,
     navigateToMusicDetail: (UUID) -> Unit
@@ -30,6 +31,7 @@ fun NavGraphBuilder.homeScreen(
 
         HomeRoute(
             onClickSearchBar = onMoveToSearchScreen,
+            onShowSnackbar = onShowSnackbar,
             searchQuery = searchedQuery,
             selectedGenreId = selectedGenreId,
             selectedMooId = selectedMooId,

@@ -8,6 +8,7 @@ import com.ccc.ncs.feature.home.SELECTED_MOOD_ID
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
+import com.ccc.ncs.model.Music
 import java.util.UUID
 
 
@@ -43,14 +44,20 @@ fun NavController.backWithMood(moodId: Int) {
 
 fun NavGraphBuilder.musicDetailScreen(
     onBack: () -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
+    onPlayMusics: (List<Music>) -> Unit,
+    onAddToQueue: (List<Music>) -> Unit,
 ) {
     composable(route = MUSIC_DETAIL_ROUTE) {
         MusicDetailRoute(
             onBack = onBack,
+            onShowSnackbar = onShowSnackbar,
             onClickMood = onClickMood,
             onClickGenre = onClickGenre,
+            onPlayMusic = { onPlayMusics(listOf(it)) },
+            onAddToQueue = { onAddToQueue(listOf(it)) }
         )
     }
 }

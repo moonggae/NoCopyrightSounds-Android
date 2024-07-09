@@ -28,6 +28,7 @@ fun NcsNavHost(
     appState: NcsAppState,
     modifier: Modifier = Modifier,
     startDestination: String = HOME_ROUTE,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<Music>) -> Unit,
     onPlayPlaylist: (PlayList) -> Unit,
     onAddToQueue: (List<Music>) -> Unit
@@ -41,6 +42,7 @@ fun NcsNavHost(
     ) {
         homeScreen(
             onMoveToSearchScreen = { navController.navigateToSearch(it) },
+            onShowSnackbar = onShowSnackbar,
             onPlayMusics = onPlayMusics,
             onAddToQueue = onAddToQueue,
             navigateToMusicDetail = { navController.navigateToMusicDetail(it) }
@@ -60,8 +62,11 @@ fun NcsNavHost(
         )
         musicDetailScreen(
             onBack = navController::navigateUp,
+            onShowSnackbar = onShowSnackbar,
             onClickGenre = { navController.backWithGenre(it.id) },
-            onClickMood = { navController.backWithMood(it.id) }
+            onClickMood = { navController.backWithMood(it.id) },
+            onPlayMusics = onPlayMusics,
+            onAddToQueue = onAddToQueue
         )
     }
 }
