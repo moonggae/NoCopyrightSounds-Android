@@ -1,6 +1,8 @@
 package com.ccc.ncs.feature.home
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -24,17 +26,41 @@ fun NavGraphBuilder.homeScreen(
     onAddToQueue: (List<Music>) -> Unit,
     navigateToMusicDetail: (UUID) -> Unit
 ) {
-    composable(route = HOME_ROUTE) {
-        val searchedQuery: String? by it.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
-        val selectedGenreId: Int? by it.savedStateHandle.getStateFlow(SELECTED_GENRE_ID, null).collectAsStateWithLifecycle()
-        val selectedMooId: Int? by it.savedStateHandle.getStateFlow(SELECTED_MOOD_ID, null).collectAsStateWithLifecycle()
+    composable(route = HOME_ROUTE) { backStackEntry ->
+        val viewModel: HomeViewModel = hiltViewModel()
+        val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        val searchedQuery: String? by backStackEntry.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
+        val selectedGenreId: Int? by backStackEntry.savedStateHandle.getStateFlow(SELECTED_GENRE_ID, null).collectAsStateWithLifecycle()
+        val selectedMoodId: Int? by backStackEntry.savedStateHandle.getStateFlow(SELECTED_MOOD_ID, null).collectAsStateWithLifecycle()
+
+        LaunchedEffect(searchedQuery) {
+            viewModel.onSearchQueryChanged(query = searchedQuery)
+        }
+
+        LaunchedEffect(selectedGenreId) {
+            if (selectedGenreId != null) {
+                homeUiState.genres.find { it.id == selectedGenreId }?.let { genre ->
+                    viewModel.onUpdateTagFromDetail(genre)
+                }
+                backStackEntry.savedStateHandle[SELECTED_GENRE_ID] = null
+            }
+        }
+
+        LaunchedEffect(selectedMoodId) {
+            if (selectedMoodId != null) {
+                homeUiState.moods.find { it.id == selectedMoodId }?.let { mood ->
+                    viewModel.onUpdateTagFromDetail(mood)
+                }
+                backStackEntry.savedStateHandle[SELECTED_MOOD_ID] = null
+            }
+        }
 
         HomeRoute(
+            viewModel = viewModel,
             onClickSearchBar = onMoveToSearchScreen,
             onShowSnackbar = onShowSnackbar,
-            searchQuery = searchedQuery,
-            selectedGenreId = selectedGenreId,
-            selectedMooId = selectedMooId,
+            onUpdateSearchQuery = { backStackEntry.savedStateHandle[SEARCHED_QUERY] = it },
             onPlayMusics = onPlayMusics,
             onAddToQueue = onAddToQueue,
             navigateToMusicDetail = { music -> navigateToMusicDetail(music.id) }

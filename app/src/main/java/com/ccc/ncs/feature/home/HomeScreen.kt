@@ -63,42 +63,20 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     onShowSnackbar: suspend (String, String?) -> Boolean,
+    onUpdateSearchQuery: (String?) -> Unit,
     onClickSearchBar: (String?) -> Unit,
-    searchQuery: String?,
-    selectedGenreId: Int?,
-    selectedMooId: Int?,
     onPlayMusics: (List<Music>) -> Unit,
     onAddToQueue: (List<Music>) -> Unit,
     navigateToMusicDetail: (Music) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(searchQuery) {
-        viewModel.onSearchQueryChanged(query = searchQuery)
-    }
-
-    LaunchedEffect(selectedGenreId) {
-        if (selectedGenreId != null) {
-            homeUiState.genres.find { it.id == selectedGenreId }?.let { genre ->
-                viewModel.onUpdateTagFromDetail(genre)
-            }
-        }
-    }
-
-    LaunchedEffect(selectedMooId) {
-        if (selectedMooId != null) {
-            homeUiState.moods.find { it.id == selectedMooId }?.let { mood ->
-                viewModel.onUpdateTagFromDetail(mood)
-            }
-        }
-    }
-
     HomeScreen(
         modifier = modifier,
         musics = viewModel.musics.collectAsLazyPagingItems(),
         homeUiState = homeUiState,
         onShowSnackbar = onShowSnackbar,
-        updateSearchQuery = viewModel::onSearchQueryChanged,
+        updateSearchQuery = onUpdateSearchQuery,
         updateSearchGenre = viewModel::onSearchGenreChanged,
         updateSearchMood = viewModel::onSearchMoodChanged,
         updateSelectMode = viewModel::updateSelectMode,
@@ -161,7 +139,7 @@ internal fun HomeScreen(
                     containerHeight = appbarHeight,
                     scrollBehavior = scrollBehavior
                 ) {
-                    SearchBox(
+                    MusicSearchBox(
                         uiState = homeUiState.searchUiState,
                         genres = homeUiState.genres,
                         moods = homeUiState.moods,
@@ -326,7 +304,7 @@ fun SearchAppBar(
 }
 
 @Composable
-fun SearchBox(
+fun MusicSearchBox(
     uiState: SearchUiState,
     genres: List<Genre>,
     moods: List<Mood>,
@@ -436,7 +414,7 @@ fun CustomFlowRow(
 fun SearchAppBarPreview() {
     NcsTheme(darkTheme = true) {
         SearchAppBar(scrollBehavior = null) {
-            SearchBox(
+            MusicSearchBox(
                 uiState = SearchUiState(),
                 genres = emptyList(),
                 moods = emptyList(),
@@ -456,7 +434,7 @@ fun SearchAppBarPreview() {
 fun SearchAppBarQueryPreview() {
     NcsTheme(darkTheme = true) {
         SearchAppBar(scrollBehavior = null) {
-            SearchBox(
+            MusicSearchBox(
                 uiState = SearchUiState(
                     query = "Alan Walker",
                     genre = Genre(

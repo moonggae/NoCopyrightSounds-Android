@@ -81,7 +81,7 @@ fun ListItemCard(
     modifier: Modifier = Modifier,
     thumbnail: Painter,
     label: String,
-    description: String,
+    description: String?,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     suffix: (@Composable () -> Unit)? = null
@@ -114,7 +114,7 @@ fun ListItemCard(
     modifier: Modifier = Modifier,
     prefix: (@Composable () -> Unit)? = null,
     label: String,
-    description: String,
+    description: String?,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     suffix: (@Composable () -> Unit)? = null
@@ -143,13 +143,15 @@ fun ListItemCard(
                     ),
                     modifier = Modifier.basicMarquee()
                 )
-                Text(
-                    text = description,
-                    style = style.descriptionTextStyle.copy(
-                        color = color.descriptionColor
-                    ),
-                    modifier = Modifier.basicMarquee()
-                )
+                description?.let {
+                    Text(
+                        text = description,
+                        style = style.descriptionTextStyle.copy(
+                            color = color.descriptionColor
+                        ),
+                        modifier = Modifier.basicMarquee()
+                    )
+                }
             }
 
             suffix?.invoke()
@@ -163,7 +165,7 @@ fun ListItemCard(
     thumbnail: String,
     thumbnailPlaceholder: Painter? = null,
     label: String,
-    description: String,
+    description: String?,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     suffix: (@Composable () -> Unit)? = null

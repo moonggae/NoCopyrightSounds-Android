@@ -13,6 +13,9 @@
     <string name="select_playlist_dialog_title">Select Playlist</string>
     <string name="select_playlist_dialog_no_playlist_available">No playlist available</string>
 
+    <string name="message_added_to_queue">Added to queue</string>
+    <string name="message_added_to_playlist">Added to playlist</string>
+
     <string name="add_new_playlist">Add New Playlist</string>
     <string name="songs_count">%1$s songs</string>
 
@@ -26,6 +29,12 @@
     <string name="player_menu_lyrics_empty">There is no Lyrics</string>
     <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[You can post the lyrics to click <annotation>here</annotation>]]></string>
 
+    <string name="artist_search_placeholder">Search Artists</string>
+    <string name="artist_sort_label_latest_artists">Latest Artists</string>
+    <string name="artist_sort_label_a_to_z">A - Z</string>
+    <string name="artist_sort_label_z_to_a">Z - A</string>
+    <string name="artist_year_all_release_years">All Release Years</string>
+
     <string name="Genre">Genre</string>
     <string name="Genres">Genres</string>
     <string name="Mood">Mood</string>
@@ -34,6 +43,4 @@
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
     <string name="auto_generated_playlist_name">Recent Playlist</string>
-    <string name="message_added_to_queue">Added to queue</string>
-    <string name="message_added_to_playlist">Added to playlist</string>
 </resources>

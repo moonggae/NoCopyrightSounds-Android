@@ -21,7 +21,7 @@ class ArtistListConverter: Converter<ResponseBody, List<Artist>> {
 
         return artistElements.map { element ->
             val detailUrl = element.select("a").attr("href")
-            val name = element.select("div.bottom strong").html()
+            val name = element.select("div.bottom strong").text()
             val imageStyleString = element.select("div.img").attr("style")
             val photoUrl = imageStyleString.split("'")[1]
 

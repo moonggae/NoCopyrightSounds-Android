@@ -47,7 +47,9 @@ fun NcsNavHost(
             onAddToQueue = onAddToQueue,
             navigateToMusicDetail = { navController.navigateToMusicDetail(it) }
         )
-        artistScreen()
+        artistScreen(
+            onMoveToSearchScreen = { navController.navigateToSearch(it) },
+        )
         libraryScreen(
             navigateToEdit = navController::navigateToEditPlaylist,
             navigateToDetail = { navController.navigateToPlaylistDetail(it.id) }
