@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import com.ccc.ncs.data.paging.ARTIST_LOAD_SIZE
 import com.ccc.ncs.data.paging.ArtistPagingSource
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.ArtistDetail
 import com.ccc.ncs.network.NcsNetworkDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class DefaultArtistRepository @Inject constructor(
@@ -31,5 +33,10 @@ internal class DefaultArtistRepository @Inject constructor(
             year = year
         )
     }.flow
+
+    override fun getArtistDetail(artistDetailPath: String): Flow<ArtistDetail?> = flow {
+        emit(network.getArtistDetail(artistDetailPath))
+    }
+
 
 }

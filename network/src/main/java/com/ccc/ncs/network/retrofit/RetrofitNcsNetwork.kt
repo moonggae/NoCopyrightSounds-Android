@@ -2,12 +2,14 @@ package com.ccc.ncs.network.retrofit
 
 
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.model.ArtistDetail
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.network.BuildConfig
 import com.ccc.ncs.network.NcsNetworkDataSource
 import com.ccc.ncs.network.converter.NcsHtmlConverterFactory
+import com.ccc.ncs.network.util.joinUri
 import okhttp3.Call
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -43,6 +45,9 @@ class RetrofitNcsNetwork @Inject constructor(
         sort: String?,
         year: Int?
     ): List<Artist> = networkApi.getArtistList(page, query, sort, year).body() ?: emptyList()
+
+    override suspend fun getArtistDetail(path: String): ArtistDetail? =
+        networkApi.getArtistDetail(joinUri(WEB_URL, path).toString()).body()
 
     override suspend fun getAllGenreAndMood(): Pair<List<Genre>, List<Mood>> =
         networkApi.getAllGenreAndMood().body() ?: Pair(emptyList(), emptyList())

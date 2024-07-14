@@ -30,7 +30,7 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         }
     }
 
-    private fun parseMusicList(document: Document): List<Music> {
+    fun parseMusicList(document: Document): List<Music> {
         val musicTable = findMusicTable(document)
         return musicTable?.select("tbody > tr")?.mapNotNull { row ->
             parseMusicRow(row)
@@ -134,5 +134,9 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         return Version.entries.filter { version ->
             versionString.uppercase().contains(version.name.uppercase())
         }.toSet()
+    }
+
+    companion object {
+
     }
 }

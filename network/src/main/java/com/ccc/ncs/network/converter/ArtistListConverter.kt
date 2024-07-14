@@ -16,7 +16,7 @@ class ArtistListConverter: Converter<ResponseBody, List<Artist>> {
         return parseArtists(document)
     }
 
-    private fun parseArtists(document: Document): List<Artist> {
+    fun parseArtists(document: Document): List<Artist> {
         val artistElements = findArtistDivs(document)
 
         return artistElements.map { element ->
@@ -24,11 +24,13 @@ class ArtistListConverter: Converter<ResponseBody, List<Artist>> {
             val name = element.select("div.bottom strong").text()
             val imageStyleString = element.select("div.img").attr("style")
             val photoUrl = imageStyleString.split("'")[1]
+            val tags = element.select("span.tags").text()
 
             Artist(
                 name = name,
                 detailUrl = detailUrl,
-                photoUrl = if (photoUrl.startsWith("/static")) WEB_URL + photoUrl else photoUrl
+                photoUrl = if (photoUrl.startsWith("/static")) WEB_URL + photoUrl else photoUrl,
+                tags = tags
             )
         }
     }
