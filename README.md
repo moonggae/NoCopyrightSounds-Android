@@ -19,9 +19,39 @@
 - [ ] Fandom wiki path 검토
 - [ ] 백엔드 추가시 검색 및 필터링 변경
 
-
 ### 🛠️ Tech
 `Compose`, `Media3`, `Hilt`, `Coroutines`, `Flow`, `Retrofit`, `Room`, `Coil`, `Unit Test`
+
+### 📖 How to run
+- `local.properties`파일에 아래 항목 추가
+- add the below data to `local.properties`
+```
+WEB_URL="https://ncs.io"
+FANDOM_URL="https://nocopyrightsounds.fandom.com"
+```
+
+
+> #### For release mode
+1. `app`디렉토리에 keystore 파일 추가
+- add keystore file to `app` directory 
+
+2. `keystore.properties`파일 추가, keystore 정보 입력
+- add `keystore.properties` file and write keystore data following below
+```
+RELEASE_KEY_STORE={KEY_STORE_FILE_NAME}
+RELEASE_KEY_PASSWORD={KEY_STORE_KEY_PASSWORD}
+RELEASE_KEY_ALIAS={KEY_STORE_KEY_ALIAS}
+RELEASE_KEY_ALIAS_PASSWORD={KEY_STORE_ALIAS_PASSWORD}
+
+# example
+# RELEASE_KEY_STORE=ncs.keystore
+# RELEASE_KEY_PASSWORD=my_password
+# RELEASE_KEY_ALIAS=alias0
+# RELEASE_KEY_ALIAS_PASSWORD=alias0_password
+```
+
+
+
 
 ### 📱 Result
 

@@ -9,10 +9,6 @@ plugins {
     alias(libs.plugins.secrets)
 }
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-
 android {
     namespace = "com.ccc.ncs"
     compileSdk = 34
@@ -32,10 +28,18 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(keystoreProperties["RELEASE_KEY_STORE"] as String)
-            storePassword = keystoreProperties["RELEASE_KEY_PASSWORD"] as String
-            keyAlias = keystoreProperties["RELEASE_KEY_ALIAS"] as String
-            keyPassword = keystoreProperties["RELEASE_KEY_ALIAS_PASSWORD"] as String
+            val keystorePropertiesFile = rootProject.file("keystore.properties")
+            if (keystorePropertiesFile.exists()) {
+                val keystoreProperties = Properties()
+                keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+                storeFile = file(keystoreProperties["RELEASE_KEY_STORE"] as String)
+                storePassword = keystoreProperties["RELEASE_KEY_PASSWORD"] as String
+                keyAlias = keystoreProperties["RELEASE_KEY_ALIAS"] as String
+                keyPassword = keystoreProperties["RELEASE_KEY_ALIAS_PASSWORD"] as String
+            } else {
+                println("Warning: keystore.properties file not found. Release signing configuration will not be set.")
+            }
         }
     }
 
