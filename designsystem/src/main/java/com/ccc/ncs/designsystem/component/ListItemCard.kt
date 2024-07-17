@@ -162,7 +162,7 @@ fun ListItemCard(
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
-    thumbnail: String,
+    thumbnail: String?,
     thumbnailPlaceholder: Painter? = null,
     label: String,
     description: String?,
@@ -174,7 +174,8 @@ fun ListItemCard(
         modifier = modifier,
         thumbnail = rememberAsyncImagePainter(
             model = thumbnail,
-            placeholder = thumbnailPlaceholder
+            placeholder = thumbnailPlaceholder,
+            fallback = thumbnailPlaceholder
         ),
         label = label,
         description = description,

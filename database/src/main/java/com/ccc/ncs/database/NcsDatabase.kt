@@ -18,6 +18,7 @@ import com.ccc.ncs.database.model.RecentSearchQueryEntity
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
 import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
+import com.ccc.ncs.database.util.ArtistConverter
 import com.ccc.ncs.database.util.InstantConverter
 
 @Database(
@@ -31,10 +32,11 @@ import com.ccc.ncs.database.util.InstantConverter
         PlayListMusicCrossRef::class,
         RecentSearchQueryEntity::class
     ],
-    version = 2
+    version = 3
 )
 @TypeConverters(
     InstantConverter::class,
+    ArtistConverter::class
 )
 abstract class NcsDatabase : RoomDatabase() {
     abstract fun genreDao(): GenreDao
@@ -47,5 +49,13 @@ abstract class NcsDatabase : RoomDatabase() {
 val MIGRATION_1_2_AddIsUserCreatedPlaylistColumn = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE play_list ADD COLUMN isUserCreated INTEGER NOT NULL DEFAULT 1")
+    }
+}
+
+val MIGRATION_2_3_AddArtistToMusic = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE music DROP COLUMN artist")
+        db.execSQL("ALTER TABLE music DROP COLUMN artistDetailUrl")
+        db.execSQL("ALTER TABLE music ADD COLUMN artists TEXT NOT NULL DEFAULT ''")
     }
 }

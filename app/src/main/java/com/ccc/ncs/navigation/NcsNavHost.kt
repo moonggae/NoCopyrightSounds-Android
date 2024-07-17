@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.ccc.ncs.feature.artist.artistScreen
+import com.ccc.ncs.feature.artist.detail.artistDetailScreen
+import com.ccc.ncs.feature.artist.detail.navigateToArtistDetail
 import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.homeScreen
 import com.ccc.ncs.feature.library.detail.navigateToPlaylistDetail
@@ -49,6 +51,12 @@ fun NcsNavHost(
         )
         artistScreen(
             onMoveToSearchScreen = { navController.navigateToSearch(it) },
+            onMoveToDetail = { navController.navigateToArtistDetail(it) }
+        )
+        artistDetailScreen(
+            onBack = navController::navigateUp,
+            onNavigateToMusicDetail = { navController.navigateToMusicDetail(it.id) },
+            onNavigateToArtistDetail = { navController.navigateToArtistDetail(it.detailUrl) }
         )
         libraryScreen(
             navigateToEdit = navController::navigateToEditPlaylist,
@@ -68,7 +76,8 @@ fun NcsNavHost(
             onClickGenre = { navController.backWithGenre(it.id) },
             onClickMood = { navController.backWithMood(it.id) },
             onPlayMusics = onPlayMusics,
-            onAddToQueue = onAddToQueue
+            onAddToQueue = onAddToQueue,
+            navigateToArtistDetail = navController::navigateToArtistDetail
         )
     }
 }

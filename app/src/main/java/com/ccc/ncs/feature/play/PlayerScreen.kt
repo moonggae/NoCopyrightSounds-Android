@@ -46,6 +46,8 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -70,15 +72,17 @@ import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.feature.music.ArtistList
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.model.artistText
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toTimestampMMSS
 import kotlinx.coroutines.launch
 import java.util.UUID
-import kotlin.reflect.KFunction2
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -95,7 +99,9 @@ fun PlayerScreen(
     onShuffle: (Boolean) -> Unit,
     onRepeat: (Boolean) -> Unit,
     onClose: () -> Unit,
-    onUpdateMusicOrder: KFunction2<Int, Int, Unit>
+    onUpdateMusicOrder: (Int, Int) -> Unit,
+    onMoveToMusicDetail: (Music) -> Unit,
+    onMoveToArtistDetail: (Artist) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -152,12 +158,14 @@ fun PlayerScreen(
                         onShuffle = onShuffle,
                         onRepeat = onRepeat,
                         onClose = onClose,
+                        onClickMusicTitle = onMoveToMusicDetail,
+                        onClickArtist = onMoveToArtistDetail,
                         modifier = Modifier
                     )
 
                     PlayerScreenSmallInformation(
                         title = music.title,
-                        artist = music.artist,
+                        artist = music.artistText,
                         modifier = Modifier
                             .padding(start = 16.dp)
                             .fillMaxHeight()
@@ -204,7 +212,7 @@ fun PlayerScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlayerScreenBigContent(
+private fun PlayerScreenBigContent(
     modifier: Modifier = Modifier,
     draggableStatePercentage: Float,
     music: Music,
@@ -215,7 +223,9 @@ fun PlayerScreenBigContent(
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
     onRepeat: (Boolean) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onClickMusicTitle: (Music) -> Unit,
+    onClickArtist: (Artist) -> Unit
 ) {
     val localConfiguration = LocalConfiguration.current
     val screenWidth = remember { localConfiguration.screenWidthDp.dp }
@@ -273,15 +283,15 @@ fun PlayerScreenBigContent(
                 style = NcsTypography.Music.Title.large.copy(
                     color = ListItemCardDefaults.listItemCardColors().labelColor,
                 ),
-                modifier = Modifier.basicMarquee()
+                modifier = Modifier
+                    .basicMarquee()
+                    .clickable { onClickMusicTitle(music) }
             )
-
-            Text(
-                text = music.artist,
-                style = NcsTypography.Music.Artist.large.copy(
-                    color = ListItemCardDefaults.listItemCardColors().descriptionColor,
-                ),
-                modifier = Modifier.basicMarquee()
+            
+            ArtistList(
+                modifier = Modifier.basicMarquee(),
+                artists = music.artists,
+                onClick = onClickArtist
             )
 
             PlayerPositionProgressBar(
@@ -595,13 +605,26 @@ private val AnchoredDraggableState<SwipeAnchors>.percentage: Float
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDraggableState<SwipeAnchors> {
+    // todo : navigation back 이후 초기화 되는 문제
+
     val density = LocalDensity.current
-    return remember(maxHeight, minHeight) {
+
+    val animationSpec = tween<Float>()
+    val positionalThreadsHold = { distance:Float -> distance * 0.3f }
+    val velocityThreshold = { with(density) { (minHeight * 1.3f).toPx() } }
+
+    val rememberedMaxHeight by rememberUpdatedState(maxHeight)
+    val rememberedMinHeight by rememberUpdatedState(minHeight)
+
+    return rememberSaveable(
+        rememberedMaxHeight, rememberedMinHeight,
+        saver = AnchoredDraggableState.Saver(animationSpec, positionalThreadsHold, velocityThreshold)
+    ) {
         AnchoredDraggableState(
             initialValue = SwipeAnchors.Small,
-            positionalThreshold = { distance -> distance * 0.3f },
-            velocityThreshold = { with(density) { (minHeight * 1.3f).toPx() } },
-            animationSpec = tween()
+            positionalThreshold = positionalThreadsHold,
+            velocityThreshold = velocityThreshold,
+            animationSpec = animationSpec
         ).apply {
             updateAnchors(
                 DraggableAnchors {
@@ -624,6 +647,7 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 .fillMaxSize()
         ) {
             PlayerScreenBigContent(
+                modifier = modifier,
                 draggableStatePercentage = 1f,
                 music = mockMusics.first(),
                 uiState = PlayerUiState.Success(
@@ -643,7 +667,8 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 onShuffle = {},
                 onRepeat = {},
                 onClose = {},
-                modifier = modifier
+                onClickMusicTitle = {},
+                onClickArtist = { }
             )
         }
     }

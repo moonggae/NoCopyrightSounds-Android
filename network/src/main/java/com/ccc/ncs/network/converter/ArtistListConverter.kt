@@ -29,7 +29,7 @@ class ArtistListConverter: Converter<ResponseBody, List<Artist>> {
             Artist(
                 name = name,
                 detailUrl = detailUrl,
-                photoUrl = if (photoUrl.startsWith("/static")) WEB_URL + photoUrl else photoUrl,
+                photoUrl = if (photoUrl.startsWith("/static")) null else photoUrl,
                 tags = tags
             )
         }

@@ -35,6 +35,8 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.feature.artist.detail.navigateToArtistDetail
+import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.play.PlayerScreen
 import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
@@ -105,7 +107,9 @@ fun NcsApp(
                     onClose = {
                         playerViewModel.closePlayer()
                         playingScreenHeightWeight = 0f
-                    }
+                    },
+                    onMoveToMusicDetail = { appState.navController.navigateToMusicDetail(it.id) },
+                    onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) }
                 )
             }
         }

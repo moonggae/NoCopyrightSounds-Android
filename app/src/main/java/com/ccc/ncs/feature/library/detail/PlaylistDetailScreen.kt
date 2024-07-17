@@ -7,8 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.AlertDialog
+import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.component.ListItemCardStyle
 import com.ccc.ncs.designsystem.icon.NcsIcons
@@ -116,7 +114,8 @@ internal fun PlaylistDetailScreen(
     ) {
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
-        PlaylistDetailAppBar(
+        CommonAppBar(
+            title = stringResource(R.string.feature_playlist_title),
             onBack = onBack,
             onClickMenu = { showMenuBottomSheet = true }
         )
@@ -276,75 +275,6 @@ fun CoverImage(
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
-}
-
-@Composable
-fun PlaylistDetailAppBar(
-    modifier: Modifier = Modifier,
-    onBack: () -> Unit,
-    onClickMenu: () -> Unit
-) {
-    CommonAppBar(
-        modifier = modifier,
-        title = "Playlist",
-        onBack = onBack,
-        onClickMenu = onClickMenu
-    )
-}
-
-
-@Composable
-fun CommonAppBar(
-    modifier: Modifier = Modifier,
-    title: String?,
-    padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
-    onBack: () -> Unit,
-    onClickMenu: (() -> Unit)? = null
-) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(padding)
-            .fillMaxWidth()
-    ) {
-        Icon(
-            imageVector = NcsIcons.ArrowBack,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .size(28.dp)
-                .clip(CircleShape)
-                .clickable(onClick = onBack)
-        )
-
-
-        if (title == null) {
-            Spacer(Modifier)
-        } else {
-            Text(
-                text = title,
-                style = NcsTypography.Label.appbarTitle.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            )
-        }
-
-
-        if (onClickMenu == null) {
-            Spacer(Modifier)
-        } else {
-            Icon(
-                imageVector = NcsIcons.MoreVertical,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .clickable(onClick = onClickMenu)
-            )
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

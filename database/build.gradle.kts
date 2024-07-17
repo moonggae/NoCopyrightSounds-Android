@@ -41,6 +41,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.test.core.ktx)
+    implementation(libs.gson)
 
     implementation(libs.room.runtime)
     api(libs.room.ktx)

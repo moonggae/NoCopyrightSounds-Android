@@ -38,6 +38,7 @@ import com.ccc.ncs.designsystem.component.ListItemCardStyle
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.artistText
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
 import java.util.UUID
@@ -101,7 +102,7 @@ fun MusicCard(
             )
         },
         label = item.title,
-        description = item.artist,
+        description = item.artistText,
         suffix = suffix,
         style = style,
         color = ListItemCardDefaults.listItemCardColors(
@@ -207,7 +208,7 @@ fun MusicCardPreview() {
             item = Music(
                 id = UUID.randomUUID(),
                 title = "Title",
-                artist = "Artist",
+                artists = listOf(),
                 coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/678/325x325/fade-1715299258-UMAjk5s2UY.jpg",
                 moods = setOf(),
                 genres = setOf(),
@@ -215,8 +216,7 @@ fun MusicCardPreview() {
                 versions = setOf(),
                 dataUrl = "",
                 detailUrl = "",
-                releaseDate = LocalDate.now(),
-                artistDetailUrl = ""
+                releaseDate = LocalDate.now()
             ),
             onClickMore = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.surface)
@@ -233,7 +233,7 @@ fun MusicCardListPreview() {
                 Music(
                     id = UUID.randomUUID(),
                     title = "Title 1",
-                    artist = "Artist 1",
+                    artists = listOf(),
                     coverThumbnailUrl = "",
                     moods = setOf(),
                     genres = setOf(),
@@ -241,13 +241,12 @@ fun MusicCardListPreview() {
                     versions = setOf(),
                     dataUrl = "",
                     detailUrl = "",
-                    releaseDate = LocalDate.now(),
-                    artistDetailUrl = ""
+                    releaseDate = LocalDate.now()
                 ),
                 Music(
                     id = UUID.randomUUID(),
                     title = "Title 2",
-                    artist = "Artist 2",
+                    artists = listOf(),
                     coverThumbnailUrl = "",
                     moods = setOf(),
                     genres = setOf(),
@@ -255,13 +254,12 @@ fun MusicCardListPreview() {
                     versions = setOf(),
                     dataUrl = "",
                     detailUrl = "",
-                    releaseDate = LocalDate.now(),
-                    artistDetailUrl = ""
+                    releaseDate = LocalDate.now()
                 ),
                 Music(
                     id = UUID.randomUUID(),
                     title = "Long Long Title Long Long Title Long Long Title",
-                    artist = "Artist 3",
+                    artists = listOf(),
                     coverThumbnailUrl = "",
                     moods = setOf(),
                     genres = setOf(),
@@ -269,8 +267,7 @@ fun MusicCardListPreview() {
                     versions = setOf(),
                     dataUrl = "",
                     detailUrl = "",
-                    releaseDate = LocalDate.now(),
-                    artistDetailUrl = ""
+                    releaseDate = LocalDate.now()
                 )
             )
         )

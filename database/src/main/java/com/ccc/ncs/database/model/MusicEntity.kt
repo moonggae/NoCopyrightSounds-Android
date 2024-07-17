@@ -2,6 +2,7 @@ package com.ccc.ncs.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -14,13 +15,12 @@ data class MusicEntity(
     @PrimaryKey
     val id: UUID,
     val title: String,
-    val artist: String,
+    val artists: List<Artist>,
     val releaseDate: String,
     val dataUrl: String,
     val coverThumbnailUrl: String,
     val coverUrl: String,
-    val detailUrl: String,
-    val artistDetailUrl: String
+    val detailUrl: String
 )
 
 fun MusicEntity.asModel(
@@ -29,13 +29,12 @@ fun MusicEntity.asModel(
 ) = Music(
     id = id,
     title = title,
-    artist = artist,
+    artists = artists,
     releaseDate = LocalDate.parse(releaseDate),
     dataUrl = dataUrl,
     coverThumbnailUrl = coverThumbnailUrl,
     coverUrl = coverUrl,
     detailUrl = detailUrl,
-    artistDetailUrl = artistDetailUrl,
     genres = genres,
     moods = moods,
     versions = setOf()
@@ -44,11 +43,10 @@ fun MusicEntity.asModel(
 fun Music.asEntity() = MusicEntity(
     id = id,
     title = title,
-    artist = artist,
+    artists = artists,
     releaseDate = releaseDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
     dataUrl = dataUrl,
     coverThumbnailUrl = coverThumbnailUrl,
     coverUrl = coverUrl,
-    detailUrl = detailUrl,
-    artistDetailUrl = artistDetailUrl,
+    detailUrl = detailUrl
 )

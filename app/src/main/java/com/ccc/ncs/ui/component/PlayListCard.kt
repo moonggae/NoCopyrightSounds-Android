@@ -122,7 +122,7 @@ val mockMusics = listOf(
     Music(
         id = UUID.randomUUID(),
         title = "Comet",
-        artist = "Keepsake, Skybreak",
+        artists = listOf(),
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/100x100/comet-1716422454-LbQTehJ3ek.jpg",
         moods = setOf(
             Mood(
@@ -172,13 +172,12 @@ val mockMusics = listOf(
         versions = setOf(),
         dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/comet-1716422457-Vd6pvNXfSt.mp3",
         detailUrl = "https://ncs.io/Comet",
-        releaseDate = LocalDate.parse("2024-05-23"),
-        artistDetailUrl = "https://ncs.io/artist/1114/keepsake"
+        releaseDate = LocalDate.parse("2024-05-23")
     ),
     Music(
         id = UUID.randomUUID(),
         title = "Title 2",
-        artist = "Artist 2",
+        artists = listOf(),
         coverThumbnailUrl = "",
         moods = setOf(),
         genres = setOf(),
@@ -187,12 +186,11 @@ val mockMusics = listOf(
         dataUrl = "",
         detailUrl = "",
         releaseDate = LocalDate.now(),
-        artistDetailUrl = ""
     ),
     Music(
         id = UUID.randomUUID(),
         title = "Long Long Title Long Long Title Long Long Title",
-        artist = "Artist 3",
+        artists = listOf(),
         coverThumbnailUrl = "",
         moods = setOf(),
         genres = setOf(),
@@ -200,8 +198,7 @@ val mockMusics = listOf(
         versions = setOf(),
         dataUrl = "",
         detailUrl = "",
-        releaseDate = LocalDate.now(),
-        artistDetailUrl = ""
+        releaseDate = LocalDate.now()
     )
 )
 

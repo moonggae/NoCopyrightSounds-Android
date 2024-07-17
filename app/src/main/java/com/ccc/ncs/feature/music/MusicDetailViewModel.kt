@@ -1,6 +1,5 @@
 package com.ccc.ncs.feature.music
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,14 +41,12 @@ class MusicDetailViewModel @Inject constructor(
         viewModelScope.launch {
             savedStateHandle.getStateFlow<String?>(MUSIC_DETAIL_ID_ARG, null)
                 .map { musicIdString ->
-                    Log.d(TAG, "observeMusicDetail - musicIdString: ${musicIdString}")
                     if (musicIdString == null) null
                     else UUID.fromString(musicIdString)
                 }.flatMapLatest { musicId ->
                     if (musicId == null) flowOf(MusicDetailUiState.Loading)
                     else {
                         musicRepository.getMusic(musicId).map { music ->
-                            Log.d(TAG, "observeMusicDetail - music: ${music}")
                             when (music) {
                                 null -> MusicDetailUiState.Fail
                                 else -> MusicDetailUiState.Success(music, null)

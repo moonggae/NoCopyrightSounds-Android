@@ -53,7 +53,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.reflect.KFunction2
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -63,7 +62,7 @@ fun PlayerMenuBottomSheet(
     playlist: PlayList,
     currentMusic: Music?,
     lyrics: String?,
-    onMusicOrderChanged: KFunction2<Int, Int, Unit>
+    onMusicOrderChanged: (Int, Int) -> Unit
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()

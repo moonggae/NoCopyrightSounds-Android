@@ -5,7 +5,6 @@ import com.ccc.ncs.database.model.relation.MusicWithGenreAndMood
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
-import com.ccc.ncs.model.Version
 import java.time.LocalDate
 import java.util.UUID
 
@@ -14,7 +13,7 @@ val MockMusicList = listOf(
     Music(
         id = UUID.fromString("c81804c6-c916-4288-bb28-1e811f2b795b"),
         title = "I Wanna Dance",
-        artist = "PYTI",
+        artists = "PYTI",
         releaseDate = LocalDate.parse("2024-04-16"),
         dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/662/1713276672_isnlxFlS9J_01-PYTI---I-Wanna-Dance-NCS-Release.mp3",
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/662/100x100/i-wanna-dance-1713272452-ESu9xGPxYk.jpg",
@@ -38,7 +37,7 @@ val MockMusicList = listOf(
     Music(
         id = UUID.fromString("049fc0ba-8998-45d7-bba4-cacd18aa1793"),
         title = "Hollow",
-        artist = "Unlike Pluto",
+        artists = "Unlike Pluto",
         releaseDate = LocalDate.parse("2024-04-12"),
         dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/661/hollow-1712880052-0MJUprE41X.mp3",
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/661/100x100/hollow-1712880050-hgQO2wDq2Y.jpg",
@@ -60,7 +59,7 @@ val MockMusicList = listOf(
     Music(
         id = UUID.fromString("f26da352-0c23-4829-90c1-e7070acdf7bd"),
         title = "blessing",
-        artist = "P3PPER",
+        artists = "P3PPER",
         releaseDate = LocalDate.parse("2024-04-11"),
         dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/660/blessing-1712793654-kznX5SFTsL.mp3",
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/660/100x100/blessing-1712793652-4JwmiqrIUP.jpg",
@@ -81,7 +80,7 @@ val MockMusicList = listOf(
     Music(
         id = UUID.fromString("9e5f2700-a887-4c76-bd50-e69722dee3e1"),
         title = "Stars in the Sky",
-        artist = "BEKSY.",
+        artists = "BEKSY.",
         releaseDate = LocalDate.parse("2024-04-09"),
         dataUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/659/stars-in-the-sky-1712620859-Z5NW7kpyJJ.mp3",
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/659/100x100/stars-in-the-sky-1712620851-2jkA3mqxBh.jpg",

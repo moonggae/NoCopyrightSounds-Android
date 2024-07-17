@@ -3,7 +3,10 @@ package com.ccc.ncs.database.di
 import android.content.Context
 import androidx.room.Room
 import com.ccc.ncs.database.MIGRATION_1_2_AddIsUserCreatedPlaylistColumn
+import com.ccc.ncs.database.MIGRATION_2_3_AddArtistToMusic
 import com.ccc.ncs.database.NcsDatabase
+import com.ccc.ncs.database.util.ArtistConverter
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,15 +17,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+    @Singleton
+    @Provides
+    fun provideGson(): Gson {
+        return Gson()
+    }
+
     @Provides
     @Singleton
     fun providesNcsDatabase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        gson: Gson
     ): NcsDatabase = Room.databaseBuilder(
         context,
         NcsDatabase::class.java,
         "ncs-database"
     )
         .addMigrations(MIGRATION_1_2_AddIsUserCreatedPlaylistColumn)
+        .addMigrations(MIGRATION_2_3_AddArtistToMusic)
+        .addTypeConverter(ArtistConverter(gson))
         .build()
 }

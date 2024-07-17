@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.artist.detail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,15 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArtistDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val artistRepository: ArtistRepository
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<ArtistDetailUiState> = savedStateHandle.getStateFlow<String?>(ARTIST_DETAIL_PATH_ARG, null)
         .flatMapLatest { path ->
+            Log.d(TAG, " - path: ${path}")
             when (path) {
                 null -> MutableStateFlow(ArtistDetailUiState.Loading)
                 else -> artistRepository.getArtistDetail(path).map { artistDetail ->
+                    Log.d(TAG, "artistDetail: ${artistDetail}")
                     when (artistDetail) {
                         null -> ArtistDetailUiState.Fail
                         else -> ArtistDetailUiState.Success(artistDetail)

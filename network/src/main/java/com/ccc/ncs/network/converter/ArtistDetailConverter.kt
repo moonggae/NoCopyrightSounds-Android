@@ -43,7 +43,13 @@ class ArtistDetailConverter: Converter<ResponseBody, ArtistDetail?> {
         val tags = document.select("body article.module.details div.info span.tags").text()
 
         val imageStyleString = document.select("body article.module.details div.img").attr("style")
-        val photoUrl = imageStyleString.split("'")[1]
+        val photoUrl = imageStyleString.split("'")[1].run {
+            if (this.startsWith("/static/web/img/no-artist")) {
+                null
+            } else {
+                this.replace("325x325", "1000x0")
+            }
+        }
 
         return Artist(
             name = name,

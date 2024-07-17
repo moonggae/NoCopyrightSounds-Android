@@ -15,7 +15,8 @@ const val ARTIST_ROUTE = "artist"
 fun NavController.navigateToArtist(navOptions: NavOptions) = navigate(ARTIST_ROUTE, navOptions)
 
 fun NavGraphBuilder.artistScreen(
-    onMoveToSearchScreen: (String?) -> Unit
+    onMoveToSearchScreen: (String?) -> Unit,
+    onMoveToDetail: (String) -> Unit
 ) {
     composable(route = ARTIST_ROUTE) { backStackEntry ->
         val viewModel: ArtistViewModel = hiltViewModel()
@@ -29,7 +30,7 @@ fun NavGraphBuilder.artistScreen(
             viewModel = viewModel,
             onClickSearchBar = onMoveToSearchScreen,
             onUpdateSearchQuery = { backStackEntry.savedStateHandle[SEARCHED_QUERY] = it },
-            onClickArtist = { /* TODO: move to artist detail page */ }
+            onClickArtist = { onMoveToDetail(it.detailUrl) }
         )
     }
 }

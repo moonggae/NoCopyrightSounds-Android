@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -38,7 +39,7 @@ import com.ccc.ncs.R
 import com.ccc.ncs.feature.home.CustomFlowRow
 import com.ccc.ncs.feature.home.SearchAppBar
 import com.ccc.ncs.model.Artist
-import com.ccc.ncs.ui.component.ArtistCard
+import com.ccc.ncs.ui.component.ArtistListCard
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
 import java.time.LocalDate
@@ -116,9 +117,17 @@ internal fun ArtistScreen(
         ) {
             items(count = artists.itemCount) { index ->
                 artists[index]?.let { artist ->
-                    ArtistCard(
+                    ArtistListCard(
                         item = artist,
-                        onClick = onClickArtist
+                        onClick = onClickArtist,
+                        modifier = Modifier
+                            .padding(
+                                top = 8.dp,
+                                bottom = 12.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            )
+                            .height(58.dp)
                     )
                 }
             }

@@ -47,7 +47,7 @@ class RetrofitNcsNetwork @Inject constructor(
     ): List<Artist> = networkApi.getArtistList(page, query, sort, year).body() ?: emptyList()
 
     override suspend fun getArtistDetail(path: String): ArtistDetail? =
-        networkApi.getArtistDetail(joinUri(WEB_URL, path).toString()).body()
+        networkApi.getArtistDetail(joinUri(WEB_URL, *path.split("/").toTypedArray()).toString()).body()
 
     override suspend fun getAllGenreAndMood(): Pair<List<Genre>, List<Mood>> =
         networkApi.getAllGenreAndMood().body() ?: Pair(emptyList(), emptyList())

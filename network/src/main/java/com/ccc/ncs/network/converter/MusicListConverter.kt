@@ -1,5 +1,6 @@
 package com.ccc.ncs.network.converter
 
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -39,7 +40,7 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
 
     private fun parseMusicRow(row: Element): Music? {
         val titleTag = row.selectFirst("td:nth-child(1) > a") ?: return null
-        val artistDetailUrl = parseArtistDetailUrl(titleTag)
+        val artists = parseArtists(titleTag)
         val releaseDate = parseReleaseDate(row) ?: return null
         val genres = parseGenres(row)
         val moods = parseMoods(row)
@@ -48,9 +49,8 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         return Music(
             id = UUID.fromString(titleTag.attribute("data-tid").value),
             title = titleTag.attribute("data-track").value,
-            artist = titleTag.attribute("data-artistraw").value,
+            artists = artists,
             dataUrl = titleTag.attribute("data-url").value,
-            artistDetailUrl = WEB_URL + artistDetailUrl,
             coverThumbnailUrl = titleTag.attribute("data-cover").value,
             coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "1000x0"),
             detailUrl = WEB_URL + (row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: ""),
@@ -61,9 +61,16 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         )
     }
 
-    private fun parseArtistDetailUrl(tag: Element): String {
+    private fun parseArtists(tag: Element): List<Artist> {
         val artistTagHtml = tag.attribute("data-artist").html()
-        return Jsoup.parse(artistTagHtml).select("a").attr("href")
+        return Jsoup.parse(artistTagHtml).select("a").map { aTag ->
+            Artist(
+                name = aTag.text(),
+                detailUrl = aTag.attribute("href").value,
+                photoUrl = null,
+                tags = ""
+            )
+        }
     }
 
     private fun parseReleaseDate(row: Element): LocalDate? {

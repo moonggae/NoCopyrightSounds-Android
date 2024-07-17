@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,13 +50,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.home.SelectMusicMenuBottomSheet
 import com.ccc.ncs.feature.home.addmusictoplaylistdialog.AddMusicsToPlaylistDialog
-import com.ccc.ncs.feature.library.detail.CommonAppBar
 import com.ccc.ncs.feature.library.detail.CoverImage
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -76,7 +78,8 @@ fun MusicDetailRoute(
     onClickGenre: (Genre) -> Unit,
     onPlayMusic: (Music) -> Unit,
     onAddToQueue: (Music) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onMoveToArtistDetail: (Artist) -> Unit
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -89,7 +92,8 @@ fun MusicDetailRoute(
             onClickGenre = onClickGenre,
             onPlayMusic = onPlayMusic,
             onAddToQueue = onAddToQueue,
-            onBack = onBack
+            onBack = onBack,
+            onClickArtist = onMoveToArtistDetail
         )
 
         else -> {
@@ -98,6 +102,7 @@ fun MusicDetailRoute(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MusicDetailScreen(
     modifier: Modifier = Modifier,
@@ -107,7 +112,8 @@ internal fun MusicDetailScreen(
     onClickGenre: (Genre) -> Unit,
     onPlayMusic: (Music) -> Unit,
     onAddToQueue: (Music) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onClickArtist: (Artist) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -116,7 +122,7 @@ internal fun MusicDetailScreen(
 
     val addedToQueueMessage = stringResource(R.string.message_added_to_queue)
     val addedToPlaylistMessage = stringResource(R.string.message_added_to_playlist)
-    
+
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -141,12 +147,23 @@ internal fun MusicDetailScreen(
                 .clip(RoundedCornerShape(4.dp))
         )
 
-        MusicDetailTitleText(
-            title = uiState.music.title,
-            modifier = Modifier.padding(top = 24.dp)
+        Text(
+            text = uiState.music.title,
+            style = NcsTypography.Music.Title.large.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier
+                .basicMarquee()
+                .padding(top = 20.dp)
         )
 
-        MusicDetailArtistText(artist = uiState.music.artist)
+        ArtistList(
+            modifier = Modifier
+                .basicMarquee()
+                .padding(bottom = 12.dp),
+            artists = uiState.music.artists,
+            onClick = onClickArtist
+        )
 
         HorizontalDivider(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -216,6 +233,27 @@ internal fun MusicDetailScreen(
     )
 }
 
+
+@Composable
+fun ArtistList(
+    modifier: Modifier = Modifier,
+    artists: List<Artist>,
+    textStyle: TextStyle = NcsTypography.Music.Artist.large.copy(
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    ),
+    onClick: (Artist) -> Unit
+) {
+    Row(modifier) {
+        artists.forEachIndexed { index, artist ->
+            Text(
+                text = artist.name + if (artists.lastIndex != index) ", " else "",
+                style = textStyle,
+                modifier = Modifier.clickable { onClick(artist) }
+            )
+        }
+    }
+}
+
 @Composable
 private fun MusicDetailLyrics(
     modifier: Modifier = Modifier,
@@ -254,7 +292,7 @@ private fun MusicDetailLyrics(
 }
 
 @Composable
-private fun ContentLabelText(
+fun ContentLabelText(
     modifier: Modifier = Modifier,
     text: String
 ) {
@@ -272,7 +310,7 @@ private fun ContentLabelText(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 @NonRestartableComposable
-private fun <T: MusicTag> MusicTagContent(
+private fun <T : MusicTag> MusicTagContent(
     modifier: Modifier = Modifier,
     musicTags: Set<T>,
     onClick: (T) -> Unit
@@ -308,44 +346,6 @@ private fun <T: MusicTag> MusicTagContent(
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MusicDetailTitleText(
-    modifier: Modifier = Modifier,
-    title: String
-) {
-    Box(modifier = modifier.height(29.dp)) {
-        Text(
-            text = title,
-            style = NcsTypography.Music.Title.large.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            modifier = Modifier
-                .basicMarquee()
-                .align(Alignment.CenterStart)
-        )
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MusicDetailArtistText(
-    modifier: Modifier = Modifier,
-    artist: String
-) {
-    Box(modifier = modifier.height(29.dp)) {
-        Text(
-            text = artist,
-            style = NcsTypography.Music.Artist.large.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .basicMarquee()
-                .align(Alignment.TopStart)
-        )
-    }
-}
 
 @Composable
 private fun MusicDetailReleaseDateText(
@@ -427,7 +427,8 @@ private fun MusicDetailScreenPreview() {
                 onClickGenre = {},
                 onClickMood = {},
                 onPlayMusic = {},
-                onAddToQueue = {}
+                onAddToQueue = {},
+                onClickArtist = {}
             )
         }
     }
