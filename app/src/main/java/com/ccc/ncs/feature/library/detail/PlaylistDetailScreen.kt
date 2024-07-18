@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,6 +42,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.AlertDialog
 import com.ccc.ncs.designsystem.component.CommonAppBar
+import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.component.ListItemCardStyle
 import com.ccc.ncs.designsystem.icon.NcsIcons
@@ -288,18 +287,12 @@ fun PlaylistDetailMenuBottomSheet(
     isUserCreated: Boolean,
 ) {
     if (show) {
-        ModalBottomSheet(
-            onDismissRequest = onDismissRequest,
-            windowInsets = WindowInsets(0)
-        ) {
-            Column {
-                PlaylistDetailMenuBottomSheetContent(
-                    isUserCreated = isUserCreated,
-                    onClickModifyName = onClickModifyName,
-                    onClickDelete = onClickDelete
-                )
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
-            }
+        CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
+            PlaylistDetailMenuBottomSheetContent(
+                isUserCreated = isUserCreated,
+                onClickModifyName = onClickModifyName,
+                onClickDelete = onClickDelete
+            )
         }
     }
 }

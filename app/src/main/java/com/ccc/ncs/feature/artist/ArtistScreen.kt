@@ -36,6 +36,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.feature.home.CustomFlowRow
 import com.ccc.ncs.feature.home.SearchAppBar
 import com.ccc.ncs.model.Artist
@@ -204,7 +205,7 @@ fun AristSortModalBottomSheet(
     onDismissRequest: () -> Unit,
     onItemSelected: (ArtistSort) -> Unit
 ) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+    CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
@@ -233,7 +234,7 @@ fun AristYearModalBottomSheet(
         addAll((2013..LocalDate.now().year).reversed())
     }
 
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+    CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
                 .padding(

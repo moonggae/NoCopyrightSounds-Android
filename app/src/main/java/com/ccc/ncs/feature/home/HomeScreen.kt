@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -44,6 +43,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.feature.home.addmusictoplaylistdialog.AddMusicsToPlaylistDialog
@@ -53,9 +53,8 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
-import com.ccc.ncs.ui.component.GenreModalBottomSheet
-import com.ccc.ncs.ui.component.MoodModalBottomSheet
 import com.ccc.ncs.ui.component.MusicCardList
+import com.ccc.ncs.ui.component.MusicTagBottomSheet
 import kotlinx.coroutines.launch
 
 @Composable
@@ -216,7 +215,7 @@ fun SelectMusicMenuBottomSheet(
     onClickAddToQueue: () -> Unit
 ) {
     if (show) {
-        ModalBottomSheet(onDismissRequest = onDismissRequest) {
+        CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
             SelectMusicMenuBottomSheetContent(
                 onClickPlayNow = onClickPlayNow,
                 onClickAddToPlayList = onClickAddToPlayList,
@@ -345,17 +344,17 @@ fun MusicSearchBox(
 
 
     if (showGenreBottomSheet) {
-        GenreModalBottomSheet(
+        MusicTagBottomSheet(
             onDismissRequest = { showGenreBottomSheet = false },
-            genreItems = genres,
+            items = genres,
             onItemSelected = updateSearchGenre
         )
     }
 
     if (showMoodBottomSheet) {
-        MoodModalBottomSheet(
+        MusicTagBottomSheet(
             onDismissRequest = { showMoodBottomSheet = false },
-            moodItems = moods,
+            items = moods,
             onItemSelected = updateSearchMood
         )
     }
