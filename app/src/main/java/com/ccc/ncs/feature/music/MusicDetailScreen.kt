@@ -241,14 +241,17 @@ fun ArtistList(
     textStyle: TextStyle = NcsTypography.Music.Artist.large.copy(
         color = MaterialTheme.colorScheme.onSurfaceVariant
     ),
-    onClick: (Artist) -> Unit
+    onClick: ((Artist) -> Unit)?
 ) {
     Row(modifier) {
         artists.forEachIndexed { index, artist ->
             Text(
                 text = artist.name + if (artists.lastIndex != index) ", " else "",
                 style = textStyle,
-                modifier = Modifier.clickable { onClick(artist) }
+                modifier = Modifier
+                    .conditional(onClick != null) {
+                        clickable { onClick?.invoke(artist) }
+                    }
             )
         }
     }

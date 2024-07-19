@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -54,6 +55,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,7 +68,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.ccc.ncs.R
@@ -231,21 +235,22 @@ private fun PlayerScreenBigContent(
     val screenWidth = remember { localConfiguration.screenWidthDp.dp }
 
     Column {
-        PlayerScreenAppBar(
-            modifier = modifier,
-            draggableStatePercentage = draggableStatePercentage,
-            screenWidth = screenWidth,
-            onClose = onClose
-        )
+        Box {
+            PlayerScreenCoverImage(
+                url = music.coverUrl,
+                progress = draggableStatePercentage
+            )
 
-        PlayerScreenCoverImage(
-            url = music.coverUrl,
-            progress = draggableStatePercentage
-        )
+            PlayerScreenAppBar(
+                modifier = modifier,
+                draggableStatePercentage = draggableStatePercentage,
+                screenWidth = screenWidth,
+                onClose = onClose
+            )
+        }
 
         Column(
             modifier = Modifier
-                .padding(top = 12.dp)
                 .widthIn(0.dp, screenWidth)
                 .width(screenWidth * draggableStatePercentage * 2),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -257,13 +262,15 @@ private fun PlayerScreenBigContent(
                 ),
                 modifier = Modifier
                     .basicMarquee()
-                    .clickable { onClickMusicTitle(music) }
+                    .conditional(draggableStatePercentage == 1f) {
+                        clickable { onClickMusicTitle(music) }
+                    }
             )
 
             ArtistList(
                 modifier = Modifier.basicMarquee(),
                 artists = music.artists,
-                onClick = onClickArtist
+                onClick = if (draggableStatePercentage == 1f) onClickArtist else null
             )
 
             PlayerPositionProgressBar(
@@ -513,20 +520,34 @@ fun PlayerPositionProgressBar(
 private fun PlayerScreenCoverImage(
     modifier: Modifier = Modifier,
     url: String,
-    progress: Float = 1f,
-    horizontalPadding: Dp = 16.dp
+    progress: Float = 1f
 ) {
-    AsyncImage(
-        model = ImageRequest
-            .Builder(LocalContext.current)
-            .data(url)
-            .size(Size.ORIGINAL)
-            .build(),
-        placeholder = painterResource(R.drawable.ncs_cover),
+    val surfaceColor = MaterialTheme.colorScheme.surfaceContainer
+
+    Image(
+        painter = rememberAsyncImagePainter(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(url)
+                .size(Size.ORIGINAL)
+                .build(),
+            placeholder = painterResource(R.drawable.ncs_cover),
+            fallback = painterResource(R.drawable.ncs_cover)
+        ),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .padding(horizontal = (horizontalPadding * progress))
+            .drawWithCache {
+                val gradient = Brush.verticalGradient(
+                    colors = listOf(surfaceColor.copy(alpha = 0.1f), surfaceColor.copy(alpha = progress)),
+                    startY = 0f,
+                    endY = size.height
+                )
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(gradient, blendMode = BlendMode.SrcAtop)
+                }
+            }
             .aspectRatio(1f)
     )
 }
