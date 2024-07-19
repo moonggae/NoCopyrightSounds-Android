@@ -26,4 +26,6 @@ interface MusicRepository {
     fun getGenres(): Flow<List<Genre>>
 
     fun getMoods(): Flow<List<Mood>>
+
+    suspend fun syncLocalMusics(musics: List<Music>)
 }

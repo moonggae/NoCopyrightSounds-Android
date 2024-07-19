@@ -45,6 +45,7 @@ internal class DefaultMusicRepository @Inject constructor(
     ) {
         MusicPagingSource(
             dataSource = network,
+            syncLocalMusics = this::syncLocalMusics,
             query = query,
             genreId = genreId,
             moodId = moodId,
@@ -123,4 +124,16 @@ internal class DefaultMusicRepository @Inject constructor(
     override fun getMoods(): Flow<List<Mood>> = moodDao
         .getAllMoods()
         .map { list -> list.map { it.asModel() } }
+
+    override suspend fun syncLocalMusics(musics: List<Music>) {
+        val localMusics = getMusics(musics.map(Music::id)).first()
+        val localMusicsMap = localMusics.associateBy { it.id }
+
+        val musicsToInsert = musics.filter { music ->
+            val localMusic = localMusicsMap[music.id]
+            localMusic == null || localMusic != music
+        }
+
+        insertMusics(musicsToInsert).first()
+    }
 }

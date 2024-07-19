@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class DefaultArtistRepository @Inject constructor(
-    private val network: NcsNetworkDataSource
+    private val network: NcsNetworkDataSource,
+    private val musicRepository: MusicRepository
 ) : ArtistRepository {
     override fun getSearchResultStream(
         query: String?,
@@ -35,8 +36,8 @@ internal class DefaultArtistRepository @Inject constructor(
     }.flow
 
     override fun getArtistDetail(artistDetailPath: String): Flow<ArtistDetail?> = flow {
-        emit(network.getArtistDetail(artistDetailPath))
+        val artistDetail = network.getArtistDetail(artistDetailPath)
+        artistDetail?.musics?.let { musicRepository.syncLocalMusics(it) }
+        emit(artistDetail)
     }
-
-
 }
