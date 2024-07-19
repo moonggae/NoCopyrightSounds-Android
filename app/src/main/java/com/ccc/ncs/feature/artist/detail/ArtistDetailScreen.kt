@@ -277,7 +277,7 @@ private fun ArtistAppBar(
 ) {
     CommonAppBar(
         padding = PaddingValues(
-            top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+            top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 12.dp,
             bottom = 20.dp,
             start = 12.dp,
             end = 12.dp

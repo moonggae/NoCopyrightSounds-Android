@@ -231,40 +231,12 @@ private fun PlayerScreenBigContent(
     val screenWidth = remember { localConfiguration.screenWidthDp.dp }
 
     Column {
-        Column(modifier.heightIn(0.dp, (100.dp * draggableStatePercentage))) {
-            Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-
-            Row(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 8.dp,
-                        top = 4.dp
-                    )
-                    .widthIn(0.dp, screenWidth)
-                    .width(screenWidth * draggableStatePercentage * 2),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    imageVector = NcsIcons.Close,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(onClick = onClose)
-                )
-
-                Icon(
-                    imageVector = NcsIcons.MoreVertical,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(onClick = {})
-                )
-            }
-        }
+        PlayerScreenAppBar(
+            modifier = modifier,
+            draggableStatePercentage = draggableStatePercentage,
+            screenWidth = screenWidth,
+            onClose = onClose
+        )
 
         PlayerScreenCoverImage(
             url = music.coverUrl,
@@ -287,7 +259,7 @@ private fun PlayerScreenBigContent(
                     .basicMarquee()
                     .clickable { onClickMusicTitle(music) }
             )
-            
+
             ArtistList(
                 modifier = Modifier.basicMarquee(),
                 artists = music.artists,
@@ -320,6 +292,49 @@ private fun PlayerScreenBigContent(
                     end = 20.dp,
                     top = 20.dp
                 )
+            )
+        }
+    }
+}
+
+@Composable
+private fun PlayerScreenAppBar(
+    modifier: Modifier,
+    draggableStatePercentage: Float,
+    screenWidth: Dp,
+    onClose: () -> Unit
+) {
+    Column(modifier.heightIn(0.dp, (100.dp * draggableStatePercentage))) {
+        Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 12.dp,
+                    top = 12.dp
+                )
+                .widthIn(0.dp, screenWidth)
+                .width(screenWidth * draggableStatePercentage * 2),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                imageVector = NcsIcons.Close,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = onClose)
+            )
+
+            Icon(
+                imageVector = NcsIcons.MoreVertical,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = {})
             )
         }
     }
@@ -509,10 +524,10 @@ private fun PlayerScreenCoverImage(
             .build(),
         placeholder = painterResource(R.drawable.ncs_cover),
         contentDescription = null,
-        contentScale = ContentScale.FillHeight,
+        contentScale = ContentScale.Crop,
         modifier = modifier
-            .aspectRatio(1f)
             .padding(horizontal = (horizontalPadding * progress))
+            .aspectRatio(1f)
     )
 }
 
@@ -610,7 +625,7 @@ private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDragga
     val density = LocalDensity.current
 
     val animationSpec = tween<Float>()
-    val positionalThreadsHold = { distance:Float -> distance * 0.3f }
+    val positionalThreadsHold = { distance: Float -> distance * 0.3f }
     val velocityThreshold = { with(density) { (minHeight * 1.3f).toPx() } }
 
     val rememberedMaxHeight by rememberUpdatedState(maxHeight)
