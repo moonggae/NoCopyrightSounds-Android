@@ -2,6 +2,7 @@ package com.ccc.ncs.playback
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.ccc.ncs.model.Music
@@ -111,6 +112,12 @@ class PlayerController @Inject constructor(
         controller.addMediaItems(musics.map { it.asMediaItem() })
     }
 
+    fun removeMusic(music: Music) = executeAfterPrepare { controller ->
+        val index = controller.getMediaItemIndex(music.asMediaItem())
+        if (index != null)
+            controller.removeMediaItem(index)
+    }
+
     private inline fun executeAfterPrepare(crossinline action: suspend (MediaController) -> Unit) {
         scope.launch {
             val controller = awaitConnect() ?: return@launch
@@ -126,4 +133,12 @@ class PlayerController @Inject constructor(
             null
         }
     }
+}
+
+private fun  MediaController.getMediaItemIndex(mediaItem: MediaItem):Int? {
+    repeat(this.mediaItemCount) { index ->
+        val currentItem = this.getMediaItemAt(index)
+        if (currentItem == mediaItem) return index
+    }
+    return null
 }

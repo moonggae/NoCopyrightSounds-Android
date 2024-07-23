@@ -35,6 +35,7 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.component.ListItemCardStyle
+import com.ccc.ncs.designsystem.component.SwipeToDeleteCard
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Music
@@ -85,6 +86,7 @@ fun MusicCard(
     selected: Boolean = false,
     isPlaying: Boolean = false,
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
+    unSelectedBackgroundColor: Color = Color.Transparent,
     onClick: (Music) -> Unit = {},
     onLongClick: (Music) -> Unit = {},
     suffix: @Composable () -> Unit = {}
@@ -106,7 +108,7 @@ fun MusicCard(
         suffix = suffix,
         style = style,
         color = ListItemCardDefaults.listItemCardColors(
-            backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+            backgroundColor = if (selected) MaterialTheme.colorScheme.primary else unSelectedBackgroundColor,
             labelColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
             descriptionColor = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
             moreIconColor = MaterialTheme.colorScheme.onSurface
@@ -285,5 +287,19 @@ fun MusicCardListPreview() {
             onClick = {},
             modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
         )
+    }
+}
+
+@Preview
+@Composable
+fun SwipeToDeleteMusicCardPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        SwipeToDeleteCard(onDelete = {}) {
+            MusicCard(
+                item = mockMusics[0],
+                suffix = {},
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            )
+        }
     }
 }

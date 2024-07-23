@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,8 @@ fun PlayerMenuPlaylistTabView(
     modifier: Modifier = Modifier,
     playlist: PlayList,
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
-    currentMusic: Music?
+    currentMusic: Music?,
+    onDelete: (Music) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         PlaylistDetailMusicList(
@@ -31,7 +33,9 @@ fun PlayerMenuPlaylistTabView(
             musics = playlist.musics,
             playingMusicId = currentMusic?.id,
             cardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
-            onMusicOrderChanged = onMusicOrderChanged
+            unSelectedBackgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+            onMusicOrderChanged = onMusicOrderChanged,
+            onDelete = onDelete
         )
     }
 }

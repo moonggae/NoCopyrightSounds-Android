@@ -62,7 +62,8 @@ fun PlayerMenuBottomSheet(
     playlist: PlayList,
     currentMusic: Music?,
     lyrics: String?,
-    onMusicOrderChanged: (Int, Int) -> Unit
+    onMusicOrderChanged: (Int, Int) -> Unit,
+    onDeleteMusicInList: (Music) -> Unit
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -120,7 +121,8 @@ fun PlayerMenuBottomSheet(
                             PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView(
                                 playlist = playlist,
                                 currentMusic = currentMusic,
-                                onMusicOrderChanged = onMusicOrderChanged
+                                onMusicOrderChanged = onMusicOrderChanged,
+                                onDelete = onDeleteMusicInList
                             )
                             PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView(
                                 lyrics = lyrics,

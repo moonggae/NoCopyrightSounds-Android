@@ -13,6 +13,7 @@ object NcsTypography {
     val Dialog = DialogTypography
     val Player = PlayerTypography
     val ArtistDetail = ArtistDetailTypography
+    val ActionCard = ActionCardTypography
 
     object MusicTypography {
         val Title = TitleTypography
@@ -205,6 +206,13 @@ object NcsTypography {
         val tags = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
+        )
+    }
+
+    object ActionCardTypography {
+        val text = TextStyle(
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
         )
     }
 }

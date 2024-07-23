@@ -105,7 +105,8 @@ fun PlayerScreen(
     onClose: () -> Unit,
     onUpdateMusicOrder: (Int, Int) -> Unit,
     onMoveToMusicDetail: (Music) -> Unit,
-    onMoveToArtistDetail: (Artist) -> Unit
+    onMoveToArtistDetail: (Artist) -> Unit,
+    onDeleteMusicInPlaylist: (Music) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -209,7 +210,8 @@ fun PlayerScreen(
         playlist = playerUiState.playlist,
         currentMusic = playerUiState.currentMusic,
         lyrics = playerUiState.lyrics,
-        onMusicOrderChanged = onUpdateMusicOrder
+        onMusicOrderChanged = onUpdateMusicOrder,
+        onDeleteMusicInList = onDeleteMusicInPlaylist
     )
 }
 

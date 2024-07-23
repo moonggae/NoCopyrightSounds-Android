@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,6 +46,7 @@ import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.component.ListItemCardStyle
+import com.ccc.ncs.designsystem.component.SwipeToDeleteCard
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
@@ -86,7 +88,8 @@ fun PlaylistDetailRoute(
                     onBack()
                 },
                 onPlay = { onPlay(uiState.playlist) },
-                isPlaying = uiState.isPlaying
+                isPlaying = uiState.isPlaying,
+                onDeleteMusicInList = viewModel::deleteMusic
             )
         }
     }
@@ -102,7 +105,8 @@ internal fun PlaylistDetailScreen(
     onDeletePlaylist: () -> Unit,
     playingMusic: Music?,
     onPlay: () -> Unit,
-    isPlaying: Boolean
+    isPlaying: Boolean,
+    onDeleteMusicInList: (Music) -> Unit
 ) {
     var showMenuBottomSheet by remember { mutableStateOf(false) }
     var showDeleteAlertDialog by remember { mutableStateOf(false) }
@@ -124,7 +128,7 @@ internal fun PlaylistDetailScreen(
             name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
             coverUrl = playlist.musics.firstOrNull()?.coverUrl,
             isPlaying = isPlaying,
-            onPlay = onPlay
+            onPlay = if (playlist.musics.isEmpty()) null else onPlay
         )
 
         PlaylistDetailMusicList(
@@ -137,7 +141,8 @@ internal fun PlaylistDetailScreen(
             playlistId = playlist.id,
             musics = playlist.musics,
             playingMusicId = playingMusic?.id,
-            onMusicOrderChanged = onMusicOrderChanged
+            onMusicOrderChanged = onMusicOrderChanged,
+            onDelete = onDeleteMusicInList
         )
     }
 
@@ -172,7 +177,9 @@ fun PlaylistDetailMusicList(
     musics: List<Music>,
     playingMusicId: UUID? = null,
     cardStyle: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.small(),
-    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit
+    unSelectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
+    onDelete: (Music) -> Unit
 ) {
     var currentMusics by remember(playlistId, musics.toSet()) { mutableStateOf(musics) }
 
@@ -189,22 +196,31 @@ fun PlaylistDetailMusicList(
         items(count = currentMusics.size, key = { currentMusics[it].id }) {
             val item = currentMusics[it]
             ReorderableItem(state = reorderableLazyListState, key = item.id) { isDragging ->
-                MusicCard(
-                    item = item,
-                    isPlaying = playingMusicId == item.id,
-                    suffix = {
-                        Icon(
-                            imageVector = NcsIcons.Menu,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier
-                                .padding(start = 12.dp)
-                                .draggableHandle()
-                        )
+                SwipeToDeleteCard(
+                    onDelete = {
+                        currentMusics = currentMusics.minus(item)
+                        onDelete(item)
                     },
-                    style = cardStyle,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                )
+                    deleteText = stringResource(R.string.Delete)
+                ) {
+                    MusicCard(
+                        item = item,
+                        isPlaying = playingMusicId == item.id,
+                        suffix = {
+                            Icon(
+                                imageVector = NcsIcons.Menu,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .padding(start = 12.dp)
+                                    .draggableHandle()
+                            )
+                        },
+                        style = cardStyle,
+                        unSelectedBackgroundColor = unSelectedBackgroundColor,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                }
             }
         }
     }
@@ -215,7 +231,7 @@ fun PlaylistDetailContent(
     modifier: Modifier = Modifier,
     name: String,
     coverUrl: String?,
-    onPlay: () -> Unit,
+    onPlay: (() -> Unit)?,
     isPlaying: Boolean
 ) {
     Column(
@@ -230,7 +246,7 @@ fun PlaylistDetailContent(
         ) {
             CoverImage(url = coverUrl)
 
-            if (!isPlaying) {
+            if (!isPlaying && onPlay != null) {
                 Icon(
                     imageVector = NcsIcons.PlayCircle,
                     contentDescription = null,
@@ -341,7 +357,8 @@ fun PlaylistDetailContentPreview() {
                 onDeletePlaylist = {},
                 playingMusic = null,
                 onPlay = {},
-                isPlaying = true
+                isPlaying = true,
+                onDeleteMusicInList = {}
             )
         }
     }

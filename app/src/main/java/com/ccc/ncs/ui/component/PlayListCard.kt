@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.theme.NcsTheme
+import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -104,9 +105,7 @@ fun PlayListColumn(
         )
     }
 
-    LazyColumn(
-        modifier = modifier
-    ) {
+    LazyColumn(modifier) {
         items(count = sortedPlaylist.size) { index ->
             PlayListColumnItem(
                 playList = sortedPlaylist[index],
@@ -122,7 +121,7 @@ val mockMusics = listOf(
     Music(
         id = UUID.randomUUID(),
         title = "Comet",
-        artists = listOf(),
+        artists = listOf(Artist(name = "Keepsake", tags = "", detailUrl = "", photoUrl = null)),
         coverThumbnailUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/100x100/comet-1716422454-LbQTehJ3ek.jpg",
         moods = setOf(
             Mood(

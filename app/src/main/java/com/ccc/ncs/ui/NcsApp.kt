@@ -55,6 +55,12 @@ fun NcsApp(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     HandleOfflineStatus(isOffline, snackbarHostState)
 
+    LaunchedEffect(playerUiState) {
+        if (playerUiState is PlayerUiState.Loading) {
+            playingScreenHeightWeight = 0f
+        }
+    }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -104,12 +110,10 @@ fun NcsApp(
                     onRepeat = playerViewModel::setRepeatMode,
                     onShuffle = playerViewModel::setShuffleMode,
                     onUpdateMusicOrder = playerViewModel::updateMusicOrder,
-                    onClose = {
-                        playerViewModel.closePlayer()
-                        playingScreenHeightWeight = 0f
-                    },
+                    onClose = playerViewModel::closePlayer,
                     onMoveToMusicDetail = { appState.navController.navigateToMusicDetail(it.id) },
-                    onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) }
+                    onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) },
+                    onDeleteMusicInPlaylist = playerViewModel::removeFromQueue
                 )
             }
         }

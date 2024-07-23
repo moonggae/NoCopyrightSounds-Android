@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+
 @HiltViewModel
 class PlaylistDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -90,6 +91,19 @@ class PlaylistDetailViewModel @Inject constructor(
             playlistRepository.deletePlayList(playlistId)
             playerRepository.clear()
             playerController.stop()
+        }
+    }
+
+    fun deleteMusic(music: Music) {
+        viewModelScope.launch {
+            (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
+                val playlist = state.playlist
+                val updatedMusics = playlist.musics - music
+                playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
+                if (playlist.id == playerRepository.playlist.first()?.id) {
+                    playerController.removeMusic(music)
+                }
+            }
         }
     }
 }

@@ -33,7 +33,7 @@ fun NavGraphBuilder.playlistDetailScreen(
         PlaylistDetailRoute(
             onBack = onBack,
             onClickModifyName = navigateToEditPlaylist,
-            onPlay = onPlayPlaylist
+            onPlay = onPlayPlaylist,
         )
     }
 }
