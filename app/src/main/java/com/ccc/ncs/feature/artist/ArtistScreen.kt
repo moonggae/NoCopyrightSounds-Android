@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.ui.component.ArtistListCard
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
+import com.ccc.ncs.ui.component.LoadingScreen
 import java.time.LocalDate
 
 @Composable
@@ -133,6 +133,10 @@ internal fun ArtistScreen(
                 }
             }
         }
+    }
+
+    if (artists.loadState.refresh is LoadState.Loading) {
+        LoadingScreen()
     }
 }
 

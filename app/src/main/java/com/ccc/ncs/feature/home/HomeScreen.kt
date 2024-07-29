@@ -53,6 +53,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
+import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCardList
 import com.ccc.ncs.ui.component.MusicTagBottomSheet
 import kotlinx.coroutines.launch
@@ -171,6 +172,10 @@ internal fun HomeScreen(
                 onClick = onClickMusic,
                 isSelectMode = homeUiState.isSelectMode
             )
+        }
+
+        if (musics.loadState.refresh is LoadState.Loading) {
+            LoadingScreen()
         }
     }
 
