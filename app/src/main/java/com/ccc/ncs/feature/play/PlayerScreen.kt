@@ -337,6 +337,7 @@ private fun PlayerScreenAppBar(
                     .clickable(onClick = onClose)
             )
 
+            /*
             Icon(
                 imageVector = NcsIcons.MoreVertical,
                 contentDescription = null,
@@ -345,6 +346,7 @@ private fun PlayerScreenAppBar(
                     .clip(CircleShape)
                     .clickable(onClick = {})
             )
+             */
         }
     }
 }
