@@ -7,6 +7,9 @@ import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
@@ -58,4 +61,7 @@ object NcsIcons {
     val PlayCircleOutline = Icons.Rounded.PlayCircleOutline
     val Edit = Icons.Rounded.Edit
     val Delete = Icons.Rounded.Delete
+    val Copy = Icons.Outlined.ContentCopy
+    val Email = Icons.Outlined.Email
+    val Code = Icons.Outlined.Code
 }

@@ -29,6 +29,8 @@ reorderable = "2.1.1"
 datastore = "1.1.1"
 lottie = "6.4.1"
 gson = "2.11.0"
+google-oss-plugin = "0.10.6"
+google-oss = "17.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -92,7 +94,7 @@ reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reo
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-
+google-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "google-oss" }
 
 [bundles]
 media3 = [
@@ -111,3 +113,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 room = { id = "androidx.room", version.ref = "room" }
+google-oss = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "google-oss-plugin" }

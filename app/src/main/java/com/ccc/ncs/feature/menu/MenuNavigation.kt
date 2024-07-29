@@ -9,8 +9,12 @@ const val MENU_ROUTE = "menu"
 
 fun NavController.navigateToMenu(navOptions: NavOptions) = navigate(MENU_ROUTE, navOptions)
 
-fun NavGraphBuilder.menuScreen() {
+fun NavGraphBuilder.menuScreen(
+    onShowSnackbar: suspend (String, String?) -> Boolean
+) {
     composable(route = MENU_ROUTE) {
-        MenuRoute()
+        MenuRoute(
+            onShowSnackbar = onShowSnackbar
+        )
     }
 }

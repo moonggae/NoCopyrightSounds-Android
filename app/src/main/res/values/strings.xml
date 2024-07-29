@@ -44,4 +44,7 @@
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
     <string name="auto_generated_playlist_name">Recent Playlist</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/ncs</string>
 </resources>

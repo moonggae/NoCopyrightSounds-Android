@@ -1,3 +1,4 @@
+
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.secrets)
+    alias(libs.plugins.google.oss)
 }
 
 android {
@@ -118,4 +120,5 @@ dependencies {
     implementation(libs.bundles.media3)
     implementation(libs.reorderable)
     implementation(libs.lottie.compose)
+    implementation(libs.google.oss)
 }
