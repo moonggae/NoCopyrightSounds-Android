@@ -4,11 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -29,7 +29,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
             value = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                Color.Black.hashCode(),
+                MaterialTheme.colorScheme.onSurface.hashCode(),
                 BlendModeCompat.SRC_ATOP
             ),
             keyPath = arrayOf("**")
@@ -39,7 +39,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
         Modifier
             .fillMaxSize()
-            .background(Color.White.copy(alpha = 0.2f))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
     ) {
         LottieAnimation(
             composition = composition,
@@ -47,7 +47,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
             dynamicProperties = dynamicProperties,
             modifier = Modifier
                 .align(Alignment.Center)
-                .height(150.dp),
+                .height(60.dp),
         )
     }
 }
