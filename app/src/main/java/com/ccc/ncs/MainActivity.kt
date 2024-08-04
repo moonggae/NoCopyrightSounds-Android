@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.designsystem.theme.NcsTheme
+import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.ui.NcsApp
 import com.ccc.ncs.ui.rememberNcsAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +21,9 @@ class MainActivity : ComponentActivity() {
     
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var playerController: PlayerController
     
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
@@ -36,6 +40,11 @@ class MainActivity : ComponentActivity() {
                 NcsApp(appState = appState)
             }
         }
+    }
+
+    override fun onDestroy() {
+        playerController.stop()
+        super.onDestroy()
     }
 
 
