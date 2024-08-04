@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ncs</string>
+    <string name="app_name">NCS</string>
     <string name="not_connected">⚠️ You aren’t connected to the internet</string>
     <string name="feature_home_title">Home</string>
     <string name="feature_artist_title">Artists</string>
