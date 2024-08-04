@@ -1,6 +1,5 @@
 package com.ccc.ncs.playback.playstate
 
-import android.util.Log
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import kotlinx.coroutines.CoroutineScope
@@ -29,21 +28,21 @@ internal class PlaybackStateListener @Inject constructor(
             playbackStateManager.flow
                 .map { it.isPlaying }
                 .collectLatest { isPlaying ->
-                    while (true) {
-                        updatePlayState()
-                        delay(400.milliseconds)
+                    if (isPlaying) {
+                        while (true) {
+                            updatePlayState()
+                            delay(400.milliseconds)
+                        }
                     }
                 }
         }
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
-        Log.d("TAG", "PlaybackStateListener - onPlaybackStateChanged")
         updatePlayState()
     }
 
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-        Log.d("TAG", "PlaybackStateListener - onPlayWhenReadyChanged")
         updatePlayState()
     }
 
@@ -52,20 +51,35 @@ internal class PlaybackStateListener @Inject constructor(
         newPosition: Player.PositionInfo,
         reason: Int
     ) {
-        Log.d("TAG", "PlaybackStateListener - onPositionDiscontinuity")
         updatePlayState()
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        Log.d("TAG", "PlaybackStateListener - onIsPlayingChanged")
         updatePlayState()
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
-        Log.d("TAG", "PlaybackStateListener - onPlaybackParametersChanged")
         updatePlayState()
     }
 
+    override fun onEvents(player: Player, events: Player.Events) {
+        if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
+            onPositionChanged()
+        }
+        super.onEvents(player, events)
+    }
+
+    fun onPositionChanged() { // seekTo()를 호출해서 position이 변경된 경우 호출
+        updatePlayState()
+    }
+
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        updatePlayState()
+    }
+
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        updatePlayState()
+    }
 
     private fun updatePlayState() {
         val playbackState = player.playbackState
@@ -85,10 +99,7 @@ internal class PlaybackStateListener @Inject constructor(
             artist = player.currentMediaItem?.mediaMetadata?.artist?.toString(),
             artworkUri = player.currentMediaItem?.mediaMetadata?.artworkUri,
             isShuffleEnabled = player.shuffleModeEnabled,
-            isRepeatMode = when (player.repeatMode) {
-                Player.REPEAT_MODE_ALL -> true
-                else -> false
-            }
+            repeatMode = RepeatMode.valueOf(player.repeatMode)
         )
     }
 }

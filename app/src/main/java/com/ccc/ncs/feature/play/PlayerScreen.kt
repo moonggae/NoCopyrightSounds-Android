@@ -81,6 +81,7 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.artistText
+import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
@@ -101,7 +102,7 @@ fun PlayerScreen(
     onSkipNext: () -> Unit,
     onSeekTo: (position: Long) -> Unit,
     onShuffle: (Boolean) -> Unit,
-    onRepeat: (Boolean) -> Unit,
+    onChangeRepeatMode: (RepeatMode) -> Unit,
     onClose: () -> Unit,
     onUpdateMusicOrder: (Int, Int) -> Unit,
     onMoveToMusicDetail: (Music) -> Unit,
@@ -161,7 +162,7 @@ fun PlayerScreen(
                         onSkipPrevious = onSkipPrevious,
                         onSkipNext = onSkipNext,
                         onShuffle = onShuffle,
-                        onRepeat = onRepeat,
+                        onChangeRepeatMode = onChangeRepeatMode,
                         onClose = onClose,
                         onClickMusicTitle = onMoveToMusicDetail,
                         onClickArtist = onMoveToArtistDetail,
@@ -228,7 +229,7 @@ private fun PlayerScreenBigContent(
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
-    onRepeat: (Boolean) -> Unit,
+    onChangeRepeatMode: (RepeatMode) -> Unit,
     onClose: () -> Unit,
     onClickMusicTitle: (Music) -> Unit,
     onClickArtist: (Artist) -> Unit
@@ -289,13 +290,13 @@ private fun PlayerScreenBigContent(
             PlayerScreenBigController(
                 isPlaying = uiState.isPlaying,
                 hasNext = uiState.hasNext,
-                isOnRepeat = uiState.isRepeatOn,
+                repeatMode = uiState.repeatMode,
                 isOnShuffle = uiState.isShuffleOn,
                 onPlay = onPlay,
                 onSkipPrevious = onSkipPrevious,
                 onSkipNext = onSkipNext,
                 onShuffle = onShuffle,
-                onRepeat = onRepeat,
+                onChangeRepeatMode = onChangeRepeatMode,
                 modifier = Modifier.padding(
                     start = 20.dp,
                     end = 20.dp,
@@ -357,13 +358,13 @@ fun PlayerScreenBigController(
     modifier: Modifier = Modifier,
     isPlaying: Boolean,
     isOnShuffle: Boolean,
-    isOnRepeat: Boolean,
+    repeatMode: RepeatMode,
     hasNext: Boolean,
     onPlay: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
-    onRepeat: (Boolean) -> Unit,
+    onChangeRepeatMode: (RepeatMode) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -413,13 +414,19 @@ fun PlayerScreenBigController(
         )
 
         Icon(
-            imageVector = NcsIcons.Repeat,
+            imageVector = when (repeatMode) {
+                RepeatMode.REPEAT_MODE_ONE -> NcsIcons.RepeatOne
+                else -> NcsIcons.Repeat
+            },
             contentDescription = null,
-            tint = if (isOnRepeat) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = when (repeatMode) {
+                RepeatMode.REPEAT_MODE_OFF -> MaterialTheme.colorScheme.onSurfaceVariant
+                else -> MaterialTheme.colorScheme.onSurface
+            },
             modifier = Modifier
                 .clip(CircleShape)
                 .size(32.dp)
-                .clickable(onClick = { onRepeat(!isOnRepeat) })
+                .clickable(onClick = { onChangeRepeatMode(repeatMode.next()) })
         )
     }
 }
@@ -705,7 +712,7 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 onSkipPrevious = {},
                 onSkipNext = {},
                 onShuffle = {},
-                onRepeat = {},
+                onChangeRepeatMode = {},
                 onClose = {},
                 onClickMusicTitle = {},
                 onClickArtist = { }

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.material.icons.outlined.Repeat
+import androidx.compose.material.icons.outlined.RepeatOne
 import androidx.compose.material.icons.outlined.Shuffle
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
@@ -49,6 +50,7 @@ object NcsIcons {
     val SkipPrevious = Icons.Outlined.SkipPrevious
     val Shuffle = Icons.Outlined.Shuffle
     val Repeat = Icons.Outlined.Repeat
+    val RepeatOne = Icons.Outlined.RepeatOne
     val Search = Icons.Rounded.Search
     val ArrowDropDown = Icons.Filled.ArrowDropDown
     val ArrowForwardNoTail = Icons.AutoMirrored.Outlined.ArrowForwardIos

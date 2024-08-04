@@ -107,7 +107,7 @@ fun NcsApp(
                     onSkipPrevious = playerViewModel::prev,
                     onSkipNext = playerViewModel::next,
                     onSeekTo = playerViewModel::setPosition,
-                    onRepeat = playerViewModel::setRepeatMode,
+                    onChangeRepeatMode = playerViewModel::setRepeatMode,
                     onShuffle = playerViewModel::setShuffleMode,
                     onUpdateMusicOrder = playerViewModel::updateMusicOrder,
                     onClose = playerViewModel::closePlayer,

@@ -6,6 +6,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.playback.session.PlaybackService
 import com.ccc.ncs.playback.session.asMediaItem
 import kotlinx.coroutines.CoroutineScope
@@ -53,11 +54,8 @@ class PlayerController @Inject constructor(
         controller.seekBack()
     }
 
-    fun setRepeatMode(isOn: Boolean) = executeAfterPrepare { controller ->
-        when (isOn) {
-            true -> controller.setRepeatMode(MediaController.REPEAT_MODE_ALL)
-            false -> controller.setRepeatMode(MediaController.REPEAT_MODE_OFF)
-        }
+    fun setRepeatMode(repeatMode: RepeatMode) = executeAfterPrepare { controller ->
+        controller.setRepeatMode(repeatMode.value)
     }
 
     fun setShuffleMode(isOn: Boolean) = executeAfterPrepare { controller ->

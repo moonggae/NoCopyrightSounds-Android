@@ -2,6 +2,7 @@ package com.ccc.ncs.playback.playstate
 
 import android.net.Uri
 import androidx.media3.common.C
+import androidx.media3.common.Player
 
 data class PlaybackState(
     val isPlaying: Boolean = false,
@@ -15,5 +16,21 @@ data class PlaybackState(
     val artist: String? = null,
     val artworkUri: Uri? = null,
     val isShuffleEnabled: Boolean = false,
-    val isRepeatMode: Boolean = false
+    val repeatMode: RepeatMode = RepeatMode.REPEAT_MODE_OFF
 )
+
+enum class RepeatMode(val value: Int) {
+    REPEAT_MODE_ALL(Player.REPEAT_MODE_ALL),
+    REPEAT_MODE_ONE(Player.REPEAT_MODE_ONE),
+    REPEAT_MODE_OFF(Player.REPEAT_MODE_OFF);
+
+    fun next(): RepeatMode =
+        if (this.value == RepeatMode.entries.maxOf { it.value }) RepeatMode.entries.minBy { it.value }
+        else RepeatMode.valueOf(this.value + 1)
+
+    companion object {
+        fun valueOf(value: Int): RepeatMode =
+            RepeatMode.entries.firstOrNull { it.value == value }
+            ?: throw IllegalArgumentException("Not exists repeat mode")
+    }
+}

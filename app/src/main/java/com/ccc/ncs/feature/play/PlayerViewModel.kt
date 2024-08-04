@@ -9,6 +9,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
+import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -122,7 +123,7 @@ class PlayerViewModel @Inject constructor(
                         duration = playbackState.duration,
                         speed = playbackState.speed,
                         isShuffleOn = playbackState.isShuffleEnabled,
-                        isRepeatOn = playbackState.isRepeatMode
+                        repeatMode = playbackState.repeatMode
                     )
                 }
             }
@@ -149,8 +150,8 @@ class PlayerViewModel @Inject constructor(
         playerController.setShuffleMode(isOn)
     }
 
-    fun setRepeatMode(isOn: Boolean) {
-        playerController.setRepeatMode(isOn)
+    fun setRepeatMode(repeatMode: RepeatMode) {
+        playerController.setRepeatMode(repeatMode)
     }
 
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
@@ -227,7 +228,7 @@ sealed interface PlayerUiState {
         val duration: Long = 0,
         val speed: Float = 1f,
         val isShuffleOn: Boolean = false,
-        val isRepeatOn: Boolean = false,
+        val repeatMode: RepeatMode = RepeatMode.REPEAT_MODE_OFF,
         val lyrics: String? = null
     ) : PlayerUiState {
         val currentMusic: Music?

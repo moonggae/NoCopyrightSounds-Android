@@ -1,6 +1,5 @@
 package com.ccc.ncs.playback.session
 
-import android.util.Log
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
@@ -22,8 +21,7 @@ internal class LibrarySessionCallback @Inject constructor(
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
-    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
-        Log.d("TAG", "onPlaybackResumption")
+    ): ListenableFuture<MediaItemsWithStartPosition> {
         return scope.future {
             val mediaItems = playerRepository.playlist.first()?.musics?.map { it.asMediaItem() } ?: emptyList()
             val startIndex = playerRepository.musicIndex.first() ?: C.INDEX_UNSET
