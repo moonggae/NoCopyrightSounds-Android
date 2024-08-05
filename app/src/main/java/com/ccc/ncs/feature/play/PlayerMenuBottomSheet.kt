@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -39,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -103,6 +105,7 @@ fun PlayerMenuBottomSheet(
 
     BottomSheetScaffold(
         scaffoldState = menuSheetState.sheetState,
+        sheetShape = RectangleShape,
         sheetContent = {
             Column(
                 modifier = Modifier
@@ -135,43 +138,50 @@ fun PlayerMenuBottomSheet(
         },
         sheetPeekHeight = (menuSheetState.sheetPeekHeight) * draggableStatePercentage,
         sheetDragHandle = {
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
-                divider = {},
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = menuSheetState.offsetProgress)
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onSizeChanged {
-                        sheetDragHandleHeight = with(density) { it.height.toDp() }
-                    }
-            ) {
-                PlayerMenuTabs.entries.forEach { tab ->
-                    Tab(
-                        selected = selectedTabIndex == tab.index,
-                        onClick = {
-                            scope.launch {
-                                selectedTabIndex = tab.index
-                                menuSheetState.sheetState.bottomSheetState.expand()
+            Column {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(menuSheetState.windowInsetPaddings.calculateTopPadding() * menuSheetState.offsetProgress)
+                )
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
+                    divider = {},
+                    indicator = { tabPositions ->
+                        TabRowDefaults.SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = menuSheetState.offsetProgress)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged {
+                            sheetDragHandleHeight = with(density) { it.height.toDp() }
+                        }
+                ) {
+                    PlayerMenuTabs.entries.forEach { tab ->
+                        Tab(
+                            selected = selectedTabIndex == tab.index,
+                            onClick = {
+                                scope.launch {
+                                    selectedTabIndex = tab.index
+                                    menuSheetState.sheetState.bottomSheetState.expand()
+                                }
+                            },
+                        ) {
+                            Row {
+                                Text(
+                                    text = tab.label,
+                                    style = NcsTypography.PlayerTypography.bottomMenuText.copy(
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = draggableStatePercentage),
+                                        textAlign = TextAlign.Center
+                                    ),
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .weight(1f)
+                                )
                             }
-                        },
-                    ) {
-                        Row {
-                            Text(
-                                text = tab.label,
-                                style = NcsTypography.PlayerTypography.bottomMenuText.copy(
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = draggableStatePercentage),
-                                    textAlign = TextAlign.Center
-                                ),
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .weight(1f)
-                            )
                         }
                     }
                 }
@@ -202,7 +212,7 @@ class PlayerMenuBottomSheetState(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     val sheetPeekHeight: Dp get() = sheetDragHandleHeight + windowInsetPaddings.calculateBottomPadding()
-    val bodyHeight: Dp get() = screenHeight - windowInsetPaddings.calculateTopPadding() - sheetDragHandleHeight
+    val bodyHeight: Dp get() = screenHeight - sheetDragHandleHeight
     val bottomSheetStateMinOffset: Dp get() = windowInsetPaddings.calculateTopPadding()
     val bottomSheetStateMaxOffset: Dp get() = screenHeight - sheetPeekHeight
 
@@ -226,7 +236,7 @@ class PlayerMenuBottomSheetState(
                     0f
                 }
             }.collectLatest { offset ->
-                updateOffsetProgress(offset)
+                updateOffsetProgress(offset.coerceIn(minOffsetPx, maxOffsetPx))
             }
         }
     }
