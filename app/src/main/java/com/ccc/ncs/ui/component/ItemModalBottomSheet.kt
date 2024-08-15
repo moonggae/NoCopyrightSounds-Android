@@ -1,17 +1,16 @@
 package com.ccc.ncs.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.model.MusicTag
 
@@ -22,28 +21,45 @@ fun <T: MusicTag> MusicTagBottomSheet(
     items: List<T>,
     onItemSelected: (T?) -> Unit
 ) {
+    val nullContainedItems: List<T?> = remember {
+        listOf(null) + items
+    }
+
     CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
         FlowRow(
-            modifier = Modifier
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            OutlinedButton(onClick = {
-                onItemSelected(null)
-                onDismissRequest()
-            }) {
-                Text(text = "DELETE")
+            nullContainedItems.forEach { musicTag ->
+                MusicTagButton(
+                    item = musicTag,
+                    onClick = {
+                        onItemSelected(it)
+                        onDismissRequest()
+                    }
+                )
             }
+        }
+    }
+}
 
-            items.forEach {
-                OutlinedButton(onClick = {
-                    onItemSelected(it)
-                    onDismissRequest()
-                }) {
-                    Text(text = it.name)
-                }
-            }
+
+@Composable
+fun <T: MusicTag> MusicTagButton(
+    modifier: Modifier = Modifier,
+    item: T?,
+    onClick: (T?) -> Unit
+) {
+    OutlinedButton(
+        onClick = { onClick(item) },
+        border = null
+    ) {
+        if (item != null) {
+            Text(text = "#${item.name}")
+        } else {
+            Text(
+                text = "DELETE",
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }
