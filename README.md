@@ -10,6 +10,15 @@
 - [x] 플레이리스트 관리 및 재생
 - [x] 음악 순서 변경
 
+<p>
+<img width="32.5%" src="resource/nmp_player_small.gif">
+<img width="32.5%" src="resource/nmp_playing_small.gif">
+<img width="32.5%" src="resource/nmp_detail_small.gif">
+<img width="32.5%" src="resource/nmp_delete_small.gif">
+<img width="32.5%" src="resource/nmp_search_small.gif">
+<img width="32.5%" src="resource/nmp_lyrics_small.gif">
+</p>
+
 ### 📝 Todos
 - [x] 음악 상세 페이지
 - [x] 아티스트 상세 페이지
@@ -34,8 +43,8 @@ FANDOM_URL="https://nocopyrightsounds.fandom.com"
 1. `app`디렉토리에 keystore 파일 추가
 - add keystore file to `app` directory 
 
-2. `keystore.properties`파일 추가, keystore 정보 입력
-- add `keystore.properties` file and write keystore data following below
+2. `root`디렉토리에 `keystore.properties`파일 추가, keystore 정보 입력
+- add `keystore.properties` file to `root` directory and write keystore data following below
 ```
 RELEASE_KEY_STORE={KEY_STORE_FILE_NAME}
 RELEASE_KEY_PASSWORD={KEY_STORE_KEY_PASSWORD}
