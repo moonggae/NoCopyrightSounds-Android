@@ -126,46 +126,32 @@ val mockMusics = listOf(
         moods = setOf(
             Mood(
                 id = 3,
-                name = "Dreamy",
-                colorInt = -15131356,
-                backgroundColorInt = -8201475
+                name = "Dreamy"
             ),
             Mood(
                 id = 4,
-                name = "Epic",
-                colorInt = -15131356,
-                backgroundColorInt = -11040
+                name = "Epic"
             ),
             Mood(
                 id = 5,
-                name = "Euphoric",
-                colorInt = -15131356,
-                backgroundColorInt = -5450
+                name = "Euphoric"
             ),
             Mood(
                 id = 11,
-                name = "Happy",
-                colorInt = -15131356,
-                backgroundColorInt = -10122
+                name = "Happy"
             ),
             Mood(
                 id = 12,
-                name = "Hopeful",
-                colorInt = -15131356,
-                backgroundColorInt = -8924685
+                name = "Hopeful"
             ),
             Mood(
                 id = 22,
-                name = "Sexy",
-                colorInt = null,
-                backgroundColorInt = -1964733
+                name = "Sexy"
             ),
         ),
         genres = setOf(Genre(
             id = 4,
-            name = "Drumstep",
-            colorInt = null,
-            backgroundColorInt = -54757
+            name = "Drumstep"
         )),
         coverUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/683/1000x0/comet-1716422454-LbQTehJ3ek.jpg",
         versions = setOf(),

@@ -15,14 +15,10 @@ data class GenreEntity(
 
 fun Genre.asEntity() = GenreEntity(
     id = id,
-    name = name,
-    colorInt = colorInt,
-    backgroundColorInt = backgroundColorInt
+    name = name
 )
 
 fun GenreEntity.asModel() = Genre(
     id = id,
-    name = name,
-    colorInt = colorInt,
-    backgroundColorInt = backgroundColorInt
+    name = name
 )

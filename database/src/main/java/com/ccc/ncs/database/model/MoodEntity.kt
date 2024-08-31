@@ -15,14 +15,10 @@ data class MoodEntity(
 
 fun Mood.asEntity() = MoodEntity(
     id = id,
-    name = name,
-    colorInt = colorInt,
-    backgroundColorInt = backgroundColorInt
+    name = name
 )
 
 fun MoodEntity.asModel() = Mood(
     id = id,
-    name = name,
-    colorInt = colorInt,
-    backgroundColorInt = backgroundColorInt
+    name = name
 )
