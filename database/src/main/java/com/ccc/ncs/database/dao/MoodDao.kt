@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MoodDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllMoods(moods: List<MoodEntity>)
+    suspend fun insertAllMoods(moods: List<MoodEntity>): List<Long>
 
     @Query("SELECT * FROM mood")
     fun getAllMoods(): Flow<List<MoodEntity>>

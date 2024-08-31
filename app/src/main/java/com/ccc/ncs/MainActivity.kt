@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.playback.PlayerController
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val viewModel: MainActivityViewModel by viewModels()
-    
+
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
