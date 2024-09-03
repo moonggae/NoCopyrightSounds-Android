@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
@@ -46,6 +49,7 @@ import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
+import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.home.addmusictoplaylistdialog.AddMusicsToPlaylistDialog
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
@@ -56,6 +60,7 @@ import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCardList
 import com.ccc.ncs.ui.component.MusicTagBottomSheet
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -125,6 +130,10 @@ internal fun HomeScreen(
         }
     }
 
+    fun retryLoad() {
+        scope.launch(Dispatchers.Main) { musics.retry() }
+    }
+
     Box {
         Column {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
@@ -154,6 +163,23 @@ internal fun HomeScreen(
                             }
                         }
                     )
+                }
+            }
+
+            if (musics.loadState.hasError) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(R.string.error_failed_to_load_musics))
+                    Button(onClick = ::retryLoad) {
+                        Text(
+                            text = stringResource(R.string.retry),
+                            style = NcsTypography.Label.contentLabel .copy(
+                                color = MaterialTheme.colorScheme.surface
+                            )
+                        )
+                    }
                 }
             }
 

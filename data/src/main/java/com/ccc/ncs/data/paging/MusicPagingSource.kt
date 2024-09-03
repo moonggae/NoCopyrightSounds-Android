@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.network.NcsNetworkDataSource
-import java.io.IOException
 
 
 const val MUSIC_LOAD_SIZE = 20
@@ -38,8 +37,8 @@ class MusicPagingSource(
                 prevKey = if (currentPage == 1) null else currentPage - 1,
                 nextKey = if (isLastPage) null else currentPage + 1
             )
-        } catch (retryableError: IOException) {
-            return LoadResult.Error(retryableError)
+        } catch (th: Throwable) {
+            return LoadResult.Error(th)
         }
     }
 

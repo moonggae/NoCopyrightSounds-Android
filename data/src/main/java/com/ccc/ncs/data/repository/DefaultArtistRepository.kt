@@ -35,9 +35,13 @@ internal class DefaultArtistRepository @Inject constructor(
         )
     }.flow
 
-    override fun getArtistDetail(artistDetailPath: String): Flow<ArtistDetail?> = flow {
-        val artistDetail = network.getArtistDetail(artistDetailPath)
-        artistDetail?.musics?.let { musicRepository.syncLocalMusics(it) }
-        emit(artistDetail)
+    override fun getArtistDetail(artistDetailPath: String): Flow<Result<ArtistDetail>> = flow {
+        try {
+            val artistDetail = network.getArtistDetail(artistDetailPath)
+            artistDetail?.musics?.let { musicRepository.syncLocalMusics(it) }
+            emit(Result.success(artistDetail ?: throw Exception("fail to get artist detail")))
+        } catch (th: Throwable) {
+            emit(Result.failure(th))
+        }
     }
 }

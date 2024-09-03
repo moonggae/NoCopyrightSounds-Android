@@ -12,5 +12,5 @@ interface ArtistRepository {
         year: Int? = null
     ): Flow<PagingData<Artist>>
 
-    fun getArtistDetail(artistDetailPath: String): Flow<ArtistDetail?>
+    fun getArtistDetail(artistDetailPath: String): Flow<Result<ArtistDetail>>
 }

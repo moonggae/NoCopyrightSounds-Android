@@ -645,7 +645,11 @@ private enum class SwipeAnchors {
 @OptIn(ExperimentalFoundationApi::class)
 private val AnchoredDraggableState<SwipeAnchors>.percentage: Float
     get() = (
-            (this.requireOffset() - this.anchors.minAnchor()) / (this.anchors.maxAnchor() - this.anchors.minAnchor())
+            try {
+                (this.requireOffset() - this.anchors.minAnchor()) / (this.anchors.maxAnchor() - this.anchors.minAnchor())
+            } catch (th: Throwable) {
+                0f
+            }
             ).coerceIn(0f, 1f)
 
 

@@ -47,4 +47,9 @@
 
     <string name="ContactEmail">egchoi.dev@gmail.com</string>
     <string name="GithubRepositoryUrl">https://github.com/moonggae/ncs</string>
+
+    <string name="error_failed_to_load_musics">Failed to load musics</string>
+    <string name="error_failed_to_load_artists">Failed to load artists</string>
+    <string name="error_failed_to_load_artist_detail">Failed to load artist detail</string>
+    <string name="retry">Retry</string>
 </resources>

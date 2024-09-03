@@ -4,8 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ccc.ncs.model.Artist
 import com.ccc.ncs.network.NcsNetworkDataSource
-import java.io.IOException
-
 
 const val ARTIST_LOAD_SIZE = 20
 
@@ -16,9 +14,9 @@ class ArtistPagingSource(
     private val year: Int?
 ): PagingSource<Int, Artist>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Artist> {
-        try {
-            val currentPage = params.key ?: 1
+        val currentPage = params.key ?: 1
 
+        try {
             val response = dataSource.getArtists(
                 page = currentPage,
                 query = query,
@@ -33,8 +31,8 @@ class ArtistPagingSource(
                 prevKey = if (currentPage == 1) null else currentPage - 1,
                 nextKey = if (isLastPage) null else currentPage + 1
             )
-        } catch (retryableError: IOException) {
-            return LoadResult.Error(retryableError)
+        } catch (th: Throwable) {
+            return LoadResult.Error(th)
         }
     }
 

@@ -31,7 +31,8 @@ fun NavController.navigateToArtistDetail(
 fun NavGraphBuilder.artistDetailScreen(
     onBack: () -> Unit,
     onNavigateToMusicDetail: (Music) -> Unit,
-    onNavigateToArtistDetail: (Artist) -> Unit
+    onNavigateToArtistDetail: (Artist) -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
     composable(
         route = ARTIST_DETAIL_ROUTE,
@@ -45,7 +46,8 @@ fun NavGraphBuilder.artistDetailScreen(
         ArtistDetailRoute(
             onBack = onBack,
             onMoveToMusicDetail = onNavigateToMusicDetail,
-            onMoveToArtistDetail = onNavigateToArtistDetail
+            onMoveToArtistDetail = onNavigateToArtistDetail,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }

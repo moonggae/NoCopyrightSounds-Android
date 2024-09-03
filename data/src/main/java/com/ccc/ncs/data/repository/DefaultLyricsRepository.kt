@@ -9,6 +9,10 @@ class DefaultLyricsRepository @Inject constructor(
     private val networkDataSource: LyricsNetworkDataSource
 ) : LyricsRepository {
     override fun getLyrics(title: String): Flow<String?> = flow {
-        emit(networkDataSource.getLyrics(title).takeIf { it.isNotBlank() })
+        try {
+            emit(networkDataSource.getLyrics(title).takeIf { it.isNotBlank() })
+        } catch (th: Throwable) {
+            emit(null)
+        }
     }
 }

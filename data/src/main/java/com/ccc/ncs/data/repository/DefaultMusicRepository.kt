@@ -66,14 +66,15 @@ internal class DefaultMusicRepository @Inject constructor(
         .map { it?.asModel() }
 
     override fun initGenreAndMood(): Flow<Boolean> = flow {
-        val (genres, moods) = network.getAllGenreAndMood()
-        moodDao.deleteAllMoods()
-        val moodsRowIds = moodDao.insertAllMoods(moods.map { it.asEntity() })
+        try {
+            val (genres, moods) = network.getAllGenreAndMood()
+            val moodsRowIds = moodDao.insertAllMoods(moods.map { it.asEntity() })
+            val genresRowIds = genreDao.insertAllGenres(genres.map { it.asEntity() })
 
-        genreDao.deleteAllGenres()
-        val genresRowIds = genreDao.insertAllGenres(genres.map { it.asEntity() })
-
-        emit(moodsRowIds.isNotEmpty() && genresRowIds.isNotEmpty())
+            emit(moodsRowIds.isNotEmpty() && genresRowIds.isNotEmpty())
+        } catch (th: Throwable) {
+            emit(false)
+        }
     }
 
     override fun insertMusics(musics: List<Music>): Flow<List<Music>> = flow {

@@ -20,7 +20,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -31,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -48,8 +51,10 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.ArtistDetail
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.ui.component.ArtistListCard
+import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -58,8 +63,10 @@ fun ArtistDetailRoute(
     viewModel: ArtistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onMoveToMusicDetail: (Music) -> Unit,
-    onMoveToArtistDetail: (Artist) -> Unit
+    onMoveToArtistDetail: (Artist) -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
+    val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (val state = uiState) {
@@ -73,8 +80,18 @@ fun ArtistDetailRoute(
             )
         }
 
-        else -> {
-            // Handle other states
+        is ArtistDetailUiState.Loading -> {
+            LoadingScreen()
+        }
+
+        is ArtistDetailUiState.Fail -> {
+            val message = stringResource(R.string.error_failed_to_load_artist_detail)
+            LaunchedEffect(Unit) {
+                scope.launch {
+                    onShowSnackbar(message, null)
+                }
+                onBack()
+            }
         }
     }
 }

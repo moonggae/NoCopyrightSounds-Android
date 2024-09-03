@@ -56,7 +56,8 @@ fun NcsNavHost(
         artistDetailScreen(
             onBack = navController::navigateUp,
             onNavigateToMusicDetail = { navController.navigateToMusicDetail(it.id) },
-            onNavigateToArtistDetail = { navController.navigateToArtistDetail(it.detailUrl) }
+            onNavigateToArtistDetail = { navController.navigateToArtistDetail(it.detailUrl) },
+            onShowSnackbar = onShowSnackbar
         )
         libraryScreen(
             navigateToEdit = navController::navigateToEditPlaylist,
