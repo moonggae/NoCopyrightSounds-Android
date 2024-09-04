@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -141,7 +142,8 @@ internal fun HomeScreen(
             if (homeUiState.isSelectMode) {
                 SelectMusicAppBar(
                     onClickMenu = { showSelectMusicMenu = true },
-                    onClickClose = { updateSelectMode(false) }
+                    onClickClose = { updateSelectMode(false) },
+                    selectedMusicCount = homeUiState.selectedMusics.size
                 )
             } else {
                 SearchAppBar(
@@ -288,17 +290,37 @@ fun SelectMusicAppBar(
     modifier: Modifier = Modifier,
     onClickMenu: () -> Unit,
     onClickClose: () -> Unit,
+    selectedMusicCount: Int
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onClickMenu) {
-            Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
-        }
+        Text(
+            text = " $selectedMusicCount ",
+            style = NcsTypography.Label.contentLabel.copy(
+                color = MaterialTheme.colorScheme.onPrimary
+            ),
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                )
+                .padding(6.dp)
+        )
 
-        IconButton(onClick = onClickClose) {
-            Icon(imageVector = NcsIcons.Close, contentDescription = null)
+        Row {
+            IconButton(onClick = onClickMenu) {
+                Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
+            }
+
+            IconButton(onClick = onClickClose) {
+                Icon(imageVector = NcsIcons.Close, contentDescription = null)
+            }
         }
     }
 }
