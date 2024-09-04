@@ -3,6 +3,7 @@ package com.ccc.ncs.feature.library.detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,6 +56,7 @@ import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
+import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.swap
@@ -63,7 +67,6 @@ import java.util.UUID
 
 @Composable
 fun PlaylistDetailRoute(
-    modifier: Modifier = Modifier,
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onClickModifyName: (UUID) -> Unit,
@@ -72,12 +75,17 @@ fun PlaylistDetailRoute(
     val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (playListUiState) {
-        is PlaylistDetailUiState.Loading -> {}
-        is PlaylistDetailUiState.Fail -> {}
+        is PlaylistDetailUiState.Loading -> {
+            LoadingScreen()
+        }
+
+        is PlaylistDetailUiState.Fail -> {
+            onBack()
+        }
+
         is PlaylistDetailUiState.Success -> {
             val uiState = playListUiState as PlaylistDetailUiState.Success
             PlaylistDetailScreen(
-                modifier = modifier,
                 playlist = uiState.playlist,
                 playingMusic = uiState.playingMusic,
                 onMusicOrderChanged = viewModel::updateMusicOrder,
@@ -97,7 +105,6 @@ fun PlaylistDetailRoute(
 
 @Composable
 internal fun PlaylistDetailScreen(
-    modifier: Modifier = Modifier,
     playlist: PlayList,
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
     onBack: () -> Unit,
@@ -111,40 +118,44 @@ internal fun PlaylistDetailScreen(
     var showMenuBottomSheet by remember { mutableStateOf(false) }
     var showDeleteAlertDialog by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+    PlaylistDetailMusicList(
+        modifier = Modifier
+            .padding(
+                horizontal = 16.dp,
+                vertical = 32.dp
+            )
+            .fillMaxWidth(),
+        playlistId = playlist.id,
+        musics = playlist.musics,
+        playingMusicId = playingMusic?.id,
+        onMusicOrderChanged = onMusicOrderChanged,
+        onDelete = onDeleteMusicInList,
+        topLayout = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Column {
+                    Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+                    Spacer(Modifier.height(32.dp))
+                }
 
-        CommonAppBar(
-            title = stringResource(R.string.feature_playlist_title),
-            onBack = onBack,
-            onClickMenu = { showMenuBottomSheet = true }
-        )
-
-        PlaylistDetailContent(
-            modifier = modifier,
-            name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
-            coverUrl = playlist.musics.firstOrNull()?.coverUrl,
-            isPlaying = isPlaying,
-            onPlay = if (playlist.musics.isEmpty()) null else onPlay
-        )
-
-        PlaylistDetailMusicList(
-            modifier = Modifier
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 32.dp
+                PlaylistDetailContent(
+                    name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
+                    coverUrl = playlist.musics.firstOrNull()?.coverUrl,
+                    isPlaying = isPlaying,
+                    onPlay = if (playlist.musics.isEmpty()) null else onPlay
                 )
-                .fillMaxWidth(),
-            playlistId = playlist.id,
-            musics = playlist.musics,
-            playingMusicId = playingMusic?.id,
-            onMusicOrderChanged = onMusicOrderChanged,
-            onDelete = onDeleteMusicInList
-        )
-    }
+                
+                Spacer(modifier = Modifier.height(18.dp))
+            }
+        }
+    )
+
+    PlaylistDetailScreenAppBar(
+        onBack = onBack,
+        onClickMenu = { showMenuBottomSheet = true },
+    )
 
 
     PlaylistDetailMenuBottomSheet(
@@ -169,6 +180,26 @@ internal fun PlaylistDetailScreen(
     )
 }
 
+@Composable
+fun PlaylistDetailScreenAppBar(
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit,
+    onClickMenu: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+        CommonAppBar(
+            title = stringResource(R.string.feature_playlist_title),
+            onBack = onBack,
+            onClickMenu = onClickMenu,
+        )
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDetailMusicList(
@@ -179,7 +210,8 @@ fun PlaylistDetailMusicList(
     cardStyle: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.small(),
     unSelectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
-    onDelete: (Music) -> Unit
+    onDelete: (Music) -> Unit,
+    topLayout: @Composable () -> Unit = {}
 ) {
     var currentMusics by remember(playlistId, musics.toSet()) { mutableStateOf(musics) }
 
@@ -193,6 +225,10 @@ fun PlaylistDetailMusicList(
         modifier = modifier,
         state = lazyListState
     ) {
+        item {
+            topLayout()
+        }
+
         items(count = currentMusics.size, key = { currentMusics[it].id }) {
             val item = currentMusics[it]
             ReorderableItem(state = reorderableLazyListState, key = item.id) { isDragging ->
@@ -223,12 +259,16 @@ fun PlaylistDetailMusicList(
                 }
             }
         }
+
+        item {
+            Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+        }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDetailContent(
-    modifier: Modifier = Modifier,
     name: String,
     coverUrl: String?,
     onPlay: (() -> Unit)?,
@@ -267,7 +307,9 @@ fun PlaylistDetailContent(
             style = NcsTypography.PlaylistDetailTypography.name.copy(
                 color = MaterialTheme.colorScheme.onSurface
             ),
-            modifier = Modifier.padding(top = 24.dp)
+            modifier = Modifier
+                .padding(top = 24.dp)
+                .basicMarquee()
         )
     }
 }
