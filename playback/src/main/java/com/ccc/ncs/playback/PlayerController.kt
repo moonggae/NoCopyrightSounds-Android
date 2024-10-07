@@ -3,6 +3,7 @@ package com.ccc.ncs.playback
 import android.content.ComponentName
 import android.content.Context
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.ccc.ncs.model.Music
@@ -116,6 +117,39 @@ class PlayerController @Inject constructor(
             controller.removeMediaItem(index)
     }
 
+    fun updateCurrentPlaylistMusic(music: Music) = executeAfterPrepare { controller ->
+        val mediaItem = music.asMediaItem()
+        val index = controller.getMediaItemIndex(mediaItem) ?: return@executeAfterPrepare
+
+        if (index == controller.currentMediaItemIndex) {
+            val listener = object : Player.Listener {
+                override fun onMediaItemTransition(newMediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(newMediaItem, reason)
+
+                    // 업데이트할 미디어 항목 인덱스 가져오기
+                    val updateMediaItemIndex = controller.getMediaItemIndex(mediaItem)
+                    if (updateMediaItemIndex == null) {
+                        controller.removeListener(this)
+                        return
+                    }
+
+                    // 현재 재생 중인 항목이 다를 경우 교체
+                    val currentMediaItemIndex = newMediaItem?.let { controller.getMediaItemIndex(it) } ?: -1
+                    if (currentMediaItemIndex != updateMediaItemIndex) {
+                        controller.replaceMediaItem(updateMediaItemIndex, mediaItem)
+                        controller.removeListener(this)
+                    }
+                }
+            }
+            controller.addListener(listener)
+        } else {
+            // 현재 재생 항목이 아닌 경우 바로 교체
+            controller.replaceMediaItem(index, mediaItem)
+        }
+    }
+
+
+
     private inline fun executeAfterPrepare(crossinline action: suspend (MediaController) -> Unit) {
         scope.launch {
             val controller = awaitConnect() ?: return@launch
@@ -136,7 +170,7 @@ class PlayerController @Inject constructor(
 private fun  MediaController.getMediaItemIndex(mediaItem: MediaItem):Int? {
     repeat(this.mediaItemCount) { index ->
         val currentItem = this.getMediaItemAt(index)
-        if (currentItem == mediaItem) return index
+        if (currentItem.mediaId == mediaItem.mediaId) return index
     }
     return null
 }

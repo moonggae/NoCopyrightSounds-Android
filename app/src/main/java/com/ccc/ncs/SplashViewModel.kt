@@ -14,7 +14,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
 ): ViewModel() {
-    val uiState: StateFlow<SplashUiState> = musicRepository.initGenreAndMood().map { success ->
+    val uiState: StateFlow<SplashUiState> = musicRepository.initGenreAndMood().map { success -> // todo 로딩이 오래 걸려서 로직 수정
         if (success) SplashUiState.Done
         else SplashUiState.Fail
     }.stateIn(

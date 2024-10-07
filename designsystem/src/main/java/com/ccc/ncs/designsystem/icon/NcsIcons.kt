@@ -5,12 +5,15 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.DownloadDone
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LibraryMusic
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.PeopleOutline
@@ -66,4 +69,7 @@ object NcsIcons {
     val Copy = Icons.Outlined.ContentCopy
     val Email = Icons.Outlined.Email
     val Code = Icons.Outlined.Code
+    val Download = Icons.Filled.Download
+    val Info = Icons.Outlined.Info
+    val DownloadDone = Icons.Outlined.DownloadDone
 }

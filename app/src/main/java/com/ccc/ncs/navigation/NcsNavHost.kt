@@ -13,6 +13,10 @@ import com.ccc.ncs.feature.library.detail.playlistDetailScreen
 import com.ccc.ncs.feature.library.edit.editPlaylistScreen
 import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.library.libraryScreen
+import com.ccc.ncs.feature.menu.cache.cacheSettingScreen
+import com.ccc.ncs.feature.menu.cache.cacheSizeSettingScreen
+import com.ccc.ncs.feature.menu.cache.navigateToCacheSetting
+import com.ccc.ncs.feature.menu.cache.navigateToCacheSizeSetting
 import com.ccc.ncs.feature.menu.menuScreen
 import com.ccc.ncs.feature.music.backWithGenre
 import com.ccc.ncs.feature.music.backWithMood
@@ -21,9 +25,9 @@ import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.search.backFromSearch
 import com.ccc.ncs.feature.search.navigateToSearch
 import com.ccc.ncs.feature.search.searchScreen
-import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.NcsAppState
+import java.util.UUID
 
 @Composable
 fun NcsNavHost(
@@ -31,9 +35,9 @@ fun NcsNavHost(
     modifier: Modifier = Modifier,
     startDestination: String = HOME_ROUTE,
     onShowSnackbar: suspend (String, String?) -> Boolean,
-    onPlayMusics: (List<Music>) -> Unit,
+    onPlayMusics: (List<UUID>) -> Unit,
     onPlayPlaylist: (PlayList) -> Unit,
-    onAddToQueue: (List<Music>) -> Unit
+    onAddToQueue: (List<UUID>) -> Unit
 ) {
     val navController = appState.navController
 
@@ -55,7 +59,7 @@ fun NcsNavHost(
         )
         artistDetailScreen(
             onBack = navController::navigateUp,
-            onNavigateToMusicDetail = { navController.navigateToMusicDetail(it.id) },
+            onNavigateToMusicDetail = { navController.navigateToMusicDetail(it) },
             onNavigateToArtistDetail = { navController.navigateToArtistDetail(it.detailUrl) },
             onShowSnackbar = onShowSnackbar
         )
@@ -64,7 +68,15 @@ fun NcsNavHost(
             navigateToDetail = { navController.navigateToPlaylistDetail(it.id) }
         )
         menuScreen(
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            onMoveCacheScreen = navController::navigateToCacheSetting
+        )
+        cacheSettingScreen(
+            onBack = navController::navigateUp,
+            onMoveToSettingSizeScreen = navController::navigateToCacheSizeSetting
+        )
+        cacheSizeSettingScreen(
+            onBack = navController::navigateUp
         )
         searchScreen(onSearch = navController::backFromSearch)
         editPlaylistScreen(onBack = navController::navigateUp)

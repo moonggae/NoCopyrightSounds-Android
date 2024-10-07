@@ -14,9 +14,11 @@ import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
 import com.ccc.ncs.database.model.relation.MusicWithGenreAndMood
 import com.ccc.ncs.database.model.relation.asModel
+import com.ccc.ncs.database.model.toStatusString
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.network.NcsNetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,7 +47,7 @@ internal class DefaultMusicRepository @Inject constructor(
     ) {
         MusicPagingSource(
             dataSource = network,
-            syncLocalMusics = this::syncLocalMusics,
+            syncLocalMusics = this::insertNotExistMusics,
             query = query,
             genreId = genreId,
             moodId = moodId,
@@ -55,11 +57,7 @@ internal class DefaultMusicRepository @Inject constructor(
 
     override fun getMusics(musicIds: List<UUID>): Flow<List<Music>> = musicDao
         .getMusics(musicIds)
-        .map {
-            it.map { musicWithGenreAndMood ->
-                musicWithGenreAndMood.asModel()
-            }
-        }
+        .map(List<MusicWithGenreAndMood>::asModel)
 
     override fun getMusic(musicId: UUID): Flow<Music?> = musicDao
         .getMusic(musicId)
@@ -82,8 +80,6 @@ internal class DefaultMusicRepository @Inject constructor(
 
         val musicGenreCrossRefs = mutableListOf<MusicGenreCrossRef>()
         val musicMoodCrossRefs = mutableListOf<MusicMoodCrossRef>()
-
-        overrideMoodAndGenreColors(musics)
 
         musics.forEach { music ->
             music.genres.mapTo(musicGenreCrossRefs) { genre ->
@@ -112,14 +108,6 @@ internal class DefaultMusicRepository @Inject constructor(
         emit(insertedMusics)
     }
 
-    private suspend fun overrideMoodAndGenreColors(musics: List<Music>) {
-        val moods = musics.map { it.moods }.flatten().distinctBy { it.id }
-        val genres = musics.map { it.genres }.flatten().distinctBy { it.id }
-
-        moodDao.insertAllMoods(moods.map { it.asEntity() })
-        genreDao.insertAllGenres(genres.map { it.asEntity() })
-    }
-
     override fun getGenres(): Flow<List<Genre>> = genreDao
         .getAllGenres()
         .map { list -> list.map { it.asModel() } }
@@ -128,15 +116,27 @@ internal class DefaultMusicRepository @Inject constructor(
         .getAllMoods()
         .map { list -> list.map { it.asModel() } }
 
-    override suspend fun syncLocalMusics(musics: List<Music>) {
+    override suspend fun insertNotExistMusics(musics: List<Music>) {
         val localMusics = getMusics(musics.map(Music::id)).first()
         val localMusicsMap = localMusics.associateBy { it.id }
 
         val musicsToInsert = musics.filter { music ->
             val localMusic = localMusicsMap[music.id]
-            localMusic == null || localMusic != music
+            localMusic == null
         }
 
         insertMusics(musicsToInsert).first()
+    }
+
+    override fun getMusicsByStatus(status: List<MusicStatus>): Flow<List<Music>> =
+        musicDao.getMusicsByStatus(status.map(MusicStatus::toStatusString)).map(List<MusicWithGenreAndMood>::asModel)
+
+    override suspend fun updateMusicStatus(musicId: UUID, status: MusicStatus) {
+        getMusic(musicId).first()?.let { music ->
+            if (music.status == status) return
+            musicDao.updateMusic(music.copy(
+                status = status
+            ).asEntity())
+        }
     }
 }

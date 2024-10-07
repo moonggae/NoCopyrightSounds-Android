@@ -22,15 +22,17 @@ coil = "2.7.0"
 paing = "3.3.2"
 navigation = "2.7.7"
 androidxHiltNavigationCompose = "1.2.0"
+androidxHiltWork = "1.0.0"
 media3 = "1.4.1"
 room = "2.6.1"
 androidXTestVersion = "1.6.1"
 reorderable = "2.1.1"
 datastore = "1.1.1"
-lottie = "6.4.1"
+lottie = "6.5.2"
 gson = "2.11.0"
 google-oss-plugin = "0.10.6"
 google-oss = "17.1.0"
+workRuntimeKtx = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +43,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHiltWork" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -77,6 +80,7 @@ androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplaye
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3" }
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+androidx-media3-datastore = { group = "androidx.media3", name = "media3-datastore", version.ref = "media3" }
 androidx-media3-extractor = { group = "androidx.media3", name = "media3-extractor", version.ref = "media3" }
 androidx-media3-container = { group = "androidx.media3", name = "media3-container", version.ref = "media3" }
 
@@ -95,6 +99,7 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 google-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "google-oss" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 
 [bundles]
 media3 = [

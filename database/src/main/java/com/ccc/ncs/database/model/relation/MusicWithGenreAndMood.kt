@@ -9,7 +9,6 @@ import com.ccc.ncs.database.model.MusicEntity
 import com.ccc.ncs.database.model.asModel
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
-import com.ccc.ncs.model.Music
 
 data class MusicWithGenreAndMood(
     @Embedded val music: MusicEntity,
@@ -43,3 +42,5 @@ fun MusicWithGenreAndMood.asModel() = music.asModel(
     genres.map { it.asModel() }.toSet(),
     moods.map { it.asModel() }.toSet()
 )
+
+fun List<MusicWithGenreAndMood>.asModel() = this.map { it.asModel() }

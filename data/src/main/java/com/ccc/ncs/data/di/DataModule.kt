@@ -3,11 +3,13 @@ package com.ccc.ncs.data.di
 import com.ccc.ncs.data.repository.ArtistRepository
 import com.ccc.ncs.data.repository.DefaultArtistRepository
 import com.ccc.ncs.data.repository.DefaultLyricsRepository
+import com.ccc.ncs.data.repository.DefaultMusicCacheRepository
 import com.ccc.ncs.data.repository.DefaultMusicRepository
 import com.ccc.ncs.data.repository.DefaultPlayListRepository
 import com.ccc.ncs.data.repository.DefaultPlayerRepository
 import com.ccc.ncs.data.repository.DefaultRecentSearchRepository
 import com.ccc.ncs.data.repository.LyricsRepository
+import com.ccc.ncs.data.repository.MusicCacheRepository
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
@@ -56,4 +58,9 @@ abstract class DataModule {
     internal abstract fun bindLyricsRepository(
         lyricsRepository: DefaultLyricsRepository
     ): LyricsRepository
+
+    @Binds
+    internal abstract fun bindMusicCacheRepository(
+        musicCacheRepository: DefaultMusicCacheRepository
+    ): MusicCacheRepository
 }

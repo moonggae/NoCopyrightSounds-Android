@@ -9,6 +9,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
     resolutionStrategy {
         eachPlugin {
@@ -37,3 +38,4 @@ include(":database")
 include(":database-test")
 include(":playback")
 include(":datastore")
+include(":cache")

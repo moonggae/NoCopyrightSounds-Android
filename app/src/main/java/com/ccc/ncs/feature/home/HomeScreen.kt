@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,6 +64,7 @@ import com.ccc.ncs.ui.component.MusicCardList
 import com.ccc.ncs.ui.component.MusicTagBottomSheet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
 fun HomeRoute(
@@ -71,9 +73,9 @@ fun HomeRoute(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onUpdateSearchQuery: (String?) -> Unit,
     onClickSearchBar: (String?) -> Unit,
-    onPlayMusics: (List<Music>) -> Unit,
-    onAddToQueue: (List<Music>) -> Unit,
-    navigateToMusicDetail: (Music) -> Unit,
+    onPlayMusics: (List<UUID>) -> Unit,
+    onAddToQueue: (List<UUID>) -> Unit,
+    navigateToMusicDetail: (UUID) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -91,9 +93,9 @@ fun HomeRoute(
         onPlayMusics = onPlayMusics,
         onAddToQueue = onAddToQueue,
         onClickMusic = {
-            viewModel.insertMusicToLocal(it)
             navigateToMusicDetail(it)
-        }
+        },
+        downloadMusic = viewModel::downloadMusic
     )
 }
 
@@ -108,13 +110,15 @@ internal fun HomeScreen(
     updateSearchGenre: (Genre?) -> Unit,
     updateSearchMood: (Mood?) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
-    updateSelectMusic: (Music) -> Unit,
+    updateSelectMusic: (UUID) -> Unit,
     onClickSearchBar: (String?) -> Unit,
-    onPlayMusics: (List<Music>) -> Unit,
-    onAddToQueue: (List<Music>) -> Unit,
-    onClickMusic: (Music) -> Unit
+    onPlayMusics: (List<UUID>) -> Unit,
+    onAddToQueue: (List<UUID>) -> Unit,
+    onClickMusic: (UUID) -> Unit,
+    downloadMusic: (UUID) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -143,7 +147,7 @@ internal fun HomeScreen(
                 SelectMusicAppBar(
                     onClickMenu = { showSelectMusicMenu = true },
                     onClickClose = { updateSelectMode(false) },
-                    selectedMusicCount = homeUiState.selectedMusics.size
+                    selectedMusicCount = homeUiState.selectedMusicIds.size
                 )
             } else {
                 SearchAppBar(
@@ -187,7 +191,7 @@ internal fun HomeScreen(
 
             MusicCardList(
                 musicItems = musics,
-                selectedMusics = homeUiState.selectedMusics,
+                selectedMusicIds = homeUiState.selectedMusicIds,
                 nestedScrollConnection = scrollBehavior.nestedScrollConnection,
                 updateSelectMusic = updateSelectMusic,
                 updateSelectMode = updateSelectMode,
@@ -198,7 +202,7 @@ internal fun HomeScreen(
                 },
                 state = listState,
                 onClick = onClickMusic,
-                isSelectMode = homeUiState.isSelectMode
+                isSelectMode = homeUiState.isSelectMode,
             )
         }
 
@@ -211,23 +215,30 @@ internal fun HomeScreen(
         show = showSelectMusicMenu,
         onDismissRequest = { showSelectMusicMenu = false },
         onClickPlayNow = {
-            onPlayMusics(homeUiState.selectedMusics)
+            onPlayMusics(homeUiState.selectedMusicIds)
             showSelectMusicMenu = false
             updateSelectMode(false)
         },
         onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
         onClickAddToQueue = {
-            onAddToQueue(homeUiState.selectedMusics)
+            onAddToQueue(homeUiState.selectedMusicIds)
             showSelectMusicMenu = false
             updateSelectMode(false)
             scope.launch { onShowSnackbar(addedToQueueMessage, null) }
+        },
+        onClickDownload = {
+            scope.launch {
+                homeUiState.selectedMusicIds.forEach { music ->
+                    downloadMusic(music)
+                }
+            }
         }
     )
 
     AddMusicsToPlaylistDialog(
         show = showAddMusicsToPlaylistDialog,
         onDismissRequest = { showAddMusicsToPlaylistDialog = false },
-        musics = homeUiState.selectedMusics,
+        musicIds = homeUiState.selectedMusicIds,
         onFinish = {
             showAddMusicsToPlaylistDialog = false
             showSelectMusicMenu = false
@@ -237,6 +248,7 @@ internal fun HomeScreen(
     )
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectMusicMenuBottomSheet(
@@ -245,14 +257,16 @@ fun SelectMusicMenuBottomSheet(
     onDismissRequest: () -> Unit,
     onClickPlayNow: () -> Unit,
     onClickAddToPlayList: () -> Unit,
-    onClickAddToQueue: () -> Unit
+    onClickAddToQueue: () -> Unit,
+    onClickDownload: () -> Unit
 ) {
     if (show) {
         CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
             SelectMusicMenuBottomSheetContent(
                 onClickPlayNow = onClickPlayNow,
                 onClickAddToPlayList = onClickAddToPlayList,
-                onClickAddToQueue = onClickAddToQueue
+                onClickAddToQueue = onClickAddToQueue,
+                onClickDownload = onClickDownload
             )
         }
     }
@@ -263,7 +277,8 @@ fun SelectMusicMenuBottomSheetContent(
     modifier: Modifier = Modifier,
     onClickPlayNow: () -> Unit,
     onClickAddToPlayList: () -> Unit,
-    onClickAddToQueue: () -> Unit
+    onClickAddToQueue: () -> Unit,
+    onClickDownload: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -281,6 +296,11 @@ fun SelectMusicMenuBottomSheetContent(
             icon = NcsIcons.PlaylistAdd,
             label = stringResource(R.string.home_select_musics_menu_add_to_queue),
             onClick = onClickAddToQueue
+        )
+        BottomSheetMenuItem(
+            icon = NcsIcons.Download,
+            label = stringResource(R.string.home_select_musics_menu_download),
+            onClick = onClickDownload
         )
     }
 }
@@ -516,7 +536,8 @@ fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
         SelectMusicMenuBottomSheetContent(
             onClickPlayNow = {},
             onClickAddToPlayList = {},
-            onClickAddToQueue = {}
+            onClickAddToQueue = {},
+            onClickDownload = {}
         )
     }
 }

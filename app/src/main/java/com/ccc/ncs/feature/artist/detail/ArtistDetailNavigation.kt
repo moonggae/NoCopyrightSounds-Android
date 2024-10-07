@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ccc.ncs.feature.artist.ARTIST_ROUTE
 import com.ccc.ncs.model.Artist
-import com.ccc.ncs.model.Music
+import java.util.UUID
 
 
 const val ARTIST_DETAIL_BASE_ROUTE = "$ARTIST_ROUTE/detail"
@@ -30,7 +30,7 @@ fun NavController.navigateToArtistDetail(
 
 fun NavGraphBuilder.artistDetailScreen(
     onBack: () -> Unit,
-    onNavigateToMusicDetail: (Music) -> Unit,
+    onNavigateToMusicDetail: (UUID) -> Unit,
     onNavigateToArtistDetail: (Artist) -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean
 ) {

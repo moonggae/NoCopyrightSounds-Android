@@ -60,13 +60,13 @@ import com.ccc.ncs.feature.library.detail.CoverImage
 import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
-import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicTag
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.toString
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.UUID
 
 
 @Composable
@@ -76,8 +76,8 @@ fun MusicDetailRoute(
     viewModel: MusicDetailViewModel = hiltViewModel(),
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
-    onPlayMusic: (Music) -> Unit,
-    onAddToQueue: (Music) -> Unit,
+    onPlayMusic: (UUID) -> Unit,
+    onAddToQueue: (UUID) -> Unit,
     onBack: () -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit
 ) {
@@ -110,8 +110,8 @@ internal fun MusicDetailScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
-    onPlayMusic: (Music) -> Unit,
-    onAddToQueue: (Music) -> Unit,
+    onPlayMusic: (UUID) -> Unit,
+    onAddToQueue: (UUID) -> Unit,
     onBack: () -> Unit,
     onClickArtist: (Artist) -> Unit
 ) {
@@ -210,21 +210,24 @@ internal fun MusicDetailScreen(
         show = showMenu,
         onDismissRequest = { showMenu = false },
         onClickPlayNow = {
-            onPlayMusic(uiState.music)
+            onPlayMusic(uiState.music.id)
             showMenu = false
         },
         onClickAddToPlayList = { showAddMusicsToPlaylistDialog = true },
         onClickAddToQueue = {
-            onAddToQueue(uiState.music)
+            onAddToQueue(uiState.music.id)
             showMenu = false
             scope.launch { onShowSnackbar(addedToQueueMessage, null) }
+        },
+        onClickDownload =  {
+            TODO()
         }
     )
 
     AddMusicsToPlaylistDialog(
         show = showAddMusicsToPlaylistDialog,
         onDismissRequest = { showAddMusicsToPlaylistDialog = false },
-        musics = listOf(uiState.music),
+        musicIds = listOf(uiState.music.id),
         onFinish = {
             showAddMusicsToPlaylistDialog = false
             showMenu = false

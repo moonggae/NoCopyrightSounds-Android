@@ -3,47 +3,71 @@ package com.ccc.ncs.feature.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.UnstableApi
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
-import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.MusicTag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
+@Inject constructor(
     private val musicRepository: MusicRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val musicDownloader: MusicDownloader,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> get() = _uiState
 
+    private val statusMusics = musicRepository
+        .getMusicsByStatus(listOf(MusicStatus.FullyCached, MusicStatus.Downloading, MusicStatus.Downloaded("")))
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = listOf()
+        )
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val musics = uiState
         .distinctUntilChangedBy { it.searchUiState }
-        .flatMapLatest {
-            musicRepository
-                .getSearchResultStream(
-                    query = it.searchUiState.query,
-                    genreId = it.searchUiState.genre?.id,
-                    moodId = it.searchUiState.mood?.id
-                )
+        .flatMapLatest { state ->
+            musicRepository.getSearchResultStream(
+                query = state.searchUiState.query,
+                genreId = state.searchUiState.genre?.id,
+                moodId = state.searchUiState.mood?.id
+            )
         }.cachedIn(viewModelScope)
+        .combine(statusMusics) { pagingData, localMusic ->
+            pagingData.map { data ->
+                val localStatusMusic = localMusic.firstOrNull { it.id == data.id }
+                data.copy(
+                    status = localStatusMusic?.status ?: MusicStatus.None
+                )
+            }
+        }
+
 
     init {
         viewModelScope.launch {
-            musicRepository.initGenreAndMood()
-
             launch {
                 musicRepository.getGenres().collectLatest { genres ->
                     _uiState.update {
@@ -61,6 +85,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
 
     fun onSearchQueryChanged(query: String?) {
         viewModelScope.launch {
@@ -92,7 +117,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun <T: MusicTag> onUpdateTagFromDetail(tag: T) {
+    fun <T : MusicTag> onUpdateTagFromDetail(tag: T) {
         viewModelScope.launch {
             _uiState.update { state ->
                 val updateState = when (tag) {
@@ -103,6 +128,7 @@ class HomeViewModel @Inject constructor(
                             query = null
                         )
                     )
+
                     is Mood -> state.copy(
                         searchUiState = state.searchUiState.copy(
                             mood = tag,
@@ -110,6 +136,7 @@ class HomeViewModel @Inject constructor(
                             query = null
                         )
                     )
+
                     else -> state
                 }
                 updateState
@@ -121,30 +148,32 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedMusics = if (on) it.selectedMusics else mutableListOf(),
+                    selectedMusicIds = if (on) it.selectedMusicIds else mutableListOf(),
                     isSelectMode = on
                 )
             }
         }
     }
 
-    fun updateSelectMusic(music: Music) {
+    fun updateSelectMusic(musicId: UUID) {
         if (!_uiState.value.isSelectMode) return
 
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    selectedMusics = currentState.selectedMusics.toMutableList().apply {
-                        if (contains(music)) remove(music) else add(music)
+                    selectedMusicIds = currentState.selectedMusicIds.toMutableList().apply {
+                        if (contains(musicId)) remove(musicId) else add(musicId)
                     }
                 )
             }
         }
     }
 
-    fun insertMusicToLocal(music: Music) {
+    fun downloadMusic(musicId: UUID) {
         viewModelScope.launch {
-            musicRepository.insertMusics(listOf(music)).collect {}
+            musicRepository.getMusic(musicId).first()?.let { music ->
+                musicDownloader.download(music)
+            }
         }
     }
 }
@@ -152,7 +181,7 @@ class HomeViewModel @Inject constructor(
 data class HomeUiState(
     val searchUiState: SearchUiState = SearchUiState(),
     val isSelectMode: Boolean = false,
-    val selectedMusics: MutableList<Music> = mutableListOf(),
+    val selectedMusicIds: MutableList<UUID> = mutableListOf(),
     val genres: List<Genre> = emptyList(),
     val moods: List<Mood> = emptyList()
 )

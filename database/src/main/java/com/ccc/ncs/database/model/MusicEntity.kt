@@ -6,6 +6,7 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -20,7 +21,9 @@ data class MusicEntity(
     val dataUrl: String,
     val coverThumbnailUrl: String,
     val coverUrl: String,
-    val detailUrl: String
+    val detailUrl: String,
+    val status: String,
+    val localUri: String? = null
 )
 
 fun MusicEntity.asModel(
@@ -37,8 +40,19 @@ fun MusicEntity.asModel(
     detailUrl = detailUrl,
     genres = genres,
     moods = moods,
-    versions = setOf()
+    versions = setOf(),
+    status = status.toMusicStatus(localUri)
 )
+
+fun String.toMusicStatus(localUri: String?): MusicStatus {
+    return when (this) {
+        "Downloading" -> MusicStatus.Downloading
+        "Downloaded" -> if (localUri != null) MusicStatus.Downloaded(localUri) else MusicStatus.None
+        "PartiallyCached" -> MusicStatus.PartiallyCached
+        "FullyCached" -> MusicStatus.FullyCached
+        else -> MusicStatus.None
+    }
+}
 
 fun Music.asEntity() = MusicEntity(
     id = id,
@@ -48,5 +62,17 @@ fun Music.asEntity() = MusicEntity(
     dataUrl = dataUrl,
     coverThumbnailUrl = coverThumbnailUrl,
     coverUrl = coverUrl,
-    detailUrl = detailUrl
+    detailUrl = detailUrl,
+    status = status.toStatusString(),
+    localUri = if (status is MusicStatus.Downloaded) (status as MusicStatus.Downloaded).localUri else null
 )
+
+fun MusicStatus.toStatusString(): String {
+    return when (this) {
+        is MusicStatus.None -> "None"
+        is MusicStatus.Downloading -> "Downloading"
+        is MusicStatus.Downloaded -> "Downloaded"
+        is MusicStatus.PartiallyCached -> "PartiallyCached"
+        is MusicStatus.FullyCached -> "FullyCached"
+    }
+}

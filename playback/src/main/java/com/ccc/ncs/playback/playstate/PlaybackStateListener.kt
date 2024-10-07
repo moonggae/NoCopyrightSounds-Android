@@ -1,7 +1,11 @@
 package com.ccc.ncs.playback.playstate
 
+import androidx.annotation.OptIn
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
+import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -78,6 +82,10 @@ internal class PlaybackStateListener @Inject constructor(
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
+        updatePlayState()
+    }
+
+    override fun onTimelineChanged(timeline: Timeline, reason: Int) { // MediaItem 추가시 호출
         updatePlayState()
     }
 

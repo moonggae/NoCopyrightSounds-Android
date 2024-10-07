@@ -10,6 +10,8 @@
     <string name="home_select_musics_menu_play_now">Play now</string>
     <string name="home_select_musics_menu_add_to_playlist">Add to playlist</string>
     <string name="home_select_musics_menu_add_to_queue">Add to queue</string>
+    <string name="home_select_musics_menu_download">Download</string>
+
     <string name="home_search_placeholder"><![CDATA[Search Tracks & Artists]]></string>
     <string name="select_playlist_dialog_title">Select Playlist</string>
     <string name="select_playlist_dialog_no_playlist_available">No playlist available</string>
@@ -36,6 +38,13 @@
     <string name="artist_sort_label_z_to_a">Z - A</string>
     <string name="artist_year_all_release_years">All Release Years</string>
 
+    <string name="menu_cache_screen_title">Cache</string>
+    <string name="menu_cache_screen_cached_size_label">Cached Size</string>
+    <string name="menu_cache_screen_enable_cache_label">Enable Cache</string>
+    <string name="menu_cache_screen_max_cache_size_label">Max Cache Size</string>
+    <string name="menu_cache_screen_clear_cache_label">Clear Cache</string>
+    <string name="menu_cache_screen_apply_description">These settings will be applied after restarting the app.</string>
+
     <string name="Genre">Genre</string>
     <string name="Genres">Genres</string>
     <string name="Mood">Mood</string>
@@ -52,4 +61,5 @@
     <string name="error_failed_to_load_artists">Failed to load artists</string>
     <string name="error_failed_to_load_artist_detail">Failed to load artist detail</string>
     <string name="retry">Retry</string>
+    <string name="exo_download_notification_channel_name">download channel</string>
 </resources>

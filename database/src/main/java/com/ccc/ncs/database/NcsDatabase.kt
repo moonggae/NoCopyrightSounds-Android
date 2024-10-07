@@ -32,7 +32,7 @@ import com.ccc.ncs.database.util.InstantConverter
         PlayListMusicCrossRef::class,
         RecentSearchQueryEntity::class
     ],
-    version = 3
+    version = 5
 )
 @TypeConverters(
     InstantConverter::class,
@@ -57,5 +57,19 @@ val MIGRATION_2_3_AddArtistToMusic = object : Migration(2, 3) {
         db.execSQL("ALTER TABLE music DROP COLUMN artist")
         db.execSQL("ALTER TABLE music DROP COLUMN artistDetailUrl")
         db.execSQL("ALTER TABLE music ADD COLUMN artists TEXT NOT NULL DEFAULT ''")
+    }
+}
+
+val MIGRATION_3_4_AddMusicDownload = object: Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE music ADD COLUMN isDownloading INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE music ADD COLUMN localUri TEXT NULL DEFAULT NULL")
+    }
+}
+
+val MIGRATION_4_5_AddMusicStatus = object: Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE music DROP COLUMN isDownloading")
+        db.execSQL("ALTER TABLE music ADD COLUMN status TEXT NOT NULL DEFAULT 'None'")
     }
 }

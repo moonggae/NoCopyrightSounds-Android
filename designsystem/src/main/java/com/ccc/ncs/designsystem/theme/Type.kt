@@ -215,4 +215,27 @@ object NcsTypography {
             fontWeight = FontWeight.Medium,
         )
     }
+
+    object Menu {
+        val itemLabel = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+
+        val itemContent = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+
+        val description = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        )
+    }
 }

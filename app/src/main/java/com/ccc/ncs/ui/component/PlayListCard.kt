@@ -41,10 +41,11 @@ fun PlayListCard(
 ) {
     ListItemCard(
         prefix = {
-            PlayingMusicImage(
+            AnimationMusicImage(
                 url = item.musics.firstOrNull()?.coverThumbnailUrl,
-                isPlaying = isPlaying,
+                showAnimation = isPlaying,
                 placeholder = painterResource(R.drawable.ncs_cover),
+                lottieRawRes = R.raw.lottie_playing_music,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .aspectRatio(1f)

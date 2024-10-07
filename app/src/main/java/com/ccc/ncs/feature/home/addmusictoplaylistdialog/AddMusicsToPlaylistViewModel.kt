@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
-import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,11 +53,11 @@ class AddMusicsToPlaylistViewModel @Inject constructor(
         }
     }
 
-    fun addMusicToPlaylist(playList: PlayList, musics: List<Music>) {
+    fun addMusicToPlaylist(playList: PlayList, musicIds: List<UUID>) {
         viewModelScope.launch {
-            playlistRepository.setPlayListMusics(
+            playlistRepository.setPlayListMusicsWithId(
                 playListId = playList.id,
-                musics = playList.musics.toMutableList().plus(musics)
+                musicIds = playList.musics.map { it.id }.plus(musicIds)
             )
         }
     }

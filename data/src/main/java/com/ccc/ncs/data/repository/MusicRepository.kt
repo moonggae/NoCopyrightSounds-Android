@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -27,5 +28,9 @@ interface MusicRepository {
 
     fun getMoods(): Flow<List<Mood>>
 
-    suspend fun syncLocalMusics(musics: List<Music>)
+    suspend fun insertNotExistMusics(musics: List<Music>)
+
+    fun getMusicsByStatus(status: List<MusicStatus>): Flow<List<Music>>
+
+    suspend fun updateMusicStatus(musicId: UUID, status: MusicStatus)
 }

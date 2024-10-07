@@ -19,7 +19,6 @@ import com.ccc.ncs.designsystem.component.NcsDialog
 import com.ccc.ncs.designsystem.component.NcsDialogTextButton
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
-import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.component.PlayListColumn
 import java.util.UUID
@@ -30,7 +29,7 @@ fun AddMusicsToPlaylistDialog(
     show: Boolean,
     onDismissRequest: () -> Unit,
     onFinish: () -> Unit,
-    musics: List<Music>,
+    musicIds: List<UUID>,
     viewModel: AddMusicsToPlaylistViewModel = hiltViewModel()
 ) {
     val uiState: AddMusicsToPlaylistUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -45,7 +44,7 @@ fun AddMusicsToPlaylistDialog(
                 show = show,
                 onDismissRequest = onDismissRequest,
                 onClickPlayList = {
-                    viewModel.addMusicToPlaylist(playList = it, musics = musics)
+                    viewModel.addMusicToPlaylist(playList = it, musicIds = musicIds)
                     onFinish()
                 }
             )

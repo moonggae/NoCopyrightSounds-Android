@@ -10,11 +10,13 @@ const val MENU_ROUTE = "menu"
 fun NavController.navigateToMenu(navOptions: NavOptions) = navigate(MENU_ROUTE, navOptions)
 
 fun NavGraphBuilder.menuScreen(
-    onShowSnackbar: suspend (String, String?) -> Boolean
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onMoveCacheScreen: () -> Unit
 ) {
     composable(route = MENU_ROUTE) {
         MenuRoute(
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            onMoveCacheScreen = onMoveCacheScreen
         )
     }
 }

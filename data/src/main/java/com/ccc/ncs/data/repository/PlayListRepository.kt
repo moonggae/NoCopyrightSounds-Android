@@ -16,6 +16,8 @@ interface PlayListRepository {
 
     suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>)
 
+    suspend fun setPlayListMusicsWithId(playListId: UUID, musicIds: List<UUID>)
+
     suspend fun updatePlayListName(playListId: UUID, name: String)
 
     suspend fun deletePlayList(id: UUID)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.ListItemCard
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
@@ -39,6 +42,7 @@ import com.ccc.ncs.designsystem.component.SwipeToDeleteCard
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.artistText
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
@@ -51,28 +55,41 @@ fun MusicCard(
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     isSelectMode: Boolean = false,
     selected: Boolean = false,
-    onClick: (Music) -> Unit = {},
-    onLongClick: (Music) -> Unit = {},
-    onClickMore: (Music) -> Unit = {}
+    isPlaying: Boolean = false,
+    onClick: (UUID) -> Unit = {},
+    onLongClick: (UUID) -> Unit = {},
+    onClickMore: (UUID) -> Unit = {}
 ) {
     MusicCard(
         item = item,
         selected = selected,
+        isPlaying = isPlaying,
         modifier = modifier,
         style = style,
         onClick = onClick,
         onLongClick = onLongClick,
         suffix = {
-            if (!isSelectMode) {
-                Icon(
-                    imageVector = NcsIcons.MoreVertical,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clip(CircleShape)
-                        .clickable { onClickMore(item) }
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (item.status is MusicStatus.Downloaded || item.status is MusicStatus.FullyCached) {
+                    Icon(
+                        imageVector = NcsIcons.DownloadDone,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                if (!isSelectMode) {
+                    Icon(
+                        imageVector = NcsIcons.MoreVertical,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .clickable { onClickMore(item.id) }
+                    )
+                }
             }
         }
     )
@@ -87,16 +104,17 @@ fun MusicCard(
     isPlaying: Boolean = false,
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     unSelectedBackgroundColor: Color = Color.Transparent,
-    onClick: (Music) -> Unit = {},
-    onLongClick: (Music) -> Unit = {},
+    onClick: (UUID) -> Unit = {},
+    onLongClick: (UUID) -> Unit = {},
     suffix: @Composable () -> Unit = {}
 ) {
     ListItemCard(
         prefix = {
-            PlayingMusicImage(
+            AnimationMusicImage(
                 url = item.coverThumbnailUrl,
-                isPlaying = isPlaying,
+                showAnimation = isPlaying || item.status is MusicStatus.Downloading,
                 placeholder = painterResource(R.drawable.ncs_cover),
+                lottieRawRes = if (item.status is MusicStatus.Downloading) R.raw.lottie_downloading else R.raw.lottie_playing_music,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .aspectRatio(1f)
@@ -116,8 +134,8 @@ fun MusicCard(
         modifier = modifier
             .fillMaxWidth()
             .combinedClickable(
-                onClick = { onClick(item) },
-                onLongClick = { onLongClick(item) }
+                onClick = { onClick(item.id) },
+                onLongClick = { onLongClick(item.id) }
             )
     )
 }
@@ -126,18 +144,20 @@ fun MusicCard(
 fun MusicCardListItem(
     modifier: Modifier = Modifier,
     music: Music,
-    selectedMusics: List<Music>,
-    updateSelectMusic: (Music) -> Unit,
+    selectedMusicIds: List<UUID>,
+    playingMusic: Music? = null,
+    updateSelectMusic: (UUID) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
-    onClickMore: (Music) -> Unit,
-    onClick: (Music) -> Unit,
+    onClickMore: (UUID) -> Unit,
+    onClick: (UUID) -> Unit,
     isSelectMode: Boolean = false
 ) {
     Column {
         MusicCard(
             item = music,
-            selected = selectedMusics.contains(music),
+            selected = selectedMusicIds.any { it == music.id },
             onClickMore = onClickMore,
+            isPlaying = music.id == playingMusic?.id,
             modifier = Modifier
                 .padding(
                     top = 8.dp,
@@ -171,12 +191,12 @@ fun MusicCardListItem(
 fun MusicCardList(
     modifier: Modifier = Modifier,
     musicItems: LazyPagingItems<Music>,
-    selectedMusics: List<Music>,
+    selectedMusicIds: List<UUID>,
     nestedScrollConnection: NestedScrollConnection,
-    updateSelectMusic: (Music) -> Unit,
+    updateSelectMusic: (UUID) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
-    onClickMore: (Music) -> Unit,
-    onClick: (Music) -> Unit,
+    onClickMore: (UUID) -> Unit,
+    onClick: (UUID) -> Unit,
     state: LazyListState,
     isSelectMode: Boolean = false
 ) {
@@ -186,16 +206,19 @@ fun MusicCardList(
             .nestedScroll(nestedScrollConnection)
             .then(modifier)
     ) {
-        items(count = musicItems.itemCount) { index ->
+        items(
+            count = musicItems.itemCount,
+            key = musicItems.itemKey { it.id }
+        ) { index ->
             musicItems[index]?.let { music ->
                 MusicCardListItem(
                     music = music,
-                    selectedMusics = selectedMusics,
+                    selectedMusicIds = selectedMusicIds,
                     updateSelectMusic = updateSelectMusic,
                     updateSelectMode = updateSelectMode,
                     onClickMore = onClickMore,
                     onClick = onClick,
-                    isSelectMode = isSelectMode,
+                    isSelectMode = isSelectMode
                 )
             }
         }
@@ -277,15 +300,15 @@ fun MusicCardListPreview() {
 
     NcsTheme(darkTheme = true) {
         MusicCardList(
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
             musicItems = musicItems.collectAsLazyPagingItems(),
-            updateSelectMusic = {},
-            selectedMusics = listOf(),
-            state = rememberLazyListState(),
-            updateSelectMode = {},
+            selectedMusicIds = listOf(),
             nestedScrollConnection = rememberNestedScrollInteropConnection(),
+            updateSelectMusic = {},
+            updateSelectMode = {},
             onClickMore = {},
             onClick = {},
-            modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+            state = rememberLazyListState()
         )
     }
 }

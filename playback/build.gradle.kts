@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation(project(":model"))
     implementation(project(":data"))
+    implementation(project(":cache"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.coroutines.guava)

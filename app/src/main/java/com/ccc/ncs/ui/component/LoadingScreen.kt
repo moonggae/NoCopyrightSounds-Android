@@ -17,10 +17,12 @@ import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.ccc.ncs.R
+import com.ccc.ncs.designsystem.theme.NcsTheme
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
@@ -56,4 +58,43 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun LoadingScreenPreview(modifier: Modifier = Modifier) {
     LoadingScreen()
+}
+
+
+@Composable
+fun DownloadScreen(modifier: Modifier = Modifier) {
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.lottie_downloading),
+    )
+
+    val dynamicProperties = rememberLottieDynamicProperties(
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR_FILTER,
+            value = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                MaterialTheme.colorScheme.onSurface.hashCode(),
+                BlendModeCompat.SRC_ATOP
+            ),
+            keyPath = arrayOf("**")
+        )
+    )
+
+    LottieAnimation(
+        composition = composition,
+        iterations = IterateForever,
+        modifier = Modifier.fillMaxSize(),
+        dynamicProperties = dynamicProperties
+    )
+}
+
+@Preview
+@Composable
+fun DownloadScreenPreview(modifier: Modifier = Modifier) {
+    NcsTheme(darkTheme = true) {
+        Box(Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxSize()
+        ) {
+            DownloadScreen()
+        }
+    }
 }

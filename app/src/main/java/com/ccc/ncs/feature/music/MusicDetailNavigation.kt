@@ -47,8 +47,8 @@ fun NavGraphBuilder.musicDetailScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
-    onPlayMusics: (List<Music>) -> Unit,
-    onAddToQueue: (List<Music>) -> Unit,
+    onPlayMusics: (List<UUID>) -> Unit,
+    onAddToQueue: (List<UUID>) -> Unit,
     navigateToArtistDetail: (artistDetailPath: String) -> Unit
 ) {
     composable(route = MUSIC_DETAIL_ROUTE) {

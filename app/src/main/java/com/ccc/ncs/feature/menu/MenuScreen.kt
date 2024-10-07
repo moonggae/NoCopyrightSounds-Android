@@ -48,17 +48,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun MenuRoute(
     modifier: Modifier = Modifier,
-    onShowSnackbar: suspend (String, String?) -> Boolean
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onMoveCacheScreen: () -> Unit
 ) {
     MenuScreen(
-        onShowSnackbar = onShowSnackbar
+        onShowSnackbar = onShowSnackbar,
+        onMoveCacheScreen = onMoveCacheScreen
     )
 }
 
 @Composable
 internal fun MenuScreen(
     modifier: Modifier = Modifier,
-    onShowSnackbar: suspend (String, String?) -> Boolean
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onMoveCacheScreen: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val activity = LocalContext.current as MainActivity
@@ -68,6 +71,10 @@ internal fun MenuScreen(
 
         MenuItem(label = "Open Source Licenses") {
             activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+        }
+
+        MenuItem(label = "Cache") {
+            onMoveCacheScreen()
         }
 
         ExpandableMenuItem(label = "Contact") {

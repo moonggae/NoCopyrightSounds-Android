@@ -28,13 +28,14 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.ccc.ncs.R
 
 @Composable
-fun PlayingMusicImage(
+fun AnimationMusicImage(
     modifier: Modifier = Modifier,
     url: String?,
-    isPlaying: Boolean,
+    showAnimation: Boolean,
+    lottieRawRes: Int,
     placeholder: Painter = painterResource(R.drawable.ncs_cover)
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_playing_music))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRawRes))
     val dynamicProperties = rememberLottieDynamicProperties(
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
@@ -61,7 +62,7 @@ fun PlayingMusicImage(
                 .aspectRatio(1f)
         )
 
-        if (isPlaying) {
+        if (showAnimation) {
             LottieAnimation(
                 composition,
                 iterations = LottieConstants.IterateForever,

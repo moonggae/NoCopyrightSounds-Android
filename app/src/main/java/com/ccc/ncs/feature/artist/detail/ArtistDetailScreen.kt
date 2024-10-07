@@ -55,6 +55,7 @@ import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 @Composable
@@ -62,7 +63,7 @@ fun ArtistDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ArtistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    onMoveToMusicDetail: (Music) -> Unit,
+    onMoveToMusicDetail: (UUID) -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
@@ -101,7 +102,7 @@ internal fun ArtistDetailScreen(
     modifier: Modifier = Modifier,
     artistDetail: ArtistDetail,
     onBack: () -> Unit,
-    onClickMusic: (Music) -> Unit,
+    onClickMusic: (UUID) -> Unit,
     onClickArtist: (Artist) -> Unit
 ) {
     ArtistDetailLayout(
@@ -136,7 +137,7 @@ internal fun ArtistDetailScreen(
 private fun ArtistDetailPopularTracks(
     modifier: Modifier = Modifier,
     musics: List<Music>,
-    onClick: (Music) -> Unit
+    onClick: (UUID) -> Unit
 ) {
     Column(modifier) {
         ContentLabelText(

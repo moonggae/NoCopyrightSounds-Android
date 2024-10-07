@@ -9,7 +9,6 @@ import com.ccc.ncs.database.model.relation.asModel
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
@@ -54,17 +53,24 @@ class DefaultPlayListRepository @Inject constructor(
         )
     }
 
-    override suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>) =
+    override suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>) {
+        setPlayListMusicsWithId(
+            playListId = playListId,
+            musicIds = musics.map { it.id }
+        )
+    }
+
+    override suspend fun setPlayListMusicsWithId(playListId: UUID, musicIds: List<UUID>) {
         database.withTransaction {
             playListDao.unLinkAllMusic(playListId)
-            val insertedMusics = musicRepository.insertMusics(musics).first()
-            playListDao.linkMusicToPlayList(insertedMusics.map {
+            playListDao.linkMusicToPlayList(musicIds.map {
                 PlayListMusicCrossRef(
                     playListId = playListId,
-                    musicId = it.id
+                    musicId = it
                 )
             })
         }
+    }
 
     override suspend fun updatePlayListName(playListId: UUID, name: String) {
         playListDao.updatePlayList(
