@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,8 +49,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -69,6 +68,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
@@ -242,7 +242,8 @@ private fun PlayerScreenBigContent(
         Box {
             PlayerScreenCoverImage(
                 url = music.coverUrl,
-                progress = draggableStatePercentage
+                progress = draggableStatePercentage,
+                modifier = Modifier.align(Alignment.Center)
             )
 
             PlayerScreenAppBar(
@@ -529,6 +530,7 @@ private fun PlayerScreenCoverImage(
     url: String,
     progress: Float = 1f
 ) {
+    val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
     val surfaceColor = MaterialTheme.colorScheme.surfaceContainer
 
     Image(
@@ -554,6 +556,9 @@ private fun PlayerScreenCoverImage(
                     drawContent()
                     drawRect(gradient, blendMode = BlendMode.SrcAtop)
                 }
+            }
+            .conditional(isExpanded) {
+                widthIn(0.dp, 400.dp)
             }
             .aspectRatio(1f)
     )
@@ -660,18 +665,7 @@ private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDragga
     val velocityThreshold = { with(density) { (minHeight * 1.3f).toPx() } }
     val decayAnimationSpec = exponentialDecay<Float>()
 
-    val rememberedMaxHeight by rememberUpdatedState(maxHeight)
-    val rememberedMinHeight by rememberUpdatedState(minHeight)
-
-    return rememberSaveable(
-        rememberedMaxHeight, rememberedMinHeight,
-        saver = AnchoredDraggableState.Saver(
-            positionalThreshold = positionalThreadsHold,
-            velocityThreshold = velocityThreshold,
-            snapAnimationSpec = animationSpec,
-            decayAnimationSpec = decayAnimationSpec,
-        )
-    ) {
+    return remember(maxHeight, minHeight) {
         AnchoredDraggableState(
             initialValue = SwipeAnchors.Small,
             positionalThreshold = positionalThreadsHold,

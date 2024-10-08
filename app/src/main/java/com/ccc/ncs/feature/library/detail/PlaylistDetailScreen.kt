@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,14 +36,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.AlertDialog
@@ -59,6 +64,7 @@ import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
+import com.ccc.ncs.util.conditional
 import com.ccc.ncs.util.swap
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -266,7 +272,6 @@ fun PlaylistDetailMusicList(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDetailContent(
     name: String,
@@ -274,31 +279,36 @@ fun PlaylistDetailContent(
     onPlay: (() -> Unit)?,
     isPlaying: Boolean
 ) {
+    val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            Modifier
-                .padding(horizontal = 70.dp)
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(8.dp))
-        ) {
-            CoverImage(url = coverUrl)
+        Box(Modifier.padding(horizontal = 70.dp)) {
+            Box(
+                Modifier
+                    .conditional(isExpanded) {
+                        widthIn(0.dp, 400.dp)
+                    }
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(8.dp))
+            ) {
+                CoverImage(url = coverUrl)
 
-            if (!isPlaying && onPlay != null) {
-                Icon(
-                    imageVector = NcsIcons.PlayCircle,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
-                        .align(Alignment.Center)
-                        .padding(72.dp)
-                        .clip(CircleShape)
-                        .clickable(onClick = onPlay)
-                )
+                if (!isPlaying && onPlay != null) {
+                    Icon(
+                        imageVector = NcsIcons.PlayCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                            .align(Alignment.Center)
+                            .scale(.3f)
+                            .clip(CircleShape)
+                            .clickable(onClick = onPlay)
+                    )
+                }
             }
         }
 
@@ -377,6 +387,7 @@ fun PlaylistDetailMenuBottomSheetContent(
     }
 }
 
+@Preview(name = "Foldable", device = Devices.FOLDABLE)
 @Preview
 @Composable
 fun PlaylistDetailContentPreview() {

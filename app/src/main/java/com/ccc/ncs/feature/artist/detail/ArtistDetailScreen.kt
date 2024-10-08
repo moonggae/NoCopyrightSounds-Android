@@ -3,9 +3,11 @@ package com.ccc.ncs.feature.artist.detail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -15,10 +17,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,9 +41,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceAtMost
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.CommonAppBar
@@ -54,6 +60,7 @@ import com.ccc.ncs.ui.component.ArtistListCard
 import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCard
 import com.ccc.ncs.ui.component.mockMusics
+import com.ccc.ncs.util.conditional
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -193,20 +200,29 @@ private fun ArtistDetailLayout(
     onBack: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
     val density = LocalDensity.current
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val scrollState = rememberScrollState()
     val statusBarTopPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val coverPaddingSize = calculatePaddingSize(screenWidth, density)
+    val coverPaddingSize = calculatePaddingSize(screenWidth, density).run {
+        if (isExpanded) this.coerceAtMost(500.dp)
+        else this
+    }
     val coverVisibility = calculateCoverVisibility(density, coverPaddingSize, statusBarTopPadding, scrollState)
 
     Column {
         Box {
-            ArtistImage(
-                imageUrl = imageUrl,
-                paddingSize = coverPaddingSize,
-                coverVisibility = coverVisibility
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                ArtistImage(
+                    imageUrl = imageUrl,
+                    paddingSize = coverPaddingSize,
+                    coverVisibility = coverVisibility
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -236,6 +252,8 @@ private fun ArtistImage(
     coverVisibility: Float
 ) {
     val surfaceColor = MaterialTheme.colorScheme.surface
+    val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+    val maxSize = if (isExpanded) 500.dp else paddingSize
 
     Image(
         painter = rememberAsyncImagePainter(
@@ -246,13 +264,18 @@ private fun ArtistImage(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .fillMaxWidth()
+            .conditional(isExpanded) {
+                widthIn(0.dp, maxSize)
+            }
+            .conditional(!isExpanded) {
+                fillMaxWidth()
+            }
             .aspectRatio(1f)
             .drawWithCache {
                 val gradient = Brush.verticalGradient(
                     colors = listOf(surfaceColor.copy(alpha = 0.1f), surfaceColor),
                     startY = 0f,
-                    endY = paddingSize.toPx() * coverVisibility
+                    endY = maxSize.toPx() * coverVisibility
                 )
                 onDrawWithContent {
                     drawContent()
@@ -260,6 +283,7 @@ private fun ArtistImage(
                 }
             }
     )
+
 }
 
 @Composable
