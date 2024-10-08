@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -59,6 +60,7 @@ import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.LoadingScreen
@@ -257,6 +259,21 @@ fun PlaylistDetailMusicList(
                                     .padding(start = 12.dp)
                                     .draggableHandle()
                             )
+                        },
+                        titlePrefix = {
+                            when(item.status) {
+                                is MusicStatus.Downloaded,
+                                is MusicStatus.FullyCached -> {
+                                    Icon(
+                                        imageVector = NcsIcons.CheckCircle,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier
+                                            .padding(end = 4.dp)
+                                            .size(16.dp, 16.dp)
+                                    )
+                                } else -> {}
+                            }
                         },
                         style = cardStyle,
                         unSelectedBackgroundColor = unSelectedBackgroundColor,

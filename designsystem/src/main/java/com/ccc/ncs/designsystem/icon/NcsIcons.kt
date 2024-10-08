@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.DownloadDone
@@ -72,4 +73,5 @@ object NcsIcons {
     val Download = Icons.Filled.Download
     val Info = Icons.Outlined.Info
     val DownloadDone = Icons.Outlined.DownloadDone
+    val CheckCircle = Icons.Outlined.CheckCircle
 }

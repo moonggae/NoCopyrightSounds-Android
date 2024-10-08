@@ -64,21 +64,27 @@ fun MusicCard(
         item = item,
         selected = selected,
         isPlaying = isPlaying,
+        titlePrefix = {
+            when(item.status) {
+                is MusicStatus.Downloaded,
+                is MusicStatus.FullyCached -> {
+                    Icon(
+                        imageVector = NcsIcons.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                            .size(16.dp, 16.dp)
+                    )
+                } else -> {}
+            }
+        },
         modifier = modifier,
         style = style,
         onClick = onClick,
         onLongClick = onLongClick,
         suffix = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (item.status is MusicStatus.Downloaded || item.status is MusicStatus.FullyCached) {
-                    Icon(
-                        imageVector = NcsIcons.DownloadDone,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
                 if (!isSelectMode) {
                     Icon(
                         imageVector = NcsIcons.MoreVertical,
@@ -104,6 +110,7 @@ fun MusicCard(
     isPlaying: Boolean = false,
     style: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
     unSelectedBackgroundColor: Color = Color.Transparent,
+    titlePrefix: (@Composable () -> Unit)? = null,
     onClick: (UUID) -> Unit = {},
     onLongClick: (UUID) -> Unit = {},
     suffix: @Composable () -> Unit = {}
@@ -121,6 +128,7 @@ fun MusicCard(
                     .clip(RoundedCornerShape(4.dp))
             )
         },
+        labelPrefix = titlePrefix,
         label = item.title,
         description = item.artistText,
         suffix = suffix,

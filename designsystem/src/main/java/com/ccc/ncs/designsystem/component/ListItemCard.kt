@@ -1,6 +1,5 @@
 package com.ccc.ncs.designsystem.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -108,11 +107,11 @@ fun ListItemCard(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListItemCard(
     modifier: Modifier = Modifier,
     prefix: (@Composable () -> Unit)? = null,
+    labelPrefix: (@Composable () -> Unit)? = null,
     label: String,
     description: String?,
     color: ListItemCardColors = ListItemCardDefaults.listItemCardColors(),
@@ -135,14 +134,17 @@ fun ListItemCard(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = label,
-                    style =
-                    style.labelTextStyle.copy(
-                        color = color.labelColor,
-                    ),
-                    modifier = Modifier.basicMarquee()
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    labelPrefix?.invoke()
+                    Text(
+                        text = label,
+                        style =
+                        style.labelTextStyle.copy(
+                            color = color.labelColor,
+                        ),
+                        modifier = Modifier.basicMarquee()
+                    )
+                }
                 description?.let {
                     Text(
                         text = description,
