@@ -2,6 +2,7 @@ package com.ccc.ncs.feature.play
 
 import android.view.MotionEvent
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -197,6 +198,7 @@ fun PlayerScreen(
                     },
                     color = MaterialTheme.colorScheme.onSurface,
                     trackColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    gapSize = 0.dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
@@ -217,7 +219,6 @@ fun PlayerScreen(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PlayerScreenBigContent(
     modifier: Modifier = Modifier,
@@ -451,11 +452,10 @@ fun PlayerPositionProgressBar(
     val interactionSource = remember { MutableInteractionSource() }
     val colors = SliderDefaults.colors(
         activeTrackColor = MaterialTheme.colorScheme.onSurface,
-        thumbColor = MaterialTheme.colorScheme.onSurface
+        thumbColor = MaterialTheme.colorScheme.onSurface,
     )
 
     val thumbSize = 16.dp
-    val trackHeight = 4.dp
 
     Column(modifier) {
         Slider(
@@ -476,24 +476,20 @@ fun PlayerPositionProgressBar(
             interactionSource = interactionSource,
             thumb = {
                 SliderDefaults.Thumb(
-                    interactionSource = interactionSource,
+                    interactionSource = remember { MutableInteractionSource() },
                     colors = colors,
                     thumbSize = DpSize(thumbSize, thumbSize)
                 )
             },
             track = { sliderState ->
-                Column {
-                    SliderDefaults.Track(
-                        sliderState = sliderState,
-                        colors = colors,
-                        enabled = true,
-                    )
-                    Spacer(
-                        Modifier
-                            .height(trackHeight)
-                            .fillMaxWidth()
-                    )
-                }
+                SliderDefaults.Track(
+                    sliderState = sliderState,
+                    colors = colors,
+                    enabled = true,
+                    drawStopIndicator = null,
+                    thumbTrackGapSize = 0.dp,
+                    modifier = Modifier.height(4.dp)
+                )
             },
             modifier = Modifier
                 .height(16.dp)
@@ -563,7 +559,6 @@ private fun PlayerScreenCoverImage(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayerScreenSmallInformation(
     modifier: Modifier = Modifier,
@@ -663,27 +658,31 @@ private fun rememberDraggableState(maxHeight: Dp, minHeight: Dp): AnchoredDragga
     val animationSpec = tween<Float>()
     val positionalThreadsHold = { distance: Float -> distance * 0.3f }
     val velocityThreshold = { with(density) { (minHeight * 1.3f).toPx() } }
+    val decayAnimationSpec = exponentialDecay<Float>()
 
     val rememberedMaxHeight by rememberUpdatedState(maxHeight)
     val rememberedMinHeight by rememberUpdatedState(minHeight)
 
     return rememberSaveable(
         rememberedMaxHeight, rememberedMinHeight,
-        saver = AnchoredDraggableState.Saver(animationSpec, positionalThreadsHold, velocityThreshold)
+        saver = AnchoredDraggableState.Saver(
+            positionalThreshold = positionalThreadsHold,
+            velocityThreshold = velocityThreshold,
+            snapAnimationSpec = animationSpec,
+            decayAnimationSpec = decayAnimationSpec,
+        )
     ) {
         AnchoredDraggableState(
             initialValue = SwipeAnchors.Small,
             positionalThreshold = positionalThreadsHold,
             velocityThreshold = velocityThreshold,
-            animationSpec = animationSpec
-        ).apply {
-            updateAnchors(
-                DraggableAnchors {
-                    SwipeAnchors.Small at minHeight.value
-                    SwipeAnchors.Big at maxHeight.value
-                }
-            )
-        }
+            snapAnimationSpec = animationSpec,
+            decayAnimationSpec = decayAnimationSpec,
+            anchors = DraggableAnchors {
+                SwipeAnchors.Small at minHeight.value
+                SwipeAnchors.Big at maxHeight.value
+            }
+        )
     }
 }
 
@@ -704,6 +703,8 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 uiState = PlayerUiState.Success(
                     isPlaying = true,
                     currentIndex = 0,
+                    duration = 10,
+                    position = 3,
                     playlist = PlayList(
                         id = UUID.randomUUID(),
                         name = "My Playlist",

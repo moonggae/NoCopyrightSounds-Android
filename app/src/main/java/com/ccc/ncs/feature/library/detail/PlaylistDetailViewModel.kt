@@ -10,6 +10,7 @@ import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -38,6 +39,7 @@ class PlaylistDetailViewModel @Inject constructor(
         observePlaylistDetail()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observePlaylistDetail() {
         viewModelScope.launch {
             savedStateHandle.getStateFlow(PLAYLIST_DETAIL_ID_ARG, "")

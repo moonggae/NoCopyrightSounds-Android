@@ -1,7 +1,6 @@
 package com.ccc.ncs.feature.search
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +14,8 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,7 +35,6 @@ import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.RecentSearchQuery
 import com.ccc.ncs.ui.component.SearchBar
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SearchRoute(
     modifier: Modifier = Modifier,
@@ -57,7 +55,6 @@ internal fun SearchRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SearchScreen(
     modifier: Modifier = Modifier,
@@ -171,8 +168,6 @@ fun RecentSearchItemPreview(
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview
 fun SearchScreenPreview(

@@ -1,15 +1,13 @@
 package com.ccc.ncs.designsystem.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
-import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,13 +22,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransparentTextField(
     modifier: Modifier = Modifier,
     state: TextFieldState,
     placeholder: String = "",
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onKeyboardActions: () -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
     showUnderline: Boolean = false,
     underLineColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -46,13 +43,15 @@ fun TransparentTextField(
         onFocusChanged(isFocused)
     }
 
-    BasicTextField2(
+    BasicTextField(
         state = state,
         modifier = modifier,
         textStyle = textStyle,
         lineLimits = TextFieldLineLimits.SingleLine,
         interactionSource = interactionSource,
-        keyboardActions = keyboardActions,
+        onKeyboardAction = {
+            onKeyboardActions()
+        },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         decorator = { innerTextField ->
             Column {

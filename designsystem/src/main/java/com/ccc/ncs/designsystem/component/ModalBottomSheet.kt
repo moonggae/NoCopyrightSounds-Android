@@ -32,10 +32,9 @@ fun CommonModalBottomSheet(
     contentColor: Color = contentColorFor(containerColor),
     tonalElevation: Dp = BottomSheetDefaults.Elevation,
     scrimColor: Color = BottomSheetDefaults.ScrimColor,
-    dragHandle: @Composable() (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
-    windowInsets: WindowInsets = WindowInsets(0),
+    dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties(),
-    content: @Composable() (ColumnScope.() -> Unit)
+    content: @Composable (ColumnScope.() -> Unit)
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -48,7 +47,6 @@ fun CommonModalBottomSheet(
         tonalElevation = tonalElevation,
         scrimColor = scrimColor,
         dragHandle = dragHandle,
-        windowInsets = windowInsets,
         properties = properties
     ) {
         Column {

@@ -1,7 +1,6 @@
 package com.ccc.ncs.ui.component
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.clearText
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +33,6 @@ import com.ccc.ncs.designsystem.component.TransparentTextField
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
@@ -78,9 +75,9 @@ fun SearchBar(
                     .weight(1f)
                     .focusRequester(focusRequester),
                 onFocusChanged = { isFocused = it },
-                keyboardActions = KeyboardActions(
-                    onDone = { onSearch(state.text.toString()) }
-                )
+                onKeyboardActions = {
+                    onSearch(state.text.toString())
+                }
             )
 
             if (state.text.isNotEmpty()) {
@@ -104,7 +101,6 @@ fun SearchBar(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun SearchBarPreview() {
@@ -118,7 +114,6 @@ fun SearchBarPreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun SearchBarEmptyPreview() {

@@ -1,8 +1,7 @@
 package com.ccc.ncs.feature.search
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalFoundationApi::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -25,7 +23,6 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     private val searchQuery: StateFlow<String?> = savedStateHandle.getStateFlow(SEARCH_QUERY_ARG, null)
 
-    @OptIn(ExperimentalFoundationApi::class)
     val queryState = TextFieldState()
 
     val recentSearchQueriesUiState: StateFlow<RecentSearchQueriesUiState> =

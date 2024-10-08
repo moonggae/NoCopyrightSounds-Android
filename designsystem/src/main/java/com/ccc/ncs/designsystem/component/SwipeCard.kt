@@ -1,5 +1,6 @@
 package com.ccc.ncs.designsystem.component
 
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -149,14 +150,15 @@ private fun rememberSwipeState(density: Density): AnchoredDraggableState<DragAnc
     return remember {
         AnchoredDraggableState(
             initialValue = DragAnchors.Start,
+            positionalThreshold = { distance: Float -> distance * 0.5f },
+            velocityThreshold = { with(density) { VELOCITY_THRESHOLD.toPx() } },
+            snapAnimationSpec = tween(),
+            decayAnimationSpec = exponentialDecay(),
             anchors = DraggableAnchors {
                 DragAnchors.Start at 0f
                 DragAnchors.Center at -actionSizePx
                 DragAnchors.End at -screenWidthPx
             },
-            positionalThreshold = { distance: Float -> distance * 0.5f },
-            velocityThreshold = { with(density) { VELOCITY_THRESHOLD.toPx() } },
-            animationSpec = tween(),
         )
     }
 }

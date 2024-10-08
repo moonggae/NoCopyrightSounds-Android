@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,6 +22,7 @@ class EditPlaylistViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository
 ) : ViewModel() {
+    @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<EditPlayListUiState> = savedStateHandle
         .getStateFlow(EDIT_PLAYLIST_ID_ARG, null)
         .flatMapLatest { it: String? ->
