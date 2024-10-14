@@ -82,11 +82,11 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.artistText
+import com.ccc.ncs.model.util.toTimestampMMSS
 import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
-import com.ccc.ncs.util.toTimestampMMSS
 import kotlinx.coroutines.launch
 import java.util.UUID
 

@@ -8,10 +8,10 @@ import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.model.util.swap
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import com.ccc.ncs.playback.playstate.RepeatMode
-import com.ccc.ncs.util.swap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
