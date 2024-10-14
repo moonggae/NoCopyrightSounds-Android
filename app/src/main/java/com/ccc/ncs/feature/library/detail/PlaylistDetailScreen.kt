@@ -225,8 +225,11 @@ fun PlaylistDetailMusicList(
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        currentMusics = currentMusics.swap(from.index, to.index)
-        onMusicOrderChanged(from.index, to.index)
+        // topLayout 인덱스가 포함됨
+        val fromIndex = from.index - 1
+        val toIndex = to.index - 1
+        currentMusics = currentMusics.swap(fromIndex, toIndex)
+        onMusicOrderChanged(fromIndex, toIndex)
     }
 
     LazyColumn(

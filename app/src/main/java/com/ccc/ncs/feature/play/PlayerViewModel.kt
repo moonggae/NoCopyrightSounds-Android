@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -74,16 +75,17 @@ class PlayerViewModel @Inject constructor(
 
     private fun observePlaylistState() {
         viewModelScope.launch {
-            playerRepository.playlist.collect { playlist ->
+            // collect로 사용할 경우 updateMusicOrder transaction이 끝나기 전에 데이터가 수집됨
+            playerRepository.playlist.collectLatest { playlist ->
                 if (playlist == null) {
                     _playerUiState.update { PlayerUiState.Loading }
-                    return@collect
+                    return@collectLatest
                 }
 
                 if (playlist.musics.isEmpty()) {
                     _playerUiState.update { PlayerUiState.Loading }
                     closePlayer()
-                    return@collect
+                    return@collectLatest
                 }
 
                 _playerUiState.update { playerState ->
