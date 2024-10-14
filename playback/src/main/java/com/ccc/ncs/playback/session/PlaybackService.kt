@@ -1,8 +1,8 @@
 package com.ccc.ncs.playback.session
 
 import android.content.Intent
-import android.util.Log
 import androidx.annotation.OptIn
+import androidx.core.net.toFile
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -15,8 +15,12 @@ import com.ccc.ncs.model.MusicStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -38,6 +42,22 @@ class PlaybackService : MediaLibraryService() {
     @Inject
     lateinit var ioDispatcher: CoroutineDispatcher
 
+
+    private val serviceJob = SupervisorJob()
+    private val serviceScope = CoroutineScope(serviceJob + Dispatchers.Main)
+
+    override fun onCreate() {
+        super.onCreate()
+        setupPlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceJob.cancel()
+        player.release()
+        session.release()
+    }
+
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (!player.playWhenReady
             || player.mediaItemCount == 0
@@ -48,42 +68,7 @@ class PlaybackService : MediaLibraryService() {
         }
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        addPlayerCacheStatusUpdateListener()
-    }
-
-    private fun addPlayerCacheStatusUpdateListener() {
-        player.addListener(object : Player.Listener {
-            @OptIn(UnstableApi::class)
-            override fun onMediaItemTransition(nullableMediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(nullableMediaItem, reason)
-                nullableMediaItem?.let { mediaItem ->
-                    val uriScheme = mediaItem.localConfiguration?.uri?.scheme?.lowercase()
-                    val isNetworkMusic = uriScheme == "http" || uriScheme == "https"
-
-                    Log.d("TAG", "onMediaItemTransition - mediaItem.localConfiguration?.uri: ${mediaItem.localConfiguration?.uri}")
-                    Log.d("TAG", "onMediaItemTransition - mediaItem.mediaId: ${mediaItem.mediaId}")
-                    Log.d("TAG", "onMediaItemTransition - mediaItem.mediaMetadata.title: ${mediaItem.mediaMetadata.title}")
-                    Log.d("TAG", "onMediaItemTransition - isNetworkMusic: ${isNetworkMusic}")
-
-                    CacheManager.clearOnCacheUpdateListener()
-
-                    if (isNetworkMusic) {
-                        CacheManager.cache.checkInitialization()
-                        CacheManager.addOnCacheUpdateListener(mediaItem.mediaId) { isFullyCached: Boolean ->
-                            CoroutineScope(ioDispatcher).launch {
-                                musicRepository.updateMusicStatus(
-                                    musicId = UUID.fromString(mediaItem.mediaId),
-                                    status = if (isFullyCached) MusicStatus.FullyCached else MusicStatus.PartiallyCached
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        })
-    }
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
 
     private fun release() {
         player.release()
@@ -91,10 +76,54 @@ class PlaybackService : MediaLibraryService() {
         scope.cancel()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        release()
+    private fun setupPlayer() {
+        player.addListener(object : Player.Listener {
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                mediaItem?.let { handleMediaItemTransition(it) }
+            }
+        })
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
+    private fun handleMediaItemTransition(mediaItem: MediaItem) {
+        CacheManager.clearOnCacheUpdateListener()
+
+        if (mediaItem.isNetworkSource) {
+            setupCacheListener(mediaItem)
+        } else {
+            checkLocalFileExistence(mediaItem)
+        }
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun setupCacheListener(mediaItem: MediaItem) {
+        CacheManager.addOnCacheUpdateListener(mediaItem.mediaId) { isFullyCached ->
+            serviceScope.launch(ioDispatcher) {
+                musicRepository.updateMusicStatus(
+                    musicId = UUID.fromString(mediaItem.mediaId),
+                    status = if (isFullyCached) MusicStatus.FullyCached else MusicStatus.PartiallyCached
+                )
+            }
+        }
+    }
+
+    private fun checkLocalFileExistence(mediaItem: MediaItem) {
+        mediaItem.localConfiguration?.uri?.let { uri ->
+            serviceScope.launch(ioDispatcher) {
+                if (!uri.toFile().exists()) {
+                    handleMissingLocalFile(mediaItem)
+                }
+            }
+        }
+    }
+
+    private suspend fun handleMissingLocalFile(mediaItem: MediaItem) {
+        val currentMusicId = UUID.fromString(mediaItem.mediaId)
+        musicRepository.updateMusicStatus(currentMusicId, MusicStatus.None)
+        musicRepository.getMusic(currentMusicId).firstOrNull()?.let { musicItem ->
+            withContext(Dispatchers.Main) {
+                player.replaceMediaItem(player.currentMediaItemIndex, musicItem.asMediaItem())
+            }
+        }
+    }
 }

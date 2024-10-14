@@ -25,3 +25,9 @@ fun Music.asMediaItem(): MediaItem = MediaItem.Builder()
             .setArtworkUri(Uri.parse(coverUrl))
             .build()
     ).build()
+
+val MediaItem.isNetworkSource: Boolean
+    get() {
+        val uriScheme = this.localConfiguration?.uri?.scheme?.lowercase()
+        return uriScheme == "http" || uriScheme == "https"
+    }
