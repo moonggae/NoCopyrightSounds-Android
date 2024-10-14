@@ -1,6 +1,7 @@
 package com.ccc.ncs.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -49,4 +50,7 @@ interface MusicDao {
 
     @Update
     suspend fun updateMusic(music: MusicEntity)
+
+    @Delete
+    suspend fun deleteMusic(vararg musics: MusicEntity)
 }

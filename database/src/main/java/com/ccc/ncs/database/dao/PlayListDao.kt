@@ -38,6 +38,9 @@ interface PlayListDao {
     @Query("DELETE FROM play_list_music_cross_ref WHERE playListId = :playListId")
     suspend fun unLinkAllMusic(playListId: UUID)
 
+    @Query("DELETE FROM play_list_music_cross_ref WHERE musicId = :musicId")
+    suspend fun unLinkMusic(musicId: UUID)
+
     @Update
     suspend fun updatePlayList(playList: PlayListEntity)
 

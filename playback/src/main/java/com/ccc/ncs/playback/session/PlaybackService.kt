@@ -1,9 +1,11 @@
 package com.ccc.ncs.playback.session
 
 import android.content.Intent
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.core.net.toFile
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -82,6 +84,13 @@ class PlaybackService : MediaLibraryService() {
                 super.onMediaItemTransition(mediaItem, reason)
                 mediaItem?.let { handleMediaItemTransition(it) }
             }
+
+            override fun onPlayerError(error: PlaybackException) {
+                super.onPlayerError(error)
+                if (error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS) {
+                    handleNetworkMusicBadStatus()
+                }
+            }
         })
     }
 
@@ -123,6 +132,28 @@ class PlaybackService : MediaLibraryService() {
         musicRepository.getMusic(currentMusicId).firstOrNull()?.let { musicItem ->
             withContext(Dispatchers.Main) {
                 player.replaceMediaItem(player.currentMediaItemIndex, musicItem.asMediaItem())
+            }
+        }
+    }
+
+    private fun handleNetworkMusicBadStatus() {
+        serviceScope.launch {
+            player.currentMediaItem?.let { mediaItem ->
+                val wasPlaying = player.playWhenReady
+                Log.d("TAG", "handleNetworkMusicBadStatus - player.playWhenReady: ${player.playWhenReady}")
+                Log.d("TAG", "handleNetworkMusicBadStatus - player.playbackState: ${player.playbackState}")
+
+                // 재생중:     true  STATE_IDLE
+                // not 재생중: false STATE_IDLE
+
+                musicRepository.deleteMusic(UUID.fromString(mediaItem.mediaId))
+                withContext(Dispatchers.Main) {
+                    player.removeMediaItem(player.currentMediaItemIndex)
+                    if (wasPlaying) {
+                        player.prepare()
+                        player.play()
+                    }
+                }
             }
         }
     }

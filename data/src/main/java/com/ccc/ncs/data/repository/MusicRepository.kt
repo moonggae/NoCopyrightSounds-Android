@@ -33,4 +33,6 @@ interface MusicRepository {
     fun getMusicsByStatus(status: List<MusicStatus>): Flow<List<Music>>
 
     suspend fun updateMusicStatus(musicId: UUID, status: MusicStatus)
+
+    suspend fun deleteMusic(musicId: UUID)
 }

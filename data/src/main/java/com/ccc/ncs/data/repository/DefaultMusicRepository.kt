@@ -8,6 +8,7 @@ import com.ccc.ncs.data.paging.MusicPagingSource
 import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
+import com.ccc.ncs.database.dao.PlayListDao
 import com.ccc.ncs.database.model.asEntity
 import com.ccc.ncs.database.model.asModel
 import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
@@ -31,7 +32,8 @@ internal class DefaultMusicRepository @Inject constructor(
     private val network: NcsNetworkDataSource,
     private val genreDao: GenreDao,
     private val moodDao: MoodDao,
-    private val musicDao: MusicDao
+    private val musicDao: MusicDao,
+    private val playListDao: PlayListDao
 ) : MusicRepository {
     override fun getSearchResultStream(
         query: String?,
@@ -134,9 +136,18 @@ internal class DefaultMusicRepository @Inject constructor(
     override suspend fun updateMusicStatus(musicId: UUID, status: MusicStatus) {
         getMusic(musicId).first()?.let { music ->
             if (music.status == status) return
-            musicDao.updateMusic(music.copy(
-                status = status
-            ).asEntity())
+            musicDao.updateMusic(
+                music.copy(
+                    status = status
+                ).asEntity()
+            )
+        }
+    }
+
+    override suspend fun deleteMusic(musicId: UUID) {
+        musicDao.getMusic(musicId).first()?.asModel()?.asEntity()?.let {
+            playListDao.unLinkMusic(musicId)
+            musicDao.deleteMusic(it)
         }
     }
 }
