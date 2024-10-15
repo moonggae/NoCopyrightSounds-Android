@@ -7,6 +7,7 @@
     <string name="feature_menu_title">Menu</string>
     <string name="feature_playlist_title">Playlist</string>
 
+    <string name="home_select_musics_menu_details">Details</string>
     <string name="home_select_musics_menu_play_now">Play now</string>
     <string name="home_select_musics_menu_add_to_playlist">Add to playlist</string>
     <string name="home_select_musics_menu_add_to_queue">Add to queue</string>

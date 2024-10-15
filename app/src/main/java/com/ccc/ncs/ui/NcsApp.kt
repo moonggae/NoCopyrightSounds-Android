@@ -42,7 +42,6 @@ import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
-import java.util.UUID
 
 @Composable
 fun NcsApp(
@@ -91,9 +90,10 @@ fun NcsApp(
                             duration = Short,
                         ) == ActionPerformed
                     },
-                    onPlayMusics = playerViewModel::playMusics,
+                    onPlayMusics = playerViewModel::playMusicWithRecentPlaylist,
                     onPlayPlaylist = playerViewModel::playPlayList,
-                    onAddToQueue = playerViewModel::addToQueue
+                    onAddToQueue = playerViewModel::addQueueToCurrentPlaylist,
+                    addToQueueAndPlayMusic = playerViewModel::addToQueueAndPlay
                 )
             }
 

@@ -233,7 +233,8 @@ internal fun MusicDetailScreen(
         },
         onClickDownload =  {
             TODO()
-        }
+        },
+        onClickDetail = null
     )
 
     AddMusicsToPlaylistDialog(

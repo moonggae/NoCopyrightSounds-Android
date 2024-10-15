@@ -23,7 +23,8 @@ fun NavGraphBuilder.homeScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<UUID>) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit,
-    navigateToMusicDetail: (UUID) -> Unit
+    navigateToMusicDetail: (UUID) -> Unit,
+    addToQueueAndPlayMusic: (UUID) -> Unit,
 ) {
     composable(route = HOME_ROUTE) { backStackEntry ->
         val viewModel: HomeViewModel = hiltViewModel()
@@ -57,12 +58,13 @@ fun NavGraphBuilder.homeScreen(
 
         HomeRoute(
             viewModel = viewModel,
-            onClickSearchBar = onMoveToSearchScreen,
             onShowSnackbar = onShowSnackbar,
             onUpdateSearchQuery = { backStackEntry.savedStateHandle[SEARCHED_QUERY] = it },
+            onClickSearchBar = onMoveToSearchScreen,
             onPlayMusics = onPlayMusics,
             onAddToQueue = onAddToQueue,
-            navigateToMusicDetail = { musicId -> navigateToMusicDetail(musicId) }
+            navigateToMusicDetail = { musicId -> navigateToMusicDetail(musicId) },
+            onClickMusic = addToQueueAndPlayMusic
         )
     }
 }

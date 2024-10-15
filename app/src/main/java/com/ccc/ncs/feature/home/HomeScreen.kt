@@ -76,6 +76,7 @@ fun HomeRoute(
     onPlayMusics: (List<UUID>) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit,
     navigateToMusicDetail: (UUID) -> Unit,
+    onClickMusic: (UUID) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -92,9 +93,8 @@ fun HomeRoute(
         onClickSearchBar = onClickSearchBar,
         onPlayMusics = onPlayMusics,
         onAddToQueue = onAddToQueue,
-        onClickMusic = {
-            navigateToMusicDetail(it)
-        },
+        onMoveToDetailPage = navigateToMusicDetail,
+        onClickMusic = onClickMusic,
         downloadMusic = viewModel::downloadMusic
     )
 }
@@ -116,6 +116,7 @@ internal fun HomeScreen(
     onAddToQueue: (List<UUID>) -> Unit,
     onClickMusic: (UUID) -> Unit,
     downloadMusic: (UUID) -> Unit,
+    onMoveToDetailPage: (UUID) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -181,7 +182,7 @@ internal fun HomeScreen(
                     Button(onClick = ::retryLoad) {
                         Text(
                             text = stringResource(R.string.retry),
-                            style = NcsTypography.Label.contentLabel .copy(
+                            style = NcsTypography.Label.contentLabel.copy(
                                 color = MaterialTheme.colorScheme.surface
                             )
                         )
@@ -232,6 +233,10 @@ internal fun HomeScreen(
                     downloadMusic(music)
                 }
             }
+        },
+        onClickDetail = if (homeUiState.selectedMusicIds.size != 1) null
+        else {
+            { onMoveToDetailPage(homeUiState.selectedMusicIds.first()) }
         }
     )
 
@@ -258,7 +263,8 @@ fun SelectMusicMenuBottomSheet(
     onClickPlayNow: () -> Unit,
     onClickAddToPlayList: () -> Unit,
     onClickAddToQueue: () -> Unit,
-    onClickDownload: () -> Unit
+    onClickDownload: () -> Unit,
+    onClickDetail: (() -> Unit)?
 ) {
     if (show) {
         CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
@@ -266,7 +272,8 @@ fun SelectMusicMenuBottomSheet(
                 onClickPlayNow = onClickPlayNow,
                 onClickAddToPlayList = onClickAddToPlayList,
                 onClickAddToQueue = onClickAddToQueue,
-                onClickDownload = onClickDownload
+                onClickDownload = onClickDownload,
+                onClickMoveToDetail = onClickDetail
             )
         }
     }
@@ -278,7 +285,8 @@ fun SelectMusicMenuBottomSheetContent(
     onClickPlayNow: () -> Unit,
     onClickAddToPlayList: () -> Unit,
     onClickAddToQueue: () -> Unit,
-    onClickDownload: () -> Unit
+    onClickDownload: () -> Unit,
+    onClickMoveToDetail: (() -> Unit)?,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -287,6 +295,15 @@ fun SelectMusicMenuBottomSheetContent(
             .padding(horizontal = 24.dp)
     ) {
         BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = stringResource(R.string.home_select_musics_menu_play_now), onClick = onClickPlayNow)
+
+        if (onClickMoveToDetail != null) {
+            BottomSheetMenuItem(
+                icon = NcsIcons.LibraryMusic,
+                label = stringResource(R.string.home_select_musics_menu_details),
+                onClick = onClickMoveToDetail
+            )
+        }
+
         BottomSheetMenuItem(
             icon = NcsIcons.BookmarkAdd,
             label = stringResource(R.string.home_select_musics_menu_add_to_playlist),
@@ -537,7 +554,8 @@ fun SelectMusicMenuBottomSheetContentPreview(modifier: Modifier = Modifier) {
             onClickPlayNow = {},
             onClickAddToPlayList = {},
             onClickAddToQueue = {},
-            onClickDownload = {}
+            onClickDownload = {},
+            onClickMoveToDetail = {}
         )
     }
 }

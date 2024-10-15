@@ -14,14 +14,16 @@ import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import com.ccc.ncs.playback.playstate.RepeatMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -35,203 +37,154 @@ class PlayerViewModel @Inject constructor(
     private val lyricsRepository: LyricsRepository,
     private val musicRepository: MusicRepository
 ) : ViewModel() {
-    private val _playerUiState: MutableStateFlow<PlayerUiState> = MutableStateFlow(PlayerUiState.Loading)
-    val playerUiState: StateFlow<PlayerUiState> = _playerUiState
-
-    init {
-        observePlaylistState()
-        observePlaybackState()
-        observeLyrics()
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeLyrics() {
-        viewModelScope.launch {
-            playerUiState
-                .distinctUntilChangedBy { state ->
-                    when (state) {
-                        is PlayerUiState.Success -> state.currentMusic
-                        else -> state
-                    }
-                }.flatMapLatest { state ->
-                when (state) {
-                    is PlayerUiState.Success -> {
-                        val musicTitle = state.currentMusic?.title
-                        if (musicTitle == null) flowOf(null)
-                        else lyricsRepository.getLyrics(musicTitle)
-                    }
-
-                    is PlayerUiState.Loading -> flowOf(null)
-                }
-            }.collect { lyrics ->
-                _playerUiState.update {
-                    if (it is PlayerUiState.Success) {
-                        it.copy(lyrics = lyrics)
-                    } else { it }
-                }
-            }
+    private val lyricsFlow: StateFlow<String?> = combine(
+        playerRepository.playlist.filterNotNull(),
+        playbackStateManager.flow
+    ) { playlist, playbackState ->
+        val currentMusic = playlist.musics.getOrNull(playbackState.currentIndex)
+        currentMusic
+    }.filterNotNull()
+        .distinctUntilChangedBy { music -> music.id }
+        .flatMapLatest { music ->
+            lyricsRepository.getLyrics(music.title)
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
-    private fun observePlaylistState() {
-        viewModelScope.launch {
-            // collect로 사용할 경우 updateMusicOrder transaction이 끝나기 전에 데이터가 수집됨
-            playerRepository.playlist.collectLatest { playlist ->
-                if (playlist == null) {
-                    _playerUiState.update { PlayerUiState.Loading }
-                    return@collectLatest
-                }
 
-                if (playlist.musics.isEmpty()) {
-                    _playerUiState.update { PlayerUiState.Loading }
-                    closePlayer()
-                    return@collectLatest
-                }
-
-                _playerUiState.update { playerState ->
-                    when (playerState) {
-                        is PlayerUiState.Success -> {
-                            playerState.copy(playlist = playlist)
-                        }
-
-                        is PlayerUiState.Loading -> {
-                            val musicIndex = playerRepository.musicIndex.first() ?: 0
-                            val position = playerRepository.position.first() ?: 0
-                            playerController.prepare(playlist.musics, musicIndex, position)
-                            PlayerUiState.Success(
-                                playlist = playlist,
-                                currentIndex = musicIndex,
-                                position = position
-                            )
-                        }
-                    }
-                }
-            }
+    val playerUiState: StateFlow<PlayerUiState> = combine(
+        playerRepository.playlist,
+        playerRepository.musicIndex,
+        playbackStateManager.flow,
+        lyricsFlow
+    ) { playlist, musicIndex, playbackState, lyrics ->
+        when {
+            playlist == null || playlist.musics.isEmpty() -> PlayerUiState.Loading
+            else -> PlayerUiState.Success(
+                playlist = playlist,
+                currentIndex = playbackState.currentIndex.takeIf { it >= 0 } ?: musicIndex ?: 0,
+                position = playbackState.position,
+                isPlaying = playbackState.isPlaying,
+                hasPrevious = playbackState.hasPrevious,
+                hasNext = playbackState.hasNext,
+                duration = playbackState.duration,
+                speed = playbackState.speed,
+                isShuffleOn = playbackState.isShuffleEnabled,
+                repeatMode = playbackState.repeatMode,
+                lyrics = lyrics
+            )
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = PlayerUiState.Loading
+    )
 
-    private fun observePlaybackState() {
-        viewModelScope.launch {
-            playbackStateManager.flow.collect { playbackState ->
-                _playerUiState.update {
-                    if (it is PlayerUiState.Loading) return@update it
-
-                    playerRepository.updateMusicIndex(playbackState.currentIndex)
-                    playerRepository.updatePosition(playbackState.position)
-
-                    (it as PlayerUiState.Success).copy(
-                        isPlaying = playbackState.isPlaying,
-                        currentIndex = playbackState.currentIndex,
-                        hasPrevious = playbackState.hasPrevious,
-                        hasNext = playbackState.hasNext,
-                        position = playbackState.position,
-                        duration = playbackState.duration,
-                        speed = playbackState.speed,
-                        isShuffleOn = playbackState.isShuffleEnabled,
-                        repeatMode = playbackState.repeatMode
-                    )
-                }
-            }
-        }
-    }
-
-    fun playPause() {
-        playerController.playPause()
-    }
-
-    fun prev() {
-        playerController.previous()
-    }
-
-    fun next() {
-        playerController.next()
-    }
-
-    fun setPosition(position: Long) {
-        playerController.setPosition(position)
-    }
-
-    fun setShuffleMode(isOn: Boolean) {
-        playerController.setShuffleMode(isOn)
-    }
-
-    fun setRepeatMode(repeatMode: RepeatMode) {
-        playerController.setRepeatMode(repeatMode)
-    }
+    // Player control functions
+    fun playPause() = playerController.playPause()
+    fun prev() = playerController.previous()
+    fun next() = playerController.next()
+    fun setPosition(position: Long) = playerController.setPosition(position)
+    fun setShuffleMode(isOn: Boolean) = playerController.setShuffleMode(isOn)
+    fun setRepeatMode(repeatMode: RepeatMode) = playerController.setRepeatMode(repeatMode)
+    fun seekToMusic(musicIndex: Int) = playerController.seekTo(musicIndex)
 
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
         viewModelScope.launch {
-            _playerUiState.value.let { state ->
-                if (state is PlayerUiState.Success) {
-                    val reorderedMusicList = state.playlist.musics.swap(prevIndex, currentIndex)
-                    playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
-                    playerController.moveMediaItem(prevIndex, currentIndex)
-                }
-            }
+            val state = playerUiState.value as? PlayerUiState.Success ?: return@launch
+            val reorderedMusicList = state.playlist.musics.swap(prevIndex, currentIndex)
+            playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
+            playerController.moveMediaItem(prevIndex, currentIndex)
         }
     }
 
-    fun seekToMusic(musicIndex: Int) {
-        playerController.seekTo(musicIndex)
-    }
-
-    fun playPlayList(
-        playList: PlayList,
-        startIndex: Int = 0
-    ) {
+    fun playPlayList(playList: PlayList, startIndex: Int = 0) {
         viewModelScope.launch {
             playerRepository.setPlaylist(playList.id)
+            playerRepository.updateMusicIndex(startIndex)
             playerController.playMusics(playList.musics, startIndex)
         }
     }
 
     fun closePlayer() {
         viewModelScope.launch {
-            _playerUiState.update { PlayerUiState.Loading }
             playerController.stop()
             playerRepository.clear()
         }
     }
 
-    fun playMusics(musicIds: List<UUID>) {
+    private suspend fun addNewMusicsToPlaylist(playlist: PlayList, newMusicIds: List<UUID>): Pair<PlayList, List<Music>> {
+        val newMusics = musicRepository.getMusics(newMusicIds).first()
+        val distinctNewMusics = newMusics.filterNot { playlist.musics.contains(it) }
+        val updatedMusics = playlist.musics + distinctNewMusics
+        val updatedPlaylist = playlist.copy(musics = updatedMusics)
+        playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
+        return updatedPlaylist to distinctNewMusics
+    }
+
+    fun addQueueToCurrentPlaylist(newMusicIds: List<UUID>): Job = viewModelScope.launch {
+        val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
+        val newMusics = musicRepository.getMusics(newMusicIds).first()
+        val distinctNewMusics = newMusics.filterNot { currentPlaylist.musics.contains(it) }
+        val updatedMusics = currentPlaylist.musics + distinctNewMusics
+        playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
+        playerController.appendMusics(distinctNewMusics)
+    }
+
+    fun playMusicWithRecentPlaylist(musicIds: List<UUID>) {
         viewModelScope.launch {
-            val musics = musicRepository.getMusics(musicIds).first()
-            val playlist = playlistRepository.getAutoGeneratedPlayList().copy(musics = musics)
-            playlistRepository.setPlayListMusics(playListId = playlist.id, musics = playlist.musics)
-            playPlayList(playlist)
+            val playlist = playlistRepository.getAutoGeneratedPlayList()
+            val newMusics = musicRepository.getMusics(musicIds).first()
+            val updatedMusics = (playlist.musics - newMusics) + newMusics
+            val startIndex = updatedMusics.indexOfFirst { musicIds.contains(it.id) }
+            val updatedPlaylist = playlist.copy(musics = updatedMusics)
+            playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
+            playPlayList(updatedPlaylist, startIndex)
         }
     }
 
-    fun addToQueue(newMusicIds: List<UUID>) {
+    private fun playMusicWithCurrentPlaylist(musicId: UUID) {
         viewModelScope.launch {
-            val currentPlaylist = _playerUiState.value.let { state ->
-                if (state is PlayerUiState.Success) state.playlist
-                else return@launch
+            addQueueToCurrentPlaylist(listOf(musicId)).join()
+
+            playerUiState
+                .filterIsInstance<PlayerUiState.Success>()
+                .first { it.playlist.musics.any { music -> music.id == musicId } }
+                .let { state ->
+                    val playMusicIndex = state.playlist.musics.indexOfFirst { it.id == musicId }
+                    if (playMusicIndex >= 0) {
+                        seekToMusic(playMusicIndex)
+                    }
+                }
+        }
+    }
+
+    fun addToQueueAndPlay(musicId: UUID) {
+        viewModelScope.launch {
+            when (playerUiState.value) {
+                is PlayerUiState.Loading -> playMusicWithRecentPlaylist(listOf(musicId))
+                is PlayerUiState.Success -> playMusicWithCurrentPlaylist(musicId)
             }
-            val newMusic = musicRepository.getMusics(newMusicIds).first()
-            val distinctNewMusics = newMusic - currentPlaylist.musics.toSet()
-            val updateMusics = currentPlaylist.musics + distinctNewMusics
-            playlistRepository.setPlayListMusics(currentPlaylist.id, updateMusics)
-            playerController.appendMusics(distinctNewMusics)
         }
     }
 
     fun removeFromQueue(music: Music) {
         viewModelScope.launch {
-            val currentPlaylist = _playerUiState.value.let { state ->
-                if (state is PlayerUiState.Success) state.playlist
-                else return@launch
-            }
-
-            val updateMusics = currentPlaylist.musics - music
-            playlistRepository.setPlayListMusics(currentPlaylist.id, updateMusics)
+            val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
+            val updatedMusics = currentPlaylist.musics - music
+            playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
             playerController.removeMusic(music)
         }
     }
 }
 
 sealed interface PlayerUiState {
-    data object Loading : PlayerUiState
+    object Loading : PlayerUiState
     data class Success(
         val playlist: PlayList,
         val isPlaying: Boolean = false,
@@ -246,8 +199,6 @@ sealed interface PlayerUiState {
         val lyrics: String? = null
     ) : PlayerUiState {
         val currentMusic: Music?
-            get() =
-                if (currentIndex == -1) null
-                else playlist.musics.getOrNull(currentIndex)
+            get() = playlist.musics.getOrNull(currentIndex)
     }
 }
