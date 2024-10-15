@@ -100,8 +100,11 @@ class PlayerController @Inject constructor(
         controller.prepare()
     }
 
-    fun playMusics(musics: List<Music>) = executeAfterPrepare { controller ->
-        controller.setMediaItems(musics.map { it.asMediaItem() }, 0, 0)
+    fun playMusics(
+        musics: List<Music>,
+        startIndex: Int = 0
+    ) = executeAfterPrepare { controller ->
+        controller.setMediaItems(musics.map { it.asMediaItem() }, startIndex, 0)
         controller.prepare()
         controller.play()
     }

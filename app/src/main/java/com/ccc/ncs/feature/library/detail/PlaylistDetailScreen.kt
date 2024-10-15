@@ -78,7 +78,7 @@ fun PlaylistDetailRoute(
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onClickModifyName: (UUID) -> Unit,
-    onPlay: (PlayList) -> Unit
+    onPlay: (PlayList, Int) -> Unit
 ) {
     val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -103,7 +103,7 @@ fun PlaylistDetailRoute(
                     viewModel.deletePlaylist(uiState.playlist.id)
                     onBack()
                 },
-                onPlay = { onPlay(uiState.playlist) },
+                onPlay = { playMusicIndex -> onPlay(uiState.playlist, playMusicIndex) },
                 isPlaying = uiState.isPlaying,
                 onDeleteMusicInList = viewModel::deleteMusic
             )
@@ -119,7 +119,7 @@ internal fun PlaylistDetailScreen(
     onClickModifyName: () -> Unit,
     onDeletePlaylist: () -> Unit,
     playingMusic: Music?,
-    onPlay: () -> Unit,
+    onPlay: (Int) -> Unit,
     isPlaying: Boolean,
     onDeleteMusicInList: (Music) -> Unit
 ) {
@@ -137,6 +137,7 @@ internal fun PlaylistDetailScreen(
         musics = playlist.musics,
         playingMusicId = playingMusic?.id,
         onMusicOrderChanged = onMusicOrderChanged,
+        onClick = onPlay,
         onDelete = onDeleteMusicInList,
         topLayout = {
             Column(
@@ -298,7 +299,7 @@ fun PlaylistDetailMusicList(
 fun PlaylistDetailContent(
     name: String,
     coverUrl: String?,
-    onPlay: (() -> Unit)?,
+    onPlay: ((Int) -> Unit)?,
     isPlaying: Boolean
 ) {
     val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
@@ -328,7 +329,7 @@ fun PlaylistDetailContent(
                             .align(Alignment.Center)
                             .scale(.3f)
                             .clip(CircleShape)
-                            .clickable(onClick = onPlay)
+                            .clickable { onPlay(0) }
                     )
                 }
             }

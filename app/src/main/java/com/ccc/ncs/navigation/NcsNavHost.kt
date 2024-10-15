@@ -36,7 +36,7 @@ fun NcsNavHost(
     startDestination: String = HOME_ROUTE,
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<UUID>) -> Unit,
-    onPlayPlaylist: (PlayList) -> Unit,
+    onPlayPlaylist: (PlayList, Int) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit
 ) {
     val navController = appState.navController

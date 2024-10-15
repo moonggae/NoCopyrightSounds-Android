@@ -19,7 +19,7 @@ fun NavController.navigateToPlaylistDetail(playlistId: UUID) =
 fun NavGraphBuilder.playlistDetailScreen(
     onBack: () -> Unit,
     navigateToEditPlaylist: (UUID) -> Unit,
-    onPlayPlaylist: (PlayList) -> Unit
+    onPlayPlaylist: (PlayList, Int) -> Unit
 ) {
     composable(
         route = PLAYLIST_DETAIL_ROUTE,
