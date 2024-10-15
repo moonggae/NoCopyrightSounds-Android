@@ -1,31 +1,32 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.22"
-coroutines = "1.9.0-RC.2"
+kotlin = "2.0.20"
+coroutines = "1.9.0"
 kotlinxDatetime = "0.6.1"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycle = "2.8.4"
-activityCompose = "1.9.1"
+lifecycle = "2.8.6"
+activityCompose = "1.9.2"
 composeBom = "2024.09.03"
 appcompat = "1.7.0"
 material = "1.12.0"
 jsoup = "1.17.2"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
-hilt = "2.51.1"
-ksp = "1.9.22-1.0.18"
+hilt = "2.52"
+ksp = "2.0.20-1.0.25"
 secrets = "2.0.1"
 coil = "2.7.0"
 paing = "3.3.2"
-navigation = "2.7.7"
+navigation = "2.8.2"
 androidxHiltNavigationCompose = "1.2.0"
-androidxHiltWork = "1.0.0"
+androidxHiltWork = "1.2.0"
 media3 = "1.4.1"
 room = "2.6.1"
-androidXTestVersion = "1.6.1"
+androidXTest = "1.6.1"
+androidXTestRunnder = "1.6.2"
 reorderable = "2.3.3"
 datastore = "1.1.1"
 lottie = "6.5.2"
@@ -36,9 +37,9 @@ workRuntimeKtx = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidXTestVersion" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTestVersion" }
-androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTestVersion" }
+androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidXTest" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunnder" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTest" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -122,3 +123,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 room = { id = "androidx.room", version.ref = "room" }
 google-oss = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "google-oss-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

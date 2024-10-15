@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.secrets)
     alias(libs.plugins.google.oss)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -68,9 +69,9 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()
+//    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
