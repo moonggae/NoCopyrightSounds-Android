@@ -55,6 +55,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -65,6 +66,7 @@ fun PlayerMenuBottomSheet(
     currentMusic: Music?,
     lyrics: String?,
     onMusicOrderChanged: (Int, Int) -> Unit,
+    onClickMusic: (Int) -> Unit = {},
     onDeleteMusicInList: (Music) -> Unit
 ) {
     val density = LocalDensity.current
@@ -125,6 +127,7 @@ fun PlayerMenuBottomSheet(
                                 playlist = playlist,
                                 currentMusic = currentMusic,
                                 onMusicOrderChanged = onMusicOrderChanged,
+                                onClick = onClickMusic,
                                 onDelete = onDeleteMusicInList
                             )
                             PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView(

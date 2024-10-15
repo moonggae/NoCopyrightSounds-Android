@@ -106,6 +106,7 @@ fun PlayerScreen(
     onChangeRepeatMode: (RepeatMode) -> Unit,
     onClose: () -> Unit,
     onUpdateMusicOrder: (Int, Int) -> Unit,
+    onClickOnList: (Int) -> Unit,
     onMoveToMusicDetail: (Music) -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit,
     onDeleteMusicInPlaylist: (Music) -> Unit
@@ -214,6 +215,7 @@ fun PlayerScreen(
         currentMusic = playerUiState.currentMusic,
         lyrics = playerUiState.lyrics,
         onMusicOrderChanged = onUpdateMusicOrder,
+        onClickMusic = onClickOnList,
         onDeleteMusicInList = onDeleteMusicInPlaylist
     )
 }

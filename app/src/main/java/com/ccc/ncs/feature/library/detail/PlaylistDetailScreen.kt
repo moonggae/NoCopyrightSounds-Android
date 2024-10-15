@@ -218,6 +218,7 @@ fun PlaylistDetailMusicList(
     cardStyle: ListItemCardStyle = ListItemCardDefaults.listItemCardStyle.small(),
     unSelectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
+    onClick: (Int) -> Unit = {},
     onDelete: (Music) -> Unit,
     topLayout: @Composable () -> Unit = {}
 ) {
@@ -240,8 +241,8 @@ fun PlaylistDetailMusicList(
             topLayout()
         }
 
-        items(count = currentMusics.size, key = { currentMusics[it].id }) {
-            val item = currentMusics[it]
+        items(count = currentMusics.size, key = { currentMusics[it].id }) { index ->
+            val item = currentMusics[index]
             ReorderableItem(state = reorderableLazyListState, key = item.id) { isDragging ->
                 SwipeToDeleteCard(
                     onDelete = {
@@ -280,6 +281,7 @@ fun PlaylistDetailMusicList(
                         },
                         style = cardStyle,
                         unSelectedBackgroundColor = unSelectedBackgroundColor,
+                        onClick = { onClick(index) },
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
                 }

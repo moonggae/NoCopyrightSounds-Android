@@ -12,6 +12,7 @@ import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.feature.library.detail.PlaylistDetailMusicList
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
+import java.util.UUID
 
 @Composable
 fun PlayerMenuPlaylistTabView(
@@ -19,6 +20,7 @@ fun PlayerMenuPlaylistTabView(
     playlist: PlayList,
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
     currentMusic: Music?,
+    onClick: (Int) -> Unit,
     onDelete: (Music) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -35,6 +37,7 @@ fun PlayerMenuPlaylistTabView(
             cardStyle = ListItemCardDefaults.listItemCardStyle.medium(),
             unSelectedBackgroundColor = MaterialTheme.colorScheme.surfaceContainer,
             onMusicOrderChanged = onMusicOrderChanged,
+            onClick = onClick,
             onDelete = onDelete
         )
     }

@@ -42,6 +42,7 @@ import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
+import java.util.UUID
 
 @Composable
 fun NcsApp(
@@ -110,6 +111,7 @@ fun NcsApp(
                     onChangeRepeatMode = playerViewModel::setRepeatMode,
                     onShuffle = playerViewModel::setShuffleMode,
                     onUpdateMusicOrder = playerViewModel::updateMusicOrder,
+                    onClickOnList = playerViewModel::seekToMusic,
                     onClose = playerViewModel::closePlayer,
                     onMoveToMusicDetail = { appState.navController.navigateToMusicDetail(it.id) },
                     onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) },

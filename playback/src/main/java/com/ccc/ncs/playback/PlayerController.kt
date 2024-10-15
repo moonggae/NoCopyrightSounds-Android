@@ -79,6 +79,10 @@ class PlayerController @Inject constructor(
         controller.moveMediaItem(currentIndex, newIndex)
     }
 
+    fun seekTo(musicIndex: Int) = executeAfterPrepare { controller ->
+        controller.seekToDefaultPosition(musicIndex)
+    }
+
     fun playPause() = executeAfterPrepare { controller ->
         if (controller.isPlaying) {
             controller.pause()

@@ -171,6 +171,10 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
+    fun seekToMusic(musicIndex: Int) {
+        playerController.seekTo(musicIndex)
+    }
+
     fun playPlayList(playList: PlayList) {
         viewModelScope.launch {
             playerRepository.setPlaylist(playList.id)
