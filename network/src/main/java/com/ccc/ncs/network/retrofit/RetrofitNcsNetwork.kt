@@ -37,7 +37,11 @@ class RetrofitNcsNetwork @Inject constructor(
         genreId: Int?,
         moodId: Int?,
         version: String?
-    ): List<Music> = networkApi.getMusicList(page, query, genreId, moodId, version).body() ?: emptyList()
+    ): List<Music> = networkApi.getMusicList(page, query, genreId, moodId, version).body()
+        ?.filter {
+            it.dataUrl.isNotBlank()
+        }
+        ?: emptyList()
 
     override suspend fun getArtists(
         page: Int,

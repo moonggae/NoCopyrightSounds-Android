@@ -34,7 +34,11 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
     fun parseMusicList(document: Document): List<Music> {
         val musicTable = findMusicTable(document)
         return musicTable?.select("tbody > tr")?.mapNotNull { row ->
-            parseMusicRow(row)
+            try {
+                parseMusicRow(row)
+            } catch (e: Throwable) {
+                null
+            }
         }?: emptyList()
     }
 

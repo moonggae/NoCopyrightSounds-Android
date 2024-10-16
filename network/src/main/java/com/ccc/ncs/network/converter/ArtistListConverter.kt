@@ -19,19 +19,23 @@ class ArtistListConverter: Converter<ResponseBody, List<Artist>> {
     fun parseArtists(document: Document): List<Artist> {
         val artistElements = findArtistDivs(document)
 
-        return artistElements.map { element ->
-            val detailUrl = element.select("a").attr("href")
-            val name = element.select("div.bottom strong").text()
-            val imageStyleString = element.select("div.img").attr("style")
-            val photoUrl = imageStyleString.split("'")[1]
-            val tags = element.select("span.tags").text()
+        return artistElements.mapNotNull { element ->
+            try {
+                val detailUrl = element.select("a").attr("href")
+                val name = element.select("div.bottom strong").text()
+                val imageStyleString = element.select("div.img").attr("style")
+                val photoUrl = imageStyleString.split("'")[1]
+                val tags = element.select("span.tags").text()
 
-            Artist(
-                name = name,
-                detailUrl = detailUrl,
-                photoUrl = if (photoUrl.startsWith("/static")) null else photoUrl,
-                tags = tags
-            )
+                Artist(
+                    name = name,
+                    detailUrl = detailUrl,
+                    photoUrl = if (photoUrl.startsWith("/static")) null else photoUrl,
+                    tags = tags
+                )
+            } catch (th: Throwable) {
+                null
+            }
         }
     }
 
