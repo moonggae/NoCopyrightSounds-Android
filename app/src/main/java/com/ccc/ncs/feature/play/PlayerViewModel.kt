@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -84,6 +85,25 @@ class PlayerViewModel @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = PlayerUiState.Loading
     )
+
+    private fun observerCurrentPlayingMusicIndex() {
+        viewModelScope.launch {
+            playerUiState
+                .filterNotNull()
+                .filterIsInstance(PlayerUiState.Success::class)
+                .distinctUntilChangedBy { it.currentIndex }
+                .map { it.currentIndex }
+                .collect { currentIndex ->
+                    if (playerRepository.musicIndex.first() != currentIndex && currentIndex != -1) {
+                        playerRepository.updateMusicIndex(currentIndex)
+                    }
+                }
+        }
+    }
+
+    init {
+        observerCurrentPlayingMusicIndex()
+    }
 
     // Player control functions
     fun playPause() = playerController.playPause()

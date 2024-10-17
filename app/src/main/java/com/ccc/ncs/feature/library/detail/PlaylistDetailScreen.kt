@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -242,8 +243,10 @@ fun PlaylistDetailMusicList(
             topLayout()
         }
 
-        items(count = currentMusics.size, key = { currentMusics[it].id }) { index ->
-            val item = currentMusics[index]
+        items(
+            items = currentMusics,
+            key = { it.id }
+        ) { item ->
             ReorderableItem(state = reorderableLazyListState, key = item.id) { isDragging ->
                 SwipeToDeleteCard(
                     onDelete = {
@@ -282,7 +285,7 @@ fun PlaylistDetailMusicList(
                         },
                         style = cardStyle,
                         unSelectedBackgroundColor = unSelectedBackgroundColor,
-                        onClick = { onClick(index) },
+                        onClick = { onClick(currentMusics.indexOf(item)) },
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
                 }
