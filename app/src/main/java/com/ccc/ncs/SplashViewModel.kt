@@ -6,7 +6,9 @@ import com.ccc.ncs.data.repository.MusicRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -14,9 +16,14 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
 ): ViewModel() {
-    val uiState: StateFlow<SplashUiState> = musicRepository.initGenreAndMood().map { success -> // todo 로딩이 오래 걸려서 로직 수정
-        if (success) SplashUiState.Done
-        else SplashUiState.Fail
+    val uiState: StateFlow<SplashUiState> = flow {
+        val genres = musicRepository.getGenres().firstOrNull()
+        if (!genres.isNullOrEmpty()) {
+            emit(SplashUiState.Done)
+        } else {
+            val success = musicRepository.initGenreAndMood().first()
+            emit(if (success) SplashUiState.Done else SplashUiState.Fail)
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
