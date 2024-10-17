@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.secrets)
     alias(libs.plugins.google.oss)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.service)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -132,4 +134,8 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.lottie.compose)
     implementation(libs.google.oss)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }

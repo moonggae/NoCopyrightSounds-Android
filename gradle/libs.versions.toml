@@ -34,6 +34,9 @@ gson = "2.11.0"
 google-oss-plugin = "0.10.6"
 google-oss = "17.1.0"
 workRuntimeKtx = "2.9.1"
+google-service = "4.4.2"
+firebase-bom = "33.4.0"
+firebase-crashlytics = "3.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -105,6 +108,10 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 google-oss = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "google-oss" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
 [bundles]
 media3 = [
     "androidx-media3-exoplayer",
@@ -124,3 +131,5 @@ secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugi
 room = { id = "androidx.room", version.ref = "room" }
 google-oss = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "google-oss-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-service = { id = "com.google.gms.google-services", version.ref = "google-service" }
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
