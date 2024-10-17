@@ -109,15 +109,15 @@ fun ContactContent(
             }
         )
 
-        ClickableRow(
-            icon = NcsIcons.Code,
-            text = "Github Repository",
-            onClick = { uriHandler.openUri(githubRepo) },
-            onCopy = {
-                clipboardManager.setText(AnnotatedString(githubRepo))
-                showSnackbar("Github repository URL copied to clipboard")
-            }
-        )
+//        ClickableRow(
+//            icon = NcsIcons.Code,
+//            text = "Github Repository",
+//            onClick = { uriHandler.openUri(githubRepo) },
+//            onCopy = {
+//                clipboardManager.setText(AnnotatedString(githubRepo))
+//                showSnackbar("Github repository URL copied to clipboard")
+//            }
+//        )
     }
 }
 
