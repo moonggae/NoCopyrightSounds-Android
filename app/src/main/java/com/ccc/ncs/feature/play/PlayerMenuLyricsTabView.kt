@@ -8,15 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -67,12 +64,6 @@ fun NoLyricsText(
     modifier: Modifier = Modifier,
     title: String
 ) {
-    val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
-
-    val formattedString = context.getString(R.string.player_menu_lyrics_click_here_to_post_lyrics)
-    val annotatedString = createAnnotatedString(formattedString, title)
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,12 +72,6 @@ fun NoLyricsText(
             text = stringResource(id = R.string.player_menu_lyrics_empty),
             modifier = Modifier.padding(top = 16.dp)
         )
-
-        ClickableText(text = annotatedString, onClick = { offset ->
-            annotatedString.getStringAnnotations(tag = WIKI_TAG, start = offset, end = offset).firstOrNull()?.let {
-                uriHandler.openUri(it.item)
-            }
-        })
     }
 }
 
