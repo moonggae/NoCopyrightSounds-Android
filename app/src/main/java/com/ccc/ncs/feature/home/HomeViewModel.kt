@@ -141,6 +141,8 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
                 }
                 updateState
             }
+
+            updateSelectMode(false)
         }
     }
 
