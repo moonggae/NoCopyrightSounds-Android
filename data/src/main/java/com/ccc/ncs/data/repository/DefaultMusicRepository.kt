@@ -22,6 +22,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.network.NcsNetworkDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -68,15 +69,13 @@ internal class DefaultMusicRepository @Inject constructor(
         .map { it?.asModel() }
 
     override fun initGenreAndMood(): Flow<Boolean> = flow {
-        try {
-            val (genres, moods) = network.getAllGenreAndMood()
-            val moodsRowIds = moodDao.insertAllMoods(moods.map { it.asEntity() })
-            val genresRowIds = genreDao.insertAllGenres(genres.map { it.asEntity() })
+        val (genres, moods) = network.getAllGenreAndMood()
+        val moodsRowIds = moodDao.insertAllMoods(moods.map { it.asEntity() })
+        val genresRowIds = genreDao.insertAllGenres(genres.map { it.asEntity() })
 
-            emit(moodsRowIds.isNotEmpty() && genresRowIds.isNotEmpty())
-        } catch (th: Throwable) {
-            emit(false)
-        }
+        emit(moodsRowIds.isNotEmpty() && genresRowIds.isNotEmpty())
+    }.catch {
+        emit(false)
     }
 
     override fun insertMusics(musics: List<Music>): Flow<List<Music>> = flow {
