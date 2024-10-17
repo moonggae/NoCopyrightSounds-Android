@@ -30,7 +30,7 @@ class MusicPagingSource(
 
             syncLocalMusics(response)
 
-            val isLastPage = response.size < MUSIC_LOAD_SIZE
+            val isLastPage = response.isEmpty()
 
             return LoadResult.Page(
                 data = response,
