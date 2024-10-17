@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 internal class DefaultMusicCacheRepository @Inject constructor(
@@ -52,6 +53,13 @@ internal class DefaultMusicCacheRepository @Inject constructor(
                 .forEach { cachedMusic ->
                     musicRepository.updateMusicStatus(cachedMusic.id, MusicStatus.None)
                 }
+        }
+    }
+
+    override suspend fun removeCachedMusic(vararg key: UUID) {
+        key.forEach {
+            CacheManager.removeFile(it.toString())
+            musicRepository.updateMusicStatus(it, MusicStatus.None)
         }
     }
 }

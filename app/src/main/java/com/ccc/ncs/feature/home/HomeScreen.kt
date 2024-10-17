@@ -327,10 +327,11 @@ fun SelectMusicAppBar(
     modifier: Modifier = Modifier,
     onClickMenu: () -> Unit,
     onClickClose: () -> Unit,
-    selectedMusicCount: Int
+    selectedMusicCount: Int,
+    label: String? = null
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -349,6 +350,15 @@ fun SelectMusicAppBar(
                 )
                 .padding(6.dp)
         )
+
+        if (label != null) {
+            Text(
+                text = label,
+                style = NcsTypography.Label.appbarTitle.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
 
         Row {
             IconButton(onClick = onClickMenu) {

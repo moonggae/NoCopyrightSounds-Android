@@ -82,4 +82,9 @@ object CacheManager {
             removeOnCacheUpdateListener(key)
         }
     }
+
+    fun removeFile(key: String) {
+        if (!isInitialized) return
+        cache.removeResource(key)
+    }
 }

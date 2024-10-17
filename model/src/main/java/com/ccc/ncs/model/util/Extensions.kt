@@ -18,6 +18,14 @@ fun <T> List<T>.replace(index: Int, element: T): List<T> {
     }
 }
 
+fun <T> MutableList<T>.toggle(item: T) {
+    if (contains(item)) {
+        remove(item)
+    } else {
+        add(item)
+    }
+}
+
 fun Long.toTimestampMMSS(): String {
     val minutes = when (this > 0) {
         true -> this / 1000 / 60

@@ -58,7 +58,7 @@ fun MusicCard(
     isPlaying: Boolean = false,
     onClick: (UUID) -> Unit = {},
     onLongClick: (UUID) -> Unit = {},
-    onClickMore: (UUID) -> Unit = {}
+    onClickMore: ((UUID) -> Unit)? = null
 ) {
     MusicCard(
         item = item,
@@ -84,17 +84,19 @@ fun MusicCard(
         onClick = onClick,
         onLongClick = onLongClick,
         suffix = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!isSelectMode) {
-                    Icon(
-                        imageVector = NcsIcons.MoreVertical,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(CircleShape)
-                            .clickable { onClickMore(item.id) }
-                    )
+            if (onClickMore != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!isSelectMode) {
+                        Icon(
+                            imageVector = NcsIcons.MoreVertical,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .clickable { onClickMore(item.id) }
+                        )
+                    }
                 }
             }
         }
@@ -156,7 +158,7 @@ fun MusicCardListItem(
     playingMusic: Music? = null,
     updateSelectMusic: (UUID) -> Unit,
     updateSelectMode: (Boolean) -> Unit,
-    onClickMore: (UUID) -> Unit,
+    onClickMore: ((UUID) -> Unit)? = null,
     onClick: (UUID) -> Unit,
     isSelectMode: Boolean = false
 ) {

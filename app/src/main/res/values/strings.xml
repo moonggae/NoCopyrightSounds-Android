@@ -53,7 +53,8 @@
     <string name="Tags">Tags</string>
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
-    <string name="auto_generated_playlist_name">Recent Playlist</string>
+    <string name="playlist_name_auto_generated">Recent Playlist</string>
+    <string name="playlist_name_offline_musics">Offline Musics</string>
 
     <string name="ContactEmail">egchoi.dev@gmail.com</string>
     <string name="GithubRepositoryUrl">https://github.com/moonggae/ncs</string>

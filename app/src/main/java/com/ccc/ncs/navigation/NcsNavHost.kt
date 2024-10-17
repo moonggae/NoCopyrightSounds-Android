@@ -13,6 +13,8 @@ import com.ccc.ncs.feature.library.detail.playlistDetailScreen
 import com.ccc.ncs.feature.library.edit.editPlaylistScreen
 import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.library.libraryScreen
+import com.ccc.ncs.feature.library.offline.navigateToOfflineMusic
+import com.ccc.ncs.feature.library.offline.offlineMusicScreen
 import com.ccc.ncs.feature.menu.cache.cacheSettingScreen
 import com.ccc.ncs.feature.menu.cache.cacheSizeSettingScreen
 import com.ccc.ncs.feature.menu.cache.navigateToCacheSetting
@@ -67,7 +69,11 @@ fun NcsNavHost(
         )
         libraryScreen(
             navigateToEdit = navController::navigateToEditPlaylist,
-            navigateToDetail = { navController.navigateToPlaylistDetail(it.id) }
+            navigateToDetail = { navController.navigateToPlaylistDetail(it.id) },
+            navigateToDetailOfflineMusics = { navController.navigateToOfflineMusic() }
+        )
+        offlineMusicScreen(
+            onBack = navController::navigateUp
         )
         menuScreen(
             onShowSnackbar = onShowSnackbar,

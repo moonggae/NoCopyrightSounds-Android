@@ -35,4 +35,6 @@ interface MusicRepository {
     suspend fun updateMusicStatus(musicId: UUID, status: MusicStatus)
 
     suspend fun deleteMusic(musicId: UUID)
+
+    suspend fun removeDownloadedMusic(vararg musicId: UUID)
 }

@@ -150,7 +150,7 @@ internal fun PlaylistDetailScreen(
                 }
 
                 PlaylistDetailContent(
-                    name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.auto_generated_playlist_name),
+                    name = if (playlist.isUserCreated) playlist.name else stringResource(R.string.playlist_name_auto_generated),
                     coverUrl = playlist.musics.firstOrNull()?.coverUrl,
                     isPlaying = isPlaying,
                     onPlay = if (playlist.musics.isEmpty()) null else onPlay

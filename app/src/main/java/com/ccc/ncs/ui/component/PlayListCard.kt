@@ -52,7 +52,7 @@ fun PlayListCard(
                     .clip(RoundedCornerShape(4.dp))
             )
         },
-        label = if (item.isUserCreated) item.name else stringResource(R.string.auto_generated_playlist_name),
+        label = if (item.isUserCreated) item.name else stringResource(R.string.playlist_name_auto_generated),
         description = stringResource(R.string.songs_count, item.musics.size),
         modifier = Modifier
             .fillMaxWidth()

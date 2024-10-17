@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -33,7 +34,8 @@ internal class DefaultMusicRepository @Inject constructor(
     private val genreDao: GenreDao,
     private val moodDao: MoodDao,
     private val musicDao: MusicDao,
-    private val playListDao: PlayListDao
+    private val playListDao: PlayListDao,
+    private val downloadDirectory: File?
 ) : MusicRepository {
     override fun getSearchResultStream(
         query: String?,
@@ -148,6 +150,16 @@ internal class DefaultMusicRepository @Inject constructor(
         musicDao.getMusic(musicId).first()?.asModel()?.asEntity()?.let {
             playListDao.unLinkMusic(musicId)
             musicDao.deleteMusic(it)
+        }
+    }
+
+    override suspend fun removeDownloadedMusic(vararg musicId: UUID) {
+        musicId.forEach { id ->
+            val musicFile = File(downloadDirectory, id.toString())
+            if (musicFile.exists()) {
+                musicFile.delete()
+            }
+            updateMusicStatus(id, MusicStatus.None)
         }
     }
 }

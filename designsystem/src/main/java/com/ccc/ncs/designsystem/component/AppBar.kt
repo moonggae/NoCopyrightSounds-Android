@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
@@ -25,6 +26,7 @@ fun CommonAppBar(
     modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
     onBack: () -> Unit,
+    menuIcon: ImageVector = NcsIcons.MoreVertical,
     onClickMenu: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
@@ -53,7 +55,7 @@ fun CommonAppBar(
             Spacer(Modifier.size(28.dp))
         } else {
             Icon(
-                imageVector = NcsIcons.MoreVertical,
+                imageVector = menuIcon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -71,6 +73,7 @@ fun CommonAppBar(
     title: String?,
     padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
     onBack: () -> Unit,
+    menuIcon: ImageVector = NcsIcons.MoreVertical,
     onClickMenu: (() -> Unit)? = null
 ) = CommonAppBar(
     modifier = modifier,
@@ -84,5 +87,6 @@ fun CommonAppBar(
     },
     padding = padding,
     onBack = onBack,
+    menuIcon = menuIcon,
     onClickMenu = onClickMenu
 )

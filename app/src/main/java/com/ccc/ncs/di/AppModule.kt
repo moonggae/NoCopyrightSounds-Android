@@ -1,6 +1,7 @@
 package com.ccc.ncs.di
 
 import android.content.Context
+import android.os.Environment
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import dagger.Module
@@ -10,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import java.io.File
 import javax.inject.Singleton
 
 
@@ -22,13 +24,21 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideMusicDownloadDirectory(
+        @ApplicationContext context: Context
+    ): File? = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+
+    @Provides
+    @Singleton
     fun providesMusicDownloader(
         @ApplicationContext context: Context,
         musicRepository: MusicRepository,
-        ioDispatcher: CoroutineDispatcher
+        ioDispatcher: CoroutineDispatcher,
+        downloadDirectory: File?
     ): MusicDownloader = MusicDownloader(
         context = context,
         musicRepository = musicRepository,
-        ioDispatcher = ioDispatcher
+        ioDispatcher = ioDispatcher,
+        downloadDirectory = downloadDirectory
     )
 }

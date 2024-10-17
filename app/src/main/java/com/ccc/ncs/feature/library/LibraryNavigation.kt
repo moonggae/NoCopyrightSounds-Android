@@ -12,12 +12,14 @@ fun NavController.navigateToLibrary(navOptions: NavOptions) = navigate(LIBRARY_R
 
 fun NavGraphBuilder.libraryScreen(
     navigateToEdit: () -> Unit,
-    navigateToDetail: (PlayList) -> Unit
+    navigateToDetail: (PlayList) -> Unit,
+    navigateToDetailOfflineMusics: () -> Unit
 ) {
     composable(route = LIBRARY_ROUTE) {
         LibraryRoute(
             onClickAddPlaylist = navigateToEdit,
-            onClickPlaylist = navigateToDetail
+            onClickPlaylist = navigateToDetail,
+            onClickOfflineMusics = navigateToDetailOfflineMusics
         )
     }
 }

@@ -3,7 +3,6 @@ package com.ccc.ncs.download
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicStatus
@@ -18,7 +17,8 @@ import java.io.File
 class MusicDownloader(
     @ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val downloadDirectory: File?
 ) {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
 
@@ -27,7 +27,7 @@ class MusicDownloader(
             musicRepository.updateMusicStatus(music.id, MusicStatus.Downloading)
         }
 
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_MUSIC), "${music.id}")
+        val file = File(downloadDirectory, "${music.id}")
 
         if (file.exists()) {
             file.delete()
