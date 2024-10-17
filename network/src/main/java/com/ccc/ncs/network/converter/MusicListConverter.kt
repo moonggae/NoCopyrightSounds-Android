@@ -49,12 +49,19 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         val genres = parseGenres(row)
         val moods = parseMoods(row)
         val versions = parseVersions(row)
+        val dataUrl = titleTag.attribute("data-url").value
+        val id = try {
+            UUID.fromString(titleTag.attribute("data-tid").value)
+        } catch (e: IllegalArgumentException) { null }
+
+        if (dataUrl.isNullOrBlank()) return null
+        if (id == null) return null
 
         return Music(
-            id = UUID.fromString(titleTag.attribute("data-tid").value),
+            id = id,
             title = titleTag.attribute("data-track").value,
             artists = artists,
-            dataUrl = titleTag.attribute("data-url").value,
+            dataUrl = dataUrl,
             coverThumbnailUrl = titleTag.attribute("data-cover").value,
             coverUrl = titleTag.attribute("data-cover").value.replace("100x100", "1000x0"),
             detailUrl = WEB_URL + (row.selectFirst("td:nth-child(3) > a")?.attr("href") ?: ""),
