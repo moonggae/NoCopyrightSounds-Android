@@ -1,11 +1,8 @@
 package com.ccc.ncs.playback.playstate
 
-import androidx.annotation.OptIn
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
-import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,9 +27,9 @@ internal class PlaybackStateListener @Inject constructor(
         job?.cancel()
         job = scope.launch {
             playbackStateManager.flow
-                .map { it.isPlaying }
-                .collectLatest { isPlaying ->
-                    if (isPlaying) {
+                .map { it.playingStatus }
+                .collectLatest { playingStatus ->
+                    if (playingStatus != PlayingStatus.IDLE && playingStatus != PlayingStatus.ENDED) {
                         while (true) {
                             updatePlayState()
                             delay(400.milliseconds)
@@ -90,13 +87,8 @@ internal class PlaybackStateListener @Inject constructor(
     }
 
     private fun updatePlayState() {
-        val playbackState = player.playbackState
         playbackStateManager.playbackState = PlaybackState(
-            isPlaying = when {
-                playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE -> false
-                player.playWhenReady -> true
-                else -> false
-            },
+            playingStatus = player.playingStatus,
             currentIndex = player.currentMediaItemIndex,
             hasPrevious = player.hasPreviousMediaItem(),
             hasNext = player.hasNextMediaItem(),

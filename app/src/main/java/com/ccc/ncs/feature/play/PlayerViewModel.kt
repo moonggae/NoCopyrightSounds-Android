@@ -8,9 +8,10 @@ import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
-import com.ccc.ncs.model.util.swap
+import com.ccc.ncs.model.util.reorder
 import com.ccc.ncs.playback.PlayerController
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
+import com.ccc.ncs.playback.playstate.PlayingStatus
 import com.ccc.ncs.playback.playstate.RepeatMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,7 +71,7 @@ class PlayerViewModel @Inject constructor(
                 playlist = playlist,
                 currentIndex = playbackState.currentIndex.takeIf { it >= 0 } ?: musicIndex ?: 0,
                 position = playbackState.position,
-                isPlaying = playbackState.isPlaying,
+                playingStatus = playbackState.playingStatus,
                 hasPrevious = playbackState.hasPrevious,
                 hasNext = playbackState.hasNext,
                 duration = playbackState.duration,
@@ -117,9 +118,20 @@ class PlayerViewModel @Inject constructor(
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
         viewModelScope.launch {
             val state = playerUiState.value as? PlayerUiState.Success ?: return@launch
-            val reorderedMusicList = state.playlist.musics.swap(prevIndex, currentIndex)
+            val prevPlayingMusicId = state.currentMusic?.id
+
+            val prevMusicList = state.playlist.musics
+            val reorderedMusicList = prevMusicList.reorder(prevIndex, currentIndex)
+
             playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
             playerController.moveMediaItem(prevIndex, currentIndex)
+
+            reorderedMusicList
+                .indexOfFirst { it.id == prevPlayingMusicId }
+                .takeIf { it > 0 }
+                ?.let {
+                    playerRepository.updateMusicIndex(it)
+                }
         }
     }
 
@@ -207,7 +219,7 @@ sealed interface PlayerUiState {
     object Loading : PlayerUiState
     data class Success(
         val playlist: PlayList,
-        val isPlaying: Boolean = false,
+        val playingStatus: PlayingStatus = PlayingStatus.IDLE,
         val currentIndex: Int = -1,
         val hasPrevious: Boolean = false,
         val hasNext: Boolean = false,

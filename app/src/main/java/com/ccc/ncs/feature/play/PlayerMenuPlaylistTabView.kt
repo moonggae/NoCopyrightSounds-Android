@@ -9,10 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
-import com.ccc.ncs.feature.library.detail.PlaylistDetailMusicList
+import com.ccc.ncs.ui.component.ReorderableMusicList
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
-import java.util.UUID
 
 @Composable
 fun PlayerMenuPlaylistTabView(
@@ -24,7 +23,7 @@ fun PlayerMenuPlaylistTabView(
     onDelete: (Music) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        PlaylistDetailMusicList(
+        ReorderableMusicList(
             modifier = Modifier
                 .padding(
                     horizontal = 8.dp,

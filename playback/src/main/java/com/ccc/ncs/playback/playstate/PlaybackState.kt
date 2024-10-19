@@ -5,7 +5,7 @@ import androidx.media3.common.C
 import androidx.media3.common.Player
 
 data class PlaybackState(
-    val isPlaying: Boolean = false,
+    val playingStatus: PlayingStatus = PlayingStatus.IDLE,
     val currentIndex: Int = -1,
     val hasPrevious: Boolean = false,
     val hasNext: Boolean = false,
@@ -34,3 +34,22 @@ enum class RepeatMode(val value: Int) {
             ?: throw IllegalArgumentException("Not exists repeat mode")
     }
 }
+
+
+enum class PlayingStatus {
+    PLAYING,        // 재생 중
+    PAUSED,         // 일시 중지
+    BUFFERING,      // 버퍼링 중
+    IDLE,           // 준비되지 않음
+    ENDED           // 재생 완료
+}
+
+val Player.playingStatus: PlayingStatus
+    get() = when {
+        playbackState == Player.STATE_READY && playWhenReady -> PlayingStatus.PLAYING
+        playbackState == Player.STATE_READY && !playWhenReady -> PlayingStatus.PAUSED
+        playbackState == Player.STATE_BUFFERING -> PlayingStatus.BUFFERING
+        playbackState == Player.STATE_IDLE -> PlayingStatus.IDLE
+        playbackState == Player.STATE_ENDED -> PlayingStatus.ENDED
+        else -> PlayingStatus.IDLE // 기본값을 IDLE로 설정
+    }

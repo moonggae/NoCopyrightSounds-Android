@@ -11,6 +11,13 @@ fun <T> List<T>.swap(index1: Int, index2: Int): List<T> {
     }
 }
 
+fun <T> List<T>.reorder(from: Int, to: Int): List<T> {
+    return this.toMutableList().apply {
+        val movedItem = removeAt(from)
+        add(to, movedItem)
+    }
+}
+
 fun <T> List<T>.replace(index: Int, element: T): List<T> {
     return this.toMutableList().apply {
         removeAt(index)

@@ -83,6 +83,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.artistText
 import com.ccc.ncs.model.util.toTimestampMMSS
+import com.ccc.ncs.playback.playstate.PlayingStatus
 import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
@@ -181,7 +182,7 @@ fun PlayerScreen(
                     )
 
                     PlayerScreenSmallController(
-                        isPlaying = playerUiState.isPlaying,
+                        isPlaying = playerUiState.playingStatus == PlayingStatus.PLAYING,
                         hasNext = playerUiState.hasNext,
                         onPlay = onPlay,
                         onSkipPrevious = onSkipPrevious,
@@ -292,7 +293,7 @@ private fun PlayerScreenBigContent(
             )
 
             PlayerScreenBigController(
-                isPlaying = uiState.isPlaying,
+                isPlaying = uiState.playingStatus == PlayingStatus.PLAYING,
                 hasNext = uiState.hasNext,
                 repeatMode = uiState.repeatMode,
                 isOnShuffle = uiState.isShuffleOn,
@@ -697,7 +698,7 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 draggableStatePercentage = 1f,
                 music = mockMusics.first(),
                 uiState = PlayerUiState.Success(
-                    isPlaying = true,
+                    playingStatus = PlayingStatus.PLAYING,
                     currentIndex = 0,
                     duration = 10,
                     position = 3,
