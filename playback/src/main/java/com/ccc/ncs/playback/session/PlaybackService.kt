@@ -61,13 +61,8 @@ class PlaybackService : MediaLibraryService() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        if (!player.playWhenReady
-            || player.mediaItemCount == 0
-            || player.playbackState == Player.STATE_ENDED
-        ) {
-            release()
-            stopSelf()
-        }
+        release()
+        stopSelf()
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
