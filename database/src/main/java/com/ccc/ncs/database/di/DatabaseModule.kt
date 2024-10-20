@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.ccc.ncs.database.MIGRATION_1_2_AddIsUserCreatedPlaylistColumn
 import com.ccc.ncs.database.MIGRATION_2_3_AddArtistToMusic
-import com.ccc.ncs.database.MIGRATION_3_4_AddMusicDownload
-import com.ccc.ncs.database.MIGRATION_4_5_AddMusicStatus
+import com.ccc.ncs.database.MIGRATION_3_5_AddMusicStatus
 import com.ccc.ncs.database.NcsDatabase
 import com.ccc.ncs.database.util.ArtistConverter
 import com.google.gson.Gson
@@ -37,8 +36,7 @@ object DatabaseModule {
     )
         .addMigrations(MIGRATION_1_2_AddIsUserCreatedPlaylistColumn)
         .addMigrations(MIGRATION_2_3_AddArtistToMusic)
-        .addMigrations(MIGRATION_3_4_AddMusicDownload)
-        .addMigrations(MIGRATION_4_5_AddMusicStatus)
+        .addMigrations(MIGRATION_3_5_AddMusicStatus)
         .addTypeConverter(ArtistConverter(gson))
         .build()
 }
