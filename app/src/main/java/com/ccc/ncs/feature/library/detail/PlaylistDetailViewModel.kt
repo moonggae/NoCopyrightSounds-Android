@@ -7,7 +7,7 @@ import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
-import com.ccc.ncs.model.util.swap
+import com.ccc.ncs.model.util.reorder
 import com.ccc.ncs.playback.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -79,7 +79,7 @@ class PlaylistDetailViewModel @Inject constructor(
         viewModelScope.launch {
             (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 val playlist = state.playlist
-                val reorderedMusicList = playlist.musics.swap(prevIndex, currentIndex)
+                val reorderedMusicList = playlist.musics.reorder(prevIndex, currentIndex)
                 playlistRepository.setPlayListMusics(playlist.id, reorderedMusicList)
                 if (playlist.id == playerRepository.playlist.first()?.id) {
                     playerController.moveMediaItem(prevIndex, currentIndex)
