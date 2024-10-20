@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.data.repository.PlayerRepository
 import com.ccc.ncs.model.PlayList
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddMusicsToPlaylistViewModel @Inject constructor(
     private val playlistRepository: PlayListRepository,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<AddMusicsToPlaylistUiState>(AddMusicsToPlaylistUiState.Loading)
     val uiState: StateFlow<AddMusicsToPlaylistUiState> = _uiState
@@ -54,6 +57,9 @@ class AddMusicsToPlaylistViewModel @Inject constructor(
     }
 
     fun addMusicToPlaylist(playList: PlayList, musicIds: List<UUID>) {
+        analytics.logEvent("add_playlist_music") {
+            param("music_ids", musicIds.joinToString())
+        }
         viewModelScope.launch {
             playlistRepository.setPlayListMusicsWithId(
                 playListId = playList.id,

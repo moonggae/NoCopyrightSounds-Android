@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.Music
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +29,8 @@ import javax.inject.Inject
 class MusicDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val musicRepository: MusicRepository,
-    private val lyricsRepository: LyricsRepository
+    private val lyricsRepository: LyricsRepository,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MusicDetailUiState>(MusicDetailUiState.Loading)
     val uiState: StateFlow<MusicDetailUiState> = _uiState
@@ -48,8 +51,20 @@ class MusicDetailViewModel @Inject constructor(
                     else {
                         musicRepository.getMusic(musicId).map { music ->
                             when (music) {
-                                null -> MusicDetailUiState.Fail
-                                else -> MusicDetailUiState.Success(music, null)
+                                null -> {
+                                    analytics.logEvent("music_detail_init") {
+                                        param("id", "$musicId")
+                                        param("success", "false")
+                                    }
+                                    MusicDetailUiState.Fail
+                                }
+                                else -> {
+                                    analytics.logEvent("music_detail_init") {
+                                        param("id", "$musicId")
+                                        param("success", "true")
+                                    }
+                                    MusicDetailUiState.Success(music, null)
+                                }
                             }
                         }
                     }

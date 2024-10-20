@@ -12,6 +12,8 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.MusicTag
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,7 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     private val musicRepository: MusicRepository,
     private val savedStateHandle: SavedStateHandle,
     private val musicDownloader: MusicDownloader,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> get() = _uiState
@@ -88,6 +91,10 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
 
 
     fun onSearchQueryChanged(query: String?) {
+        analytics.logEvent("home_search_query") {
+            param("query", "$query")
+        }
+
         viewModelScope.launch {
             _uiState.update { state ->
                 state.copy(
@@ -98,6 +105,10 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     }
 
     fun onSearchGenreChanged(genre: Genre?) {
+        analytics.logEvent("home_search_genre") {
+            param("genre", "${genre?.id}")
+        }
+
         viewModelScope.launch {
             _uiState.update { state ->
                 state.copy(
@@ -108,6 +119,10 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     }
 
     fun onSearchMoodChanged(mood: Mood?) {
+        analytics.logEvent("home_search_mood") {
+            param("mood", "${mood?.id}")
+        }
+
         viewModelScope.launch {
             _uiState.update { state ->
                 state.copy(
@@ -118,6 +133,14 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     }
 
     fun <T : MusicTag> onUpdateTagFromDetail(tag: T) {
+        analytics.logEvent("home_update_tag_from_detail") {
+            when (tag) {
+                is Mood -> param("type", "Mood")
+                is Genre -> param("type", "Genre")
+            }
+            param("id", tag.id.toLong())
+        }
+
         viewModelScope.launch {
             _uiState.update { state ->
                 val updateState = when (tag) {
@@ -172,6 +195,10 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     }
 
     fun downloadMusic(musicId: UUID) {
+        analytics.logEvent("home_download_music") {
+            param("music_id", "$musicId")
+        }
+
         viewModelScope.launch {
             musicRepository.getMusic(musicId).first()?.let { music ->
                 musicDownloader.download(music)

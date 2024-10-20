@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.ArtistRepository
 import com.ccc.ncs.model.ArtistDetail
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ArtistDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val artistRepository: ArtistRepository
+    private val artistRepository: ArtistRepository,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<ArtistDetailUiState> = savedStateHandle.getStateFlow<String?>(ARTIST_DETAIL_PATH_ARG, null)
@@ -27,8 +30,16 @@ class ArtistDetailViewModel @Inject constructor(
                 null -> MutableStateFlow(ArtistDetailUiState.Loading)
                 else -> artistRepository.getArtistDetail(path).map { artistDetail ->
                     if (artistDetail.isSuccess) {
+                        analytics.logEvent("artist_detail_init") {
+                            param("music_ids", path)
+                            param("success", "true")
+                        }
                         ArtistDetailUiState.Success(artistDetail.getOrThrow())
                     } else {
+                        analytics.logEvent("artist_detail_init") {
+                            param("music_ids", path)
+                            param("success", "false")
+                        }
                         ArtistDetailUiState.Fail
                     }
                 }
