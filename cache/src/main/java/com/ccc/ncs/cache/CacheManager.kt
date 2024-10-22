@@ -20,11 +20,12 @@ object CacheManager {
     private const val CACHE_DIR = ".musicCache"
     private val cacheListenerMap = mutableMapOf<String, Cache.Listener>()
 
+    @Synchronized
     fun initialize(
         context: Context,
         cacheMaxMB: Int
     ) {
-        if (isInitialized) cache.release()
+        if (isInitialized) return
         cacheStorage = File(context.getExternalFilesDir(null), CACHE_DIR)
         cacheMaxBytes = cacheMaxMB * 1024 * 1024L
         databaseProvider = StandaloneDatabaseProvider(context)

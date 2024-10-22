@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -30,6 +31,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":datastore"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.media3)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

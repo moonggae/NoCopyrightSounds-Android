@@ -90,6 +90,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":designsystem"))
     implementation(project(":playback"))
+    implementation(project(":cache"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

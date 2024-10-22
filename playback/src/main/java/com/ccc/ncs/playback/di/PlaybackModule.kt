@@ -12,7 +12,6 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaLibraryService
-import com.ccc.ncs.cache.CacheManager
 import com.ccc.ncs.playback.playstate.PlaybackStateListener
 import com.ccc.ncs.playback.session.LibrarySessionCallback
 import com.ccc.ncs.playback.session.PlaybackService
@@ -78,8 +77,4 @@ internal object PlaybackModule {
         MediaLibraryService.MediaLibrarySession
             .Builder(service as PlaybackService, player, callback)
             .build()
-
-    @Provides
-    @ServiceScoped
-    fun providesCache(): Cache = CacheManager.cache
 }

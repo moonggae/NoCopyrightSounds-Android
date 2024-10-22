@@ -54,23 +54,37 @@ class PlaybackService : MediaLibraryService() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        serviceJob.cancel()
-        player.release()
-        session.release()
+        try {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            release()
+            stopSelf()
+        } finally {
+            super.onDestroy()
+        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        release()
-        stopSelf()
+        try {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            release()
+            stopSelf()
+        } finally {
+            super.onTaskRemoved(rootIntent)
+        }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
 
     private fun release() {
-        player.release()
-        session.release()
-        scope.cancel()
+        try {
+            player.pause()
+            session.release()
+            player.release()
+            scope.cancel()
+            serviceJob.cancel()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun setupPlayer() {
