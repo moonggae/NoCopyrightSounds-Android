@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.ccc.ncs.MainActivity
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
+import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.util.conditional
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
@@ -105,7 +106,7 @@ fun ContactContent(
             text = email,
             onCopy = {
                 clipboardManager.setText(AnnotatedString(email))
-                showSnackbar("Email copied to clipboard")
+//                showSnackbar("Email copied to clipboard")
             }
         )
 
@@ -181,7 +182,10 @@ fun MenuItem(
                 .padding(
                     horizontal = 20.dp,
                     vertical = 12.dp
-                )
+                ),
+            style = NcsTypography.Menu.itemLabel.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            )
         )
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
@@ -207,7 +211,12 @@ fun ExpandableMenuItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label)
+            Text(
+                text = label,
+                style = NcsTypography.Menu.itemLabel.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
             Icon(
                 imageVector = NcsIcons.ArrowDropDown,
                 contentDescription = null,

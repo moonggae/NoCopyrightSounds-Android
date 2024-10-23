@@ -610,6 +610,7 @@ fun PlayerScreenSmallController(
     ) {
         Icon(
             imageVector = NcsIcons.SkipPrevious,
+            tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
@@ -619,6 +620,7 @@ fun PlayerScreenSmallController(
 
         Icon(
             imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
+            tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
