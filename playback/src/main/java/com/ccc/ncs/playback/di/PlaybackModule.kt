@@ -34,7 +34,7 @@ internal object PlaybackModule {
     fun providesPlayer(
         @ApplicationContext context: Context,
         service: Service,
-        cache: Cache,
+        cache: Cache?,
         playbackStateListener: PlaybackStateListener,
     ): ExoPlayer {
         val audioAttributes = AudioAttributes.Builder()
@@ -45,19 +45,24 @@ internal object PlaybackModule {
         val renderersFactory = DefaultRenderersFactory(service)
             .forceEnableMediaCodecAsynchronousQueueing()
 
-        val cacheDataSourceFactory = CacheDataSource.Factory()
-            .setCacheKeyFactory { it.key ?: "" }
-            .setCache(cache)
-            .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
 
-        val progressiveMediaSourceFactory = ProgressiveMediaSource
-            .Factory(cacheDataSourceFactory)
-
-        return ExoPlayer.Builder(service, renderersFactory)
+        val builder = ExoPlayer.Builder(service, renderersFactory)
             .setAudioAttributes(audioAttributes, true)
             .setHandleAudioBecomingNoisy(true)
-            .setMediaSourceFactory(progressiveMediaSourceFactory)
-            .build()
+
+        if (cache != null) {
+            val cacheDataSourceFactory = CacheDataSource.Factory()
+                .setCacheKeyFactory { it.key ?: "" }
+                .setCache(cache)
+                .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
+
+            val progressiveMediaSourceFactory = ProgressiveMediaSource
+                .Factory(cacheDataSourceFactory)
+
+            builder.setMediaSourceFactory(progressiveMediaSourceFactory)
+        }
+
+        return builder.build()
             .also { player ->
                 playbackStateListener.attachTo(player)
             }

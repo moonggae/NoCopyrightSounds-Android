@@ -1,4 +1,4 @@
-package com.ccc.ncs.cache
+package com.ccc.ncs.cache.di
 
 import android.content.Context
 import androidx.annotation.OptIn
@@ -9,6 +9,7 @@ import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheSpan
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
+import com.ccc.ncs.cache.isFullyCached
 import java.io.File
 
 @OptIn(UnstableApi::class)

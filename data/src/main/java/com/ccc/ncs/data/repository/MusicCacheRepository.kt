@@ -1,12 +1,9 @@
 package com.ccc.ncs.data.repository
 
-import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 interface MusicCacheRepository {
-    fun initialize(context: Context, maxCacheSizeMb: Int)
-
     val maxSizeMb: Flow<Int>
     suspend fun setMaxSizeMb(size: Int)
 
@@ -18,5 +15,5 @@ interface MusicCacheRepository {
 
     fun clearCache()
 
-    suspend fun removeCachedMusic(vararg key: UUID)
+    suspend fun removeCachedMusic(vararg keys: UUID)
 }

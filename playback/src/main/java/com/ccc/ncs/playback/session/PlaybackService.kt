@@ -11,7 +11,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
-import com.ccc.ncs.cache.CacheManager
+import com.ccc.ncs.cache.di.CacheManager
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
 import dagger.hilt.android.AndroidEntryPoint
