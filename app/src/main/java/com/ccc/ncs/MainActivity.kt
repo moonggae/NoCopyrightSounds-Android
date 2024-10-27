@@ -7,6 +7,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.ui.NcsApp
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         viewModel.initGenreAndMood()
