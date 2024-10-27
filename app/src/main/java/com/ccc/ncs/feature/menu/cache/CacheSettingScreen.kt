@@ -31,8 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ccc.ncs.CacheUiState
-import com.ccc.ncs.CacheViewModel
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.icon.NcsIcons

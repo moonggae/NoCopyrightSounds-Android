@@ -1,4 +1,4 @@
-package com.ccc.ncs
+package com.ccc.ncs.feature.menu.cache
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
