@@ -1,3 +1,26 @@
+### 0.2.13
+```
+<ko-KR>
+- 비정상 종료 문제 수정
+- 접근성 향상을 위한 UI 개선
+- 기타 버그 수정 사항
+</ko-KR>
+<en-US>
+- Fixed application crash issues
+- UI improvements for better accessibility
+- General bug fixes
+</en-US>
+<es-ES>
+- Corrección de cierres inesperados
+- Actualización de la interfaz para mejorar la accesibilidad
+- Corrección de errores generales
+</es-ES>
+<es-419>
+- Se corrigieron problemas de cierre inesperado
+- Mejoras en la interfaz para mayor accesibilidad
+- Corrección de errores varios
+</es-419>
+```
 ### 0.2.8
 ### 0.2.7
 ```
