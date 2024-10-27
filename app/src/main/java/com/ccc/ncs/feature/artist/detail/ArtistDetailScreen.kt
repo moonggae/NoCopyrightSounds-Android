@@ -327,12 +327,14 @@ private fun ArtistAppBar(
         onBack = onBack,
         modifier = Modifier.background(if (coverVisibility == 0f) MaterialTheme.colorScheme.surface else Color.Transparent)
     ) {
-        Text(
-            text = name,
-            style = NcsTypography.Label.appbarTitle.copy(
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f - coverVisibility)
+        if (coverVisibility < 0.85f) {
+            Text(
+                text = name,
+                style = NcsTypography.Label.appbarTitle.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f - coverVisibility)
+                )
             )
-        )
+        }
     }
 }
 

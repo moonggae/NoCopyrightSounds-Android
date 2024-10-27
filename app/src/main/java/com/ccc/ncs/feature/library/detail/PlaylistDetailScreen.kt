@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -296,18 +295,19 @@ fun PlaylistDetailMenuBottomSheetContent(
     onClickDelete: () -> Unit,
     isUserCreated: Boolean,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-    ) {
+    Column {
         BottomSheetMenuItem(
             icon = NcsIcons.Edit,
             label = stringResource(if (isUserCreated) R.string.playlist_detail_menu_modify_name else R.string.playlist_detail_menu_save_recent_playlist),
-            onClick = onClickModifyName
+            onClick = onClickModifyName,
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
-        BottomSheetMenuItem(icon = NcsIcons.Delete, label = stringResource(R.string.playlist_detail_menu_delete_playlist), onClick = onClickDelete)
+        BottomSheetMenuItem(
+            icon = NcsIcons.Delete,
+            label = stringResource(R.string.playlist_detail_menu_delete_playlist),
+            onClick = onClickDelete,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
     }
 }
 

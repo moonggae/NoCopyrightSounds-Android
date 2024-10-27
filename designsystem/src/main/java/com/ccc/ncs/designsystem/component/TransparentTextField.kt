@@ -4,6 +4,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
 @Composable
@@ -54,7 +56,9 @@ fun TransparentTextField(
         },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         decorator = { innerTextField ->
-            Column {
+            Column(
+                Modifier.padding(vertical = 4.dp)
+            ) {
                 Box {
                     val isPlaceholderVisible = state.text.isEmpty() && placeholder.isNotEmpty()
                     if (isPlaceholderVisible) {

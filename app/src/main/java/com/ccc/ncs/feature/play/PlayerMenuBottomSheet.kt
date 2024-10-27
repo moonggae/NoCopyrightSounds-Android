@@ -55,7 +55,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -181,7 +180,7 @@ fun PlayerMenuBottomSheet(
                                         textAlign = TextAlign.Center
                                     ),
                                     modifier = Modifier
-                                        .padding(8.dp)
+                                        .padding(16.dp)
                                         .weight(1f)
                                 )
                             }

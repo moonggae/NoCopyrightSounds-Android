@@ -174,25 +174,27 @@ fun PlayerScreen(
                         modifier = Modifier
                     )
 
-                    PlayerScreenSmallInformation(
-                        title = music.title,
-                        artist = music.artistText,
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .fillMaxHeight()
-                            .weight(1f)
-                    )
+                    if (draggableState.currentValue != SwipeAnchors.Big) {
+                        PlayerScreenSmallInformation(
+                            title = music.title,
+                            artist = music.artistText,
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .fillMaxHeight()
+                                .weight(1f)
+                        )
 
-                    PlayerScreenSmallController(
-                        isPlaying = playerUiState.playingStatus == PlayingStatus.PLAYING,
-                        hasNext = playerUiState.hasNext,
-                        onPlay = onPlay,
-                        onSkipPrevious = onSkipPrevious,
-                        onSkipNext = onSkipNext,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(horizontal = 12.dp)
-                    )
+                        PlayerScreenSmallController(
+                            isPlaying = playerUiState.playingStatus == PlayingStatus.PLAYING,
+                            hasNext = playerUiState.hasNext,
+                            onPlay = onPlay,
+                            onSkipPrevious = onSkipPrevious,
+                            onSkipNext = onSkipNext,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(horizontal = 12.dp)
+                        )
+                    }
                 }
 
                 LinearProgressIndicator(
@@ -275,6 +277,7 @@ private fun PlayerScreenBigContent(
                     .conditional(draggableStatePercentage == 1f) {
                         clickable { onClickMusicTitle(music) }
                     }
+                    .padding(vertical = 8.dp)
             )
 
             ArtistList(
@@ -290,7 +293,7 @@ private fun PlayerScreenBigContent(
                 modifier = Modifier.padding(
                     start = 16.dp,
                     end = 16.dp,
-                    top = 16.dp
+                    top = 32.dp
                 )
             )
 
@@ -607,7 +610,7 @@ fun PlayerScreenSmallController(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+//        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier,
     ) {
         Icon(
@@ -616,8 +619,9 @@ fun PlayerScreenSmallController(
             contentDescription = stringResource(R.string.cd_player_skip_previous),
             modifier = Modifier
                 .clip(CircleShape)
-                .size(20.dp)
+                .size(48.dp)
                 .clickable(onClick = onSkipPrevious)
+                .padding(12.dp)
         )
 
         Icon(
@@ -626,8 +630,9 @@ fun PlayerScreenSmallController(
             contentDescription = if (isPlaying) stringResource(R.string.cd_player_play) else stringResource(R.string.cd_player_pause),
             modifier = Modifier
                 .clip(CircleShape)
+                .size(48.dp)
                 .clickable(onClick = onPlay)
-                .size(28.dp)
+                .padding(8.dp)
         )
 
         Icon(
@@ -636,10 +641,11 @@ fun PlayerScreenSmallController(
             tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .clip(CircleShape)
-                .size(20.dp)
+                .size(48.dp)
                 .conditional(hasNext) {
                     clickable(onClick = onSkipNext)
                 }
+                .padding(12.dp)
         )
     }
 }

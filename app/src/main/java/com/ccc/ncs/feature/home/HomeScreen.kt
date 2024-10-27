@@ -288,36 +288,40 @@ fun SelectMusicMenuBottomSheetContent(
     onClickDownload: () -> Unit,
     onClickMoveToDetail: (() -> Unit)?,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-    ) {
-        BottomSheetMenuItem(icon = NcsIcons.PlayCircle, label = stringResource(R.string.home_select_musics_menu_play_now), onClick = onClickPlayNow)
+    Column {
+        BottomSheetMenuItem(
+            icon = NcsIcons.PlayCircle,
+            label = stringResource(R.string.home_select_musics_menu_play_now),
+            onClick = onClickPlayNow,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
 
         if (onClickMoveToDetail != null) {
             BottomSheetMenuItem(
                 icon = NcsIcons.LibraryMusic,
                 label = stringResource(R.string.home_select_musics_menu_details),
-                onClick = onClickMoveToDetail
+                onClick = onClickMoveToDetail,
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
 
         BottomSheetMenuItem(
             icon = NcsIcons.BookmarkAdd,
             label = stringResource(R.string.home_select_musics_menu_add_to_playlist),
-            onClick = onClickAddToPlayList
+            onClick = onClickAddToPlayList,
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
         BottomSheetMenuItem(
             icon = NcsIcons.PlaylistAdd,
             label = stringResource(R.string.home_select_musics_menu_add_to_queue),
-            onClick = onClickAddToQueue
+            onClick = onClickAddToQueue,
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
         BottomSheetMenuItem(
             icon = NcsIcons.Download,
             label = stringResource(R.string.home_select_musics_menu_download),
-            onClick = onClickDownload
+            onClick = onClickDownload,
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
     }
 }

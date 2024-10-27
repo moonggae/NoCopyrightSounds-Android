@@ -90,7 +90,7 @@ fun MusicCard(
                     if (!isSelectMode) {
                         Icon(
                             imageVector = NcsIcons.MoreVertical,
-                            contentDescription = stringResource(R.string.cd_more_options),
+                            contentDescription = stringResource(R.string.cd_music_option, item.title),
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier
                                 .size(28.dp)

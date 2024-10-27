@@ -3,6 +3,7 @@ package com.ccc.ncs.ui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -22,23 +23,27 @@ import com.ccc.ncs.designsystem.theme.NcsTypography
 @Composable
 fun BottomSheetMenuItem(
     modifier: Modifier = Modifier,
-    icon: ImageVector,
+    icon: ImageVector?,
     label: String,
     onClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
+            .defaultMinSize(minHeight = 48.dp)
+            .then(modifier)
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(24.dp)
-        )
+        icon?.let {
+            Icon(
+                imageVector = it,
+                contentDescription = label,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(24.dp)
+            )
+        }
         Text(
             text = label,
             style = NcsTypography.Label.bottomSheetItem.copy(

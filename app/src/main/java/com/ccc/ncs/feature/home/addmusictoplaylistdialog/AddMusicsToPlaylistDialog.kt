@@ -86,7 +86,7 @@ fun AddMusicsToPlaylistDialogContent(
             }
         },
         bottomContent = {
-            Row(modifier = Modifier.height(40.dp)) {
+            Row(modifier = Modifier.height(48.dp)) {
                 NcsDialogTextButton(
                     label = stringResource(R.string.Cancel),
                     onClick = onDismissRequest

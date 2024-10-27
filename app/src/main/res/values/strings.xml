@@ -90,6 +90,7 @@
     <string name="cd_download">Download</string>
     <string name="cd_select_music_app_bar_menu">Menu</string>
     <string name="cd_select_music_app_bar_close">Exit select mode</string>
+    <string name="cd_music_option">%1$s music options</string>
 
     <!-- Library Screen -->
     <string name="cd_add_playlist">Create new playlist</string>

@@ -46,6 +46,7 @@ import com.ccc.ncs.feature.home.CustomFlowRow
 import com.ccc.ncs.feature.home.SearchAppBar
 import com.ccc.ncs.model.Artist
 import com.ccc.ncs.ui.component.ArtistListCard
+import com.ccc.ncs.ui.component.BottomSheetMenuItem
 import com.ccc.ncs.ui.component.ClickableSearchBar
 import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.LoadingScreen
@@ -247,19 +248,16 @@ fun AristSortModalBottomSheet(
     onItemSelected: (ArtistSort) -> Unit
 ) {
     CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState()),
-        ) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             ArtistSort.entries.forEach {
-                ArtistSearchBottomSheetItem(
-                    text = it.getArtistSortLabel(),
-                    onClick = {
-                        onItemSelected(it)
-                        onDismissRequest()
-                    }
-                )
+                BottomSheetMenuItem(
+                    icon = null,
+                    label = it.getArtistSortLabel(),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    onItemSelected(it)
+                    onDismissRequest()
+                }
             }
         }
     }
@@ -276,22 +274,16 @@ fun AristYearModalBottomSheet(
     }
 
     CommonModalBottomSheet(onDismissRequest = onDismissRequest) {
-        Column(
-            modifier = Modifier
-                .padding(
-                    vertical = 8.dp,
-                    horizontal = 16.dp
-                )
-                .verticalScroll(rememberScrollState()),
-        ) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             years.forEach {
-                ArtistSearchBottomSheetItem(
-                    text = "${it ?: stringResource(R.string.artist_year_all_release_years)}",
-                    onClick = {
-                        onItemSelected(it)
-                        onDismissRequest()
-                    }
-                )
+                BottomSheetMenuItem(
+                    icon = null,
+                    label = "${it ?: stringResource(R.string.artist_year_all_release_years)}",
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    onItemSelected(it)
+                    onDismissRequest()
+                }
             }
         }
     }

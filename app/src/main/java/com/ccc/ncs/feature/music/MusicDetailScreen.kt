@@ -1,7 +1,6 @@
 package com.ccc.ncs.feature.music
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -14,11 +13,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -105,7 +106,6 @@ fun MusicDetailRoute(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MusicDetailScreen(
     modifier: Modifier = Modifier,
@@ -231,8 +231,8 @@ internal fun MusicDetailScreen(
             showMenu = false
             scope.launch { onShowSnackbar(addedToQueueMessage, null) }
         },
-        onClickDownload =  {
-            TODO()
+        onClickDownload =  { // TODO
+
         },
         onClickDetail = null
     )
@@ -262,12 +262,13 @@ fun ArtistList(
     Row(modifier) {
         artists.forEachIndexed { index, artist ->
             Text(
-                text = artist.name + if (artists.lastIndex != index) ", " else "",
+                text = artist.name + if (artists.lastIndex != index) ",  " else "",
                 style = textStyle,
                 modifier = Modifier
                     .conditional(onClick != null) {
                         clickable { onClick?.invoke(artist) }
                     }
+                    .defaultMinSize(minWidth = 48.dp)
             )
         }
     }
@@ -288,8 +289,10 @@ private fun MusicDetailLyrics(
                 contentDescription = stringResource(R.string.cd_toggle_lyrics_expansion),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
+                    .size(48.dp)
                     .clip(CircleShape)
                     .clickable { expanded = !expanded }
+                    .padding(12.dp)
                     .rotate(if (expanded) 180f else 0f)
             )
         }
@@ -359,6 +362,10 @@ private fun <T : MusicTag> MusicTagContent(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
                         .clickable(onClick = { onClick(tag) })
+                        .padding(
+                            horizontal = 4.dp,
+                            vertical = 12.dp
+                        )
                 )
             }
         }

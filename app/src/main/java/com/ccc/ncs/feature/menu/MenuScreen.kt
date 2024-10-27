@@ -180,7 +180,7 @@ fun MenuItem(
                 .fillMaxWidth()
                 .padding(
                     horizontal = 20.dp,
-                    vertical = 12.dp
+                    vertical = 16.dp
                 ),
             style = NcsTypography.Menu.itemLabel.copy(
                 color = MaterialTheme.colorScheme.onSurface
