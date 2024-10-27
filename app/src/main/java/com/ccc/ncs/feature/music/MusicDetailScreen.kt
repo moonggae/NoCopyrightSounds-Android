@@ -97,7 +97,8 @@ fun MusicDetailRoute(
             onPlayMusic = onPlayMusic,
             onAddToQueue = onAddToQueue,
             onBack = onBack,
-            onClickArtist = onMoveToArtistDetail
+            onClickArtist = onMoveToArtistDetail,
+            onDownloadMusic = viewModel::downloadMusic
         )
 
         else -> {
@@ -116,7 +117,8 @@ internal fun MusicDetailScreen(
     onPlayMusic: (UUID) -> Unit,
     onAddToQueue: (UUID) -> Unit,
     onBack: () -> Unit,
-    onClickArtist: (Artist) -> Unit
+    onClickArtist: (Artist) -> Unit,
+    onDownloadMusic: (UUID) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -231,8 +233,9 @@ internal fun MusicDetailScreen(
             showMenu = false
             scope.launch { onShowSnackbar(addedToQueueMessage, null) }
         },
-        onClickDownload =  { // TODO
-
+        onClickDownload = {
+            onDownloadMusic(uiState.music.id)
+            showMenu = false
         },
         onClickDetail = null
     )
@@ -448,13 +451,14 @@ private fun MusicDetailScreenPreview() {
         ) {
             MusicDetailScreen(
                 uiState = successUiState,
-                onBack = {},
                 onShowSnackbar = { _, _ -> true },
-                onClickGenre = {},
                 onClickMood = {},
+                onClickGenre = {},
                 onPlayMusic = {},
                 onAddToQueue = {},
-                onClickArtist = {}
+                onBack = {},
+                onClickArtist = {},
+                onDownloadMusic = {}
             )
         }
     }

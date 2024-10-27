@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Music
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -30,7 +32,8 @@ class MusicDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val musicRepository: MusicRepository,
     private val lyricsRepository: LyricsRepository,
-    private val analytics: FirebaseAnalytics
+    private val analytics: FirebaseAnalytics,
+    private val musicDownloader: MusicDownloader,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MusicDetailUiState>(MusicDetailUiState.Loading)
     val uiState: StateFlow<MusicDetailUiState> = _uiState
@@ -95,6 +98,18 @@ class MusicDetailViewModel @Inject constructor(
                         it.copy(lyrics = lyrics)
                     } else { it }
                 }
+            }
+        }
+    }
+
+    fun downloadMusic(musicId: UUID) {
+        analytics.logEvent("home_download_music") {
+            param("music_id", "$musicId")
+        }
+
+        viewModelScope.launch {
+            musicRepository.getMusic(musicId).first()?.let { music ->
+                musicDownloader.download(music)
             }
         }
     }
