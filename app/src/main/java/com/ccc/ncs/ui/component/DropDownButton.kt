@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
@@ -42,7 +44,7 @@ fun DropDownButton(
 
             Icon(
                 imageVector = NcsIcons.ArrowDropDown,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_arrow_dropdown),
                 modifier = Modifier
                     .size(18.dp)
             )

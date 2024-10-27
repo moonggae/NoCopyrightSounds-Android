@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -102,7 +101,7 @@ fun ContactContent(
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         CopyableRow(
-            icon = NcsIcons.Email,
+            icon = { Icon(imageVector = NcsIcons.Email, contentDescription = stringResource(R.string.cd_email_icon)) },
             text = email,
             onCopy = {
                 clipboardManager.setText(AnnotatedString(email))
@@ -124,18 +123,18 @@ fun ContactContent(
 
 @Composable
 fun CopyableRow(
-    icon: ImageVector,
+    icon: @Composable () -> Unit,
     text: String,
     onCopy: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(imageVector = icon, contentDescription = null)
+        icon()
         Spacer(modifier = Modifier.width(8.dp))
         Text(text)
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = NcsIcons.Copy,
-            contentDescription = "Copy",
+            contentDescription = stringResource(R.string.cd_copy_icon),
             modifier = Modifier
                 .size(16.dp)
                 .clickable(onClick = onCopy)
@@ -145,13 +144,13 @@ fun CopyableRow(
 
 @Composable
 fun ClickableRow(
-    icon: ImageVector,
+    icon: @Composable () -> Unit,
     text: String,
     onClick: () -> Unit,
     onCopy: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(imageVector = icon, contentDescription = null)
+        icon()
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
@@ -160,7 +159,7 @@ fun ClickableRow(
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = NcsIcons.Copy,
-            contentDescription = "Copy",
+            contentDescription = stringResource(R.string.cd_copy_icon),
             modifier = Modifier
                 .size(16.dp)
                 .clickable(onClick = onCopy)
@@ -219,7 +218,9 @@ fun ExpandableMenuItem(
             )
             Icon(
                 imageVector = NcsIcons.ArrowDropDown,
-                contentDescription = null,
+                contentDescription =
+                if (expanded) stringResource(R.string.cd_shrink_menu_arrow)
+                else stringResource(R.string.cd_expand_menu_arrow),
                 modifier = Modifier.conditional(expanded) {
                     rotate(180f)
                 }

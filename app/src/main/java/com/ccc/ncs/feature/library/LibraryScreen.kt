@@ -90,7 +90,7 @@ internal fun LibraryScreen(
             IconButton(onClick = onClickAddPlaylist) {
                 Icon(
                     imageVector = NcsIcons.AddCircle,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.cd_add_playlist),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(60.dp)
                 )
@@ -137,7 +137,7 @@ fun OfflinePlayListColumnItem(
             prefix = {
                 Image(
                     painter = painterResource(R.drawable.ncs_cover),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.cd_music_cover),
                     modifier = Modifier
                         .padding(end = 16.dp)
                         .aspectRatio(1f)

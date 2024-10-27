@@ -64,4 +64,74 @@
     <string name="error_failed_to_load_artist_detail">Failed to load artist detail</string>
     <string name="retry">Retry</string>
     <string name="exo_download_notification_channel_name">download channel</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">Search</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_more_options">More options</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_arrow_dropdown">Show dropdown menu</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">Downloaded music</string>
+    <string name="cd_playing_music">Currently playing music</string>
+    <string name="cd_music_thumbnail">Music thumbnail</string>
+    <string name="cd_playlist_thumbnail">Playlist thumbnail</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">Toggle lyrics expansion</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">Play now</string>
+    <string name="cd_library_music">View music details</string>
+    <string name="cd_bookmark_add">Add to playlist</string>
+    <string name="cd_playlist_add">Add to queue</string>
+    <string name="cd_download">Download</string>
+    <string name="cd_select_music_app_bar_menu">Menu</string>
+    <string name="cd_select_music_app_bar_close">Exit select mode</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">Create new playlist</string>
+    <string name="cd_playlist_cover">Playlist cover image</string>
+    <string name="cd_music_cover">Music cover image</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">Edit playlist name</string>
+    <string name="cd_delete">Delete playlist</string>
+    <string name="cd_play_playlist">Play playlist</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">Email icon</string>
+    <string name="cd_copy_icon">Copy to clipboard</string>
+    <string name="cd_github_icon">Github repository icon</string>
+    <string name="cd_expand_menu_arrow">Expand menu</string>
+    <string name="cd_shrink_menu_arrow">Shrink menu</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">Search history icon</string>
+    <string name="cd_delete_search_history">Delete search history item</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">Information icon</string>
+    <string name="cd_cache_progress">Cache usage progress</string>
+
+    <!--
+    contentDescription = null
+    -->
+
+    <!-- Artist -->
+    <string name="cd_artist_image">Arist image</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">Shuffle mode is on</string>
+    <string name="cd_player_shuffle_off">Shuffle mode is off</string>
+    <string name="cd_player_skip_previous">Skip to previous track</string>
+    <string name="cd_player_pause">Pause playback</string>
+    <string name="cd_player_play">Play</string>
+    <string name="cd_player_skip_next">Skip to next track</string>
+    <string name="cd_player_skip_next_disabled">Skip to next track unavailable</string>
+    <string name="cd_player_repeat_one">Repeat current track</string>
+    <string name="cd_player_repeat_all">Repeat all tracks</string>
+    <string name="cd_player_repeat_off">Repeat mode off</string>
 </resources>

@@ -30,10 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.ccc.ncs.designsystem.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import kotlin.math.roundToInt
@@ -100,7 +102,7 @@ private fun BoxScope.DeleteAction(
     ) {
         Icon(
             imageVector = NcsIcons.Delete,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_delete_item),
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -129,7 +131,9 @@ private fun SwipeableContent(
             }
             .offset {
                 IntOffset(
-                    x = state.requireOffset().roundToInt(),
+                    x = state
+                        .requireOffset()
+                        .roundToInt(),
                     y = 0,
                 )
             }

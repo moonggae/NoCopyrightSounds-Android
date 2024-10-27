@@ -127,7 +127,7 @@ fun RecentSearchItem(
     ) {
         Icon(
             imageVector = NcsIcons.Search,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_search_history_icon),
             tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .padding(end = 6.dp)
@@ -144,7 +144,7 @@ fun RecentSearchItem(
 
         Icon(
             imageVector = NcsIcons.Close,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_delete_search_history),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .padding(start = 16.dp)

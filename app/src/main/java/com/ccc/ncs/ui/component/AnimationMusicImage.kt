@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -55,7 +56,7 @@ fun AnimationMusicImage(
                 model = url,
                 placeholder = placeholder
             ) else placeholder,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_music_thumbnail),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxHeight()

@@ -99,7 +99,7 @@ fun ReorderableMusicList(
                         suffix = {
                             Icon(
                                 imageVector = NcsIcons.Menu,
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.cd_menu),
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier
                                     .padding(start = 12.dp)
@@ -119,7 +119,7 @@ fun ReorderableMusicList(
                                 is MusicStatus.FullyCached -> {
                                     Icon(
                                         imageVector = NcsIcons.CheckCircle,
-                                        contentDescription = null,
+                                        contentDescription = stringResource(R.string.cd_downloaded_music),
                                         tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier
                                             .padding(end = 4.dp)

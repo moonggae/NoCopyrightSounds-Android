@@ -261,7 +261,7 @@ private fun ArtistImage(
             placeholder = painterResource(R.drawable.ncs_cover),
             fallback = painterResource(R.drawable.ncs_cover)
         ),
-        contentDescription = null,
+        contentDescription = stringResource(R.string.cd_artist_image),
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .conditional(isExpanded) {

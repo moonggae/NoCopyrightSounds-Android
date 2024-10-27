@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ccc.ncs.designsystem.R
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
@@ -39,7 +41,7 @@ fun CommonAppBar(
     ) {
         Icon(
             imageVector = NcsIcons.ArrowBack,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_back),
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(28.dp)
@@ -56,7 +58,7 @@ fun CommonAppBar(
         } else {
             Icon(
                 imageVector = menuIcon,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_menu),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .size(28.dp)

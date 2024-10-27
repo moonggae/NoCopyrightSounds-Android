@@ -362,11 +362,11 @@ fun SelectMusicAppBar(
 
         Row {
             IconButton(onClick = onClickMenu) {
-                Icon(imageVector = NcsIcons.MoreVertical, contentDescription = null)
+                Icon(imageVector = NcsIcons.MoreVertical, contentDescription = stringResource(R.string.cd_select_music_app_bar_menu))
             }
 
             IconButton(onClick = onClickClose) {
-                Icon(imageVector = NcsIcons.Close, contentDescription = null)
+                Icon(imageVector = NcsIcons.Close, contentDescription = stringResource(R.string.cd_select_music_app_bar_close))
             }
         }
     }

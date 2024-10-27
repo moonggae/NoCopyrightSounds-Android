@@ -159,8 +159,8 @@ private fun NcsBottomBar(
             NcsNavigationBarItem(
                 selected = selected,
                 onClick = { onNavigateToDestination(destination) },
-                icon = { Icon(imageVector = destination.unselectedIcon, contentDescription = null) },
-                selectedIcon = { Icon(imageVector = destination.selectedIcon, contentDescription = null) },
+                icon = { Icon(imageVector = destination.unselectedIcon, contentDescription = stringResource(destination.iconTextId)) },
+                selectedIcon = { Icon(imageVector = destination.selectedIcon, contentDescription = stringResource(destination.iconTextId)) },
                 label = { Text(text = stringResource(destination.iconTextId), style = NcsTypography.Label.navigationLabel) },
                 modifier = modifier
             )

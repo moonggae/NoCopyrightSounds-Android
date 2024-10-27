@@ -60,7 +60,7 @@ fun SearchBar(
         ) {
             Icon(
                 imageVector = NcsIcons.ArrowBack,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_back),
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .padding(end = 16.dp)
@@ -83,7 +83,7 @@ fun SearchBar(
             if (state.text.isNotEmpty()) {
                 Icon(
                     imageVector = NcsIcons.Close,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.cd_close),
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .padding(start = 16.dp)

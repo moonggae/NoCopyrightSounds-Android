@@ -35,7 +35,7 @@ fun BottomSheetMenuItem(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = label,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.size(24.dp)
         )

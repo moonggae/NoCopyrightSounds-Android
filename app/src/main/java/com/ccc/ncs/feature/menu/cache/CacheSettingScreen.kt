@@ -129,7 +129,7 @@ internal fun CacheSettingScreen(
             ) {
                 Icon(
                     imageVector = NcsIcons.Info,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.cd_info_icon),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )

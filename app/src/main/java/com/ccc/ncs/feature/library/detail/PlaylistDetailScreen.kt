@@ -222,7 +222,7 @@ fun PlaylistDetailContent(
                 if (!isPlaying && onPlay != null) {
                     Icon(
                         imageVector = NcsIcons.PlayCircle,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.cd_play_playlist),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .fillMaxSize()
@@ -263,7 +263,7 @@ fun CoverImage(
             .fillMaxWidth()
             .aspectRatio(1f),
         painter = painter,
-        contentDescription = null,
+        contentDescription = stringResource(R.string.cd_music_cover),
         contentScale = ContentScale.Crop
     )
 }

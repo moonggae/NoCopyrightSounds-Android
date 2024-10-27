@@ -285,7 +285,7 @@ private fun MusicDetailLyrics(
             ContentLabelText(text = "Lyrics")
             Icon(
                 imageVector = NcsIcons.ArrowDropDown,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_toggle_lyrics_expansion),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .clip(CircleShape)

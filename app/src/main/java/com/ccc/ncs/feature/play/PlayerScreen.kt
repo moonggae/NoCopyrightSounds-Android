@@ -64,6 +64,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -86,6 +87,7 @@ import com.ccc.ncs.model.util.toTimestampMMSS
 import com.ccc.ncs.playback.playstate.PlayingStatus
 import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.ui.component.mockMusics
+import com.ccc.ncs.ui.model.getContentDescription
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
 import kotlinx.coroutines.launch
@@ -336,7 +338,7 @@ private fun PlayerScreenAppBar(
         ) {
             Icon(
                 imageVector = NcsIcons.Close,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_close),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .clip(CircleShape)
@@ -378,7 +380,7 @@ fun PlayerScreenBigController(
     ) {
         Icon(
             imageVector = NcsIcons.Shuffle,
-            contentDescription = null,
+            contentDescription = if (isOnShuffle) stringResource(R.string.cd_player_shuffle_on) else stringResource(R.string.cd_player_shuffle_off),
             tint = if (isOnShuffle) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .clip(CircleShape)
@@ -388,7 +390,7 @@ fun PlayerScreenBigController(
 
         Icon(
             imageVector = NcsIcons.SkipPrevious,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_player_skip_previous),
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
@@ -398,7 +400,7 @@ fun PlayerScreenBigController(
 
         Icon(
             imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
-            contentDescription = null,
+            contentDescription = if (isPlaying) stringResource(R.string.cd_player_play) else stringResource(R.string.cd_player_pause),
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
@@ -408,7 +410,7 @@ fun PlayerScreenBigController(
 
         Icon(
             imageVector = NcsIcons.SkipNext,
-            contentDescription = null,
+            contentDescription = if (hasNext) stringResource(R.string.cd_player_skip_next) else stringResource(R.string.cd_player_skip_next_disabled),
             tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .clip(CircleShape)
@@ -423,7 +425,7 @@ fun PlayerScreenBigController(
                 RepeatMode.REPEAT_MODE_ONE -> NcsIcons.RepeatOne
                 else -> NcsIcons.Repeat
             },
-            contentDescription = null,
+            contentDescription = repeatMode.getContentDescription(),
             tint = when (repeatMode) {
                 RepeatMode.REPEAT_MODE_OFF -> MaterialTheme.colorScheme.onSurfaceVariant
                 else -> MaterialTheme.colorScheme.onSurface
@@ -546,7 +548,7 @@ private fun PlayerScreenCoverImage(
             placeholder = painterResource(R.drawable.ncs_cover),
             fallback = painterResource(R.drawable.ncs_cover)
         ),
-        contentDescription = null,
+        contentDescription = stringResource(R.string.cd_music_cover),
         contentScale = ContentScale.Crop,
         modifier = modifier
             .drawWithCache {
@@ -611,7 +613,7 @@ fun PlayerScreenSmallController(
         Icon(
             imageVector = NcsIcons.SkipPrevious,
             tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.cd_player_skip_previous),
             modifier = Modifier
                 .clip(CircleShape)
                 .size(20.dp)
@@ -621,7 +623,7 @@ fun PlayerScreenSmallController(
         Icon(
             imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
             tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = null,
+            contentDescription = if (isPlaying) stringResource(R.string.cd_player_play) else stringResource(R.string.cd_player_pause),
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable(onClick = onPlay)
@@ -630,7 +632,7 @@ fun PlayerScreenSmallController(
 
         Icon(
             imageVector = NcsIcons.SkipNext,
-            contentDescription = null,
+            contentDescription = if (hasNext) stringResource(R.string.cd_player_skip_next) else stringResource(R.string.cd_player_skip_next_disabled),
             tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .clip(CircleShape)

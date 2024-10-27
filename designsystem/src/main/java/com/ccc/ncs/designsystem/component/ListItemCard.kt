@@ -22,10 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.ccc.ncs.designsystem.R
 import com.ccc.ncs.designsystem.theme.NcsTypography
 
 data class ListItemCardColors(
@@ -95,7 +97,7 @@ fun ListItemCard(
         prefix = {
             Image(
                 painter = thumbnail,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.cd_list_item_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .padding(end = 16.dp)
