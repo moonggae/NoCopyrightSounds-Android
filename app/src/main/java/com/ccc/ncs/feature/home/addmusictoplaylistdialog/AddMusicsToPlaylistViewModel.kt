@@ -63,7 +63,9 @@ class AddMusicsToPlaylistViewModel @Inject constructor(
         viewModelScope.launch {
             playlistRepository.setPlayListMusicsWithId(
                 playListId = playList.id,
-                musicIds = playList.musics.map { it.id }.plus(musicIds)
+                musicIds = playList.musics.map { it.id }
+                    .minus(musicIds)
+                    .plus(musicIds)
             )
         }
     }
