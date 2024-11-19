@@ -45,10 +45,15 @@ class NcsApplication: Application(), Configuration.Provider, ImageLoaderFactory 
 
     private fun configureFirebaseAnalytics() {
         CoroutineScope(Dispatchers.IO).launch {
-            Firebase.analytics.setUserId(Firebase.installations.id.await())
-            val enabled = BuildConfig.FIREBASE_ANALYTICS_ENABLED.toBooleanStrictOrNull() ?: false
-            Firebase.analytics.setAnalyticsCollectionEnabled(enabled)
-            Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
+            if (BuildConfig.DEBUG) {
+                Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                Firebase.crashlytics.isCrashlyticsCollectionEnabled = false
+            } else {
+                Firebase.analytics.setUserId(Firebase.installations.id.await())
+                val enabled = BuildConfig.FIREBASE_ANALYTICS_ENABLED.toBooleanStrictOrNull() ?: false
+                Firebase.analytics.setAnalyticsCollectionEnabled(enabled)
+                Firebase.crashlytics.isCrashlyticsCollectionEnabled = enabled
+            }
         }
     }
 }

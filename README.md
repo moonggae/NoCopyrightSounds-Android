@@ -67,29 +67,6 @@ WEB_URL="https://ncs.io"
 FANDOM_URL="https://nocopyrightsounds.fandom.com"
 ```
 
-
-> #### For release mode
-1. `app`디렉토리에 keystore 파일 추가
-- add keystore file to `app` directory 
-
-2. `root`디렉토리에 `keystore.properties`파일 추가, keystore 정보 입력
-- add `keystore.properties` file to `root` directory and write keystore data following below
-```
-RELEASE_KEY_STORE={KEY_STORE_FILE_NAME}
-RELEASE_KEY_PASSWORD={KEY_STORE_KEY_PASSWORD}
-RELEASE_KEY_ALIAS={KEY_STORE_KEY_ALIAS}
-RELEASE_KEY_ALIAS_PASSWORD={KEY_STORE_ALIAS_PASSWORD}
-
-# example
-# RELEASE_KEY_STORE=ncs.keystore
-# RELEASE_KEY_PASSWORD=my_password
-# RELEASE_KEY_ALIAS=alias0
-# RELEASE_KEY_ALIAS_PASSWORD=alias0_password
-```
-
-
-
-
 ### 📱 Result
 
 <p>
