@@ -2,6 +2,7 @@ package com.ccc.ncs.playback.session
 
 import android.net.Uri
 import androidx.annotation.OptIn
+import androidx.core.net.toFile
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
@@ -30,4 +31,11 @@ val MediaItem.isNetworkSource: Boolean
     get() {
         val uriScheme = this.localConfiguration?.uri?.scheme?.lowercase()
         return uriScheme == "http" || uriScheme == "https"
+    }
+
+val MediaItem.isLocalFileExists: Boolean
+    get() = try {
+        localConfiguration?.uri?.toFile()?.exists() ?: false
+    } catch (e: IllegalArgumentException) {
+        false
     }

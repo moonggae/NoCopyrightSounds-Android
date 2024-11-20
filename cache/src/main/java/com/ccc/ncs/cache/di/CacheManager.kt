@@ -10,6 +10,9 @@ import androidx.media3.datasource.cache.CacheSpan
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
 import com.ccc.ncs.cache.isFullyCached
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 @OptIn(UnstableApi::class)
@@ -55,15 +58,23 @@ object CacheManager {
         // databaseProvider 삭제시 바로 재생하면 오류 발생함
     }
 
-    fun addOnCacheUpdateListener(key: String, block:(isFullyCached: Boolean) -> Unit) {
+    fun addOnCacheUpdateListener(
+        key: String,
+        scope: CoroutineScope,
+        block: suspend (isFullyCached: Boolean) -> Unit,
+    ) {
         val listener = object : Cache.Listener {
             override fun onSpanAdded(cache: Cache, span: CacheSpan) {
-                val isFullyCached = cache.isFullyCached(key)
-                block(isFullyCached)
+                scope.launch(Dispatchers.IO) {
+                    val isFullyCached = cache.isFullyCached(key)
+                    block(isFullyCached)
+                }
             }
             override fun onSpanTouched(cache: Cache, oldSpan: CacheSpan, newSpan: CacheSpan) {
-                val isFullyCached = cache.isFullyCached(key)
-                block(isFullyCached)
+                scope.launch(Dispatchers.IO) {
+                    val isFullyCached = cache.isFullyCached(key)
+                    block(isFullyCached)
+                }
             }
             override fun onSpanRemoved(cache: Cache, span: CacheSpan) {}
         }

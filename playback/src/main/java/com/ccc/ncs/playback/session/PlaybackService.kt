@@ -3,7 +3,6 @@ package com.ccc.ncs.playback.session
 import android.content.Intent
 import android.util.Log
 import androidx.annotation.OptIn
-import androidx.core.net.toFile
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -15,11 +14,9 @@ import com.ccc.ncs.cache.di.CacheManager
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,20 +30,14 @@ class PlaybackService : MediaLibraryService() {
     lateinit var session: MediaLibrarySession
 
     @Inject
-    lateinit var scope: CoroutineScope
-
-    @Inject
     lateinit var player: ExoPlayer
 
     @Inject
     lateinit var musicRepository: MusicRepository
 
-    @Inject
-    lateinit var ioDispatcher: CoroutineDispatcher
-
 
     private val serviceJob = SupervisorJob()
-    private val serviceScope = CoroutineScope(serviceJob + Dispatchers.Main)
+    private val serviceScope = CoroutineScope(serviceJob + Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
@@ -54,23 +45,14 @@ class PlaybackService : MediaLibraryService() {
     }
 
     override fun onDestroy() {
-        try {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-            release()
-            stopSelf()
-        } finally {
-            super.onDestroy()
-        }
+        release()
+        super.onDestroy()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        try {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-            release()
-            stopSelf()
-        } finally {
-            super.onTaskRemoved(rootIntent)
-        }
+        release()
+        stopSelf()
+        super.onTaskRemoved(rootIntent)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
@@ -80,10 +62,9 @@ class PlaybackService : MediaLibraryService() {
             player.pause()
             session.release()
             player.release()
-            scope.cancel()
             serviceJob.cancel()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "release", e)
         }
     }
 
@@ -91,47 +72,46 @@ class PlaybackService : MediaLibraryService() {
         player.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
-                mediaItem?.let { handleMediaItemTransition(it) }
+                mediaItem?.let {
+                    serviceScope.launch {
+                        handleMediaItemTransition(it)
+                    }
+                }
             }
 
             override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
                 if (error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS) {
-                    handleNetworkMusicBadStatus()
+                    serviceScope.launch {
+                        handleNetworkMusicBadStatus()
+                    }
                 }
             }
         })
     }
 
-    private fun handleMediaItemTransition(mediaItem: MediaItem) {
+    private suspend fun handleMediaItemTransition(mediaItem: MediaItem) {
         CacheManager.clearOnCacheUpdateListener()
 
         if (mediaItem.isNetworkSource) {
             setupCacheListener(mediaItem)
         } else {
-            checkLocalFileExistence(mediaItem)
+            if (!mediaItem.isLocalFileExists) {
+                handleMissingLocalFile(mediaItem)
+            }
         }
     }
 
     @OptIn(UnstableApi::class)
-    private fun setupCacheListener(mediaItem: MediaItem) {
-        CacheManager.addOnCacheUpdateListener(mediaItem.mediaId) { isFullyCached ->
-            serviceScope.launch(ioDispatcher) {
-                musicRepository.updateMusicStatus(
-                    musicId = UUID.fromString(mediaItem.mediaId),
-                    status = if (isFullyCached) MusicStatus.FullyCached else MusicStatus.PartiallyCached
-                )
-            }
-        }
-    }
-
-    private fun checkLocalFileExistence(mediaItem: MediaItem) {
-        mediaItem.localConfiguration?.uri?.let { uri ->
-            serviceScope.launch(ioDispatcher) {
-                if (!uri.toFile().exists()) {
-                    handleMissingLocalFile(mediaItem)
-                }
-            }
+    suspend fun setupCacheListener(mediaItem: MediaItem) {
+        CacheManager.addOnCacheUpdateListener(
+            key = mediaItem.mediaId,
+            scope = serviceScope
+        ) { isFullyCached ->
+            musicRepository.updateMusicStatus(
+                musicId = UUID.fromString(mediaItem.mediaId),
+                status = if (isFullyCached) MusicStatus.FullyCached else MusicStatus.PartiallyCached
+            )
         }
     }
 
@@ -145,25 +125,27 @@ class PlaybackService : MediaLibraryService() {
         }
     }
 
-    private fun handleNetworkMusicBadStatus() {
-        serviceScope.launch {
-            player.currentMediaItem?.let { mediaItem ->
-                val wasPlaying = player.playWhenReady
-                Log.d("TAG", "handleNetworkMusicBadStatus - player.playWhenReady: ${player.playWhenReady}")
-                Log.d("TAG", "handleNetworkMusicBadStatus - player.playbackState: ${player.playbackState}")
+    private suspend fun handleNetworkMusicBadStatus() {
+        player.currentMediaItem?.let { mediaItem ->
+            val wasPlaying = player.playWhenReady
+            Log.d("TAG", "handleNetworkMusicBadStatus - player.playWhenReady: ${player.playWhenReady}")
+            Log.d("TAG", "handleNetworkMusicBadStatus - player.playbackState: ${player.playbackState}")
 
-                // 재생중:     true  STATE_IDLE
-                // not 재생중: false STATE_IDLE
+            // 재생중:     true  STATE_IDLE
+            // not 재생중: false STATE_IDLE
 
-                musicRepository.deleteMusic(UUID.fromString(mediaItem.mediaId))
-                withContext(Dispatchers.Main) {
-                    player.removeMediaItem(player.currentMediaItemIndex)
-                    if (wasPlaying) {
-                        player.prepare()
-                        player.play()
-                    }
+            musicRepository.deleteMusic(UUID.fromString(mediaItem.mediaId))
+            withContext(Dispatchers.Main) {
+                player.removeMediaItem(player.currentMediaItemIndex)
+                if (wasPlaying) {
+                    player.prepare()
+                    player.play()
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "PlaybackService"
     }
 }
