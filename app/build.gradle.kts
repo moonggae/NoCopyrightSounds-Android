@@ -55,10 +55,16 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
 
-//        debug {
+        debug {
+            /*
+            The application could not be installed: INSTALL_BASELINE_PROFILE_FAILED Installation failed due to: 'Baseline profile did not install
+            같은 applicationId에 다른 singing key로 설치 될 때 발생하는 오류
+            https://stackoverflow.com/questions/79111518/why-do-i-get-install-baseline-profile-failed-when-running-the-app
+             */
+            applicationIdSuffix = ".debug"
 //            isMinifyEnabled = true
 //            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-//        }
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
