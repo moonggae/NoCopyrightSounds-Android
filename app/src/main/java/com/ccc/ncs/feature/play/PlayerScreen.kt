@@ -214,15 +214,17 @@ fun PlayerScreen(
         }
     }
 
-    PlayerMenuBottomSheet(
-        draggableStatePercentage = draggableState.percentage,
-        playlist = playerUiState.playlist,
-        currentMusic = playerUiState.currentMusic,
-        lyrics = playerUiState.lyrics,
-        onMusicOrderChanged = onUpdateMusicOrder,
-        onClickMusic = onClickOnList,
-        onDeleteMusicInList = onDeleteMusicInPlaylist
-    )
+    if (draggableState.targetValue == SwipeAnchors.Big) {
+        PlayerMenuBottomSheet(
+            playerScreenVisibleProgress = draggableState.percentage,
+            playlist = playerUiState.playlist,
+            currentMusic = playerUiState.currentMusic,
+            lyrics = playerUiState.lyrics,
+            onMusicOrderChanged = onUpdateMusicOrder,
+            onClickMusic = onClickOnList,
+            onDeleteMusicInList = onDeleteMusicInPlaylist
+        )
+    }
 }
 
 

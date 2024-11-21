@@ -1,17 +1,11 @@
 package com.ccc.ncs.feature.play
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
@@ -29,10 +23,8 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,7 +33,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -56,11 +47,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerMenuBottomSheet(
     modifier: Modifier = Modifier,
-    draggableStatePercentage: Float,
+    playerScreenVisibleProgress: Float,
     playlist: PlayList,
     currentMusic: Music?,
     lyrics: String?,
@@ -68,10 +59,8 @@ fun PlayerMenuBottomSheet(
     onClickMusic: (Int) -> Unit = {},
     onDeleteMusicInList: (Music) -> Unit
 ) {
-    val density = LocalDensity.current
     val scope = rememberCoroutineScope()
-
-    var sheetDragHandleHeight by remember { mutableStateOf(0.dp) }
+    val sheetDragHandleHeight by remember { mutableStateOf(50.dp) }
 
     val menuSheetState = rememberPlayerMenuSheetState(
         sheetState = rememberBottomSheetScaffoldState(),
@@ -84,114 +73,65 @@ fun PlayerMenuBottomSheet(
         pageCount = PlayerMenuTabs.entries::count
     )
 
-    var selectedTabIndex by remember { mutableIntStateOf(PlayerMenuTabs.entries.first().index) }
-
     BackHandler(enabled = menuSheetState.sheetState.bottomSheetState.targetValue == SheetValue.Expanded) {
         scope.launch {
             menuSheetState.sheetState.bottomSheetState.partialExpand()
         }
     }
 
-    LaunchedEffect(selectedTabIndex) {
-        scope.launch {
-            if (PlayerMenuTabs.entries.any { it.index == selectedTabIndex }) {
-                tabPagerState.animateScrollToPage(selectedTabIndex)
-            }
-        }
-    }
-
-    LaunchedEffect(tabPagerState.targetPage) {
-        selectedTabIndex = tabPagerState.targetPage
-    }
-
     BottomSheetScaffold(
         scaffoldState = menuSheetState.sheetState,
         sheetShape = RectangleShape,
         sheetContent = {
-            Column(
-                modifier = Modifier
-                    .heightIn(0.dp, menuSheetState.bodyHeight)
-                    .fillMaxSize()
-            ) {
-                HorizontalPager(
+            HorizontalPager(
+                state = tabPagerState,
+                flingBehavior = PagerDefaults.flingBehavior(
                     state = tabPagerState,
-                    flingBehavior = PagerDefaults.flingBehavior(
-                        state = tabPagerState,
-                        snapPositionalThreshold = 0.3f
-                    )
-                ) { index ->
-                    Box(modifier = Modifier.alpha(menuSheetState.offsetProgress)) {
-                        when (index) {
-                            PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView(
-                                playlist = playlist,
-                                currentMusic = currentMusic,
-                                onMusicOrderChanged = onMusicOrderChanged,
-                                onClick = onClickMusic,
-                                onDelete = onDeleteMusicInList
-                            )
-                            PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView(
-                                lyrics = lyrics,
-                                title = currentMusic?.title,
-                            )
-                        }
+                    snapPositionalThreshold = 0.3f
+                )
+            ) { index ->
+                Box(modifier = Modifier.alpha(menuSheetState.offsetProgress)) {
+                    when (index) {
+                        PlayerMenuTabs.PLAYLIST.index -> PlayerMenuPlaylistTabView(
+                            playlist = playlist,
+                            currentMusic = currentMusic,
+                            onMusicOrderChanged = onMusicOrderChanged,
+                            onClick = onClickMusic,
+                            onDelete = onDeleteMusicInList
+                        )
+                        PlayerMenuTabs.LYRICS.index -> PlayerMenuLyricsTabView(
+                            lyrics = lyrics,
+                            title = currentMusic?.title,
+                        )
                     }
                 }
             }
         },
-        sheetPeekHeight = (menuSheetState.sheetPeekHeight) * draggableStatePercentage,
+        sheetPeekHeight = (menuSheetState.sheetPeekHeight) * playerScreenVisibleProgress,
         sheetDragHandle = {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(menuSheetState.windowInsetPaddings.calculateTopPadding() * menuSheetState.offsetProgress)
-                )
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
-                    divider = {},
-                    indicator = { tabPositions ->
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = menuSheetState.offsetProgress)
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onSizeChanged {
-                            sheetDragHandleHeight = with(density) { it.height.toDp() }
-                        }
-                ) {
-                    PlayerMenuTabs.entries.forEach { tab ->
-                        Tab(
-                            selected = selectedTabIndex == tab.index,
-                            onClick = {
-                                scope.launch {
-                                    selectedTabIndex = tab.index
-                                    menuSheetState.sheetState.bottomSheetState.expand()
-                                }
-                            },
-                        ) {
-                            Row {
-                                Text(
-                                    text = tab.label,
-                                    style = NcsTypography.PlayerTypography.bottomMenuText.copy(
-                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = draggableStatePercentage),
-                                        textAlign = TextAlign.Center
-                                    ),
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .weight(1f)
-                                )
+            PlayerMenuTabRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = menuSheetState.windowInsetPaddings.calculateTopPadding() * menuSheetState.offsetProgress),
+                selectedIndex = tabPagerState.targetPage,
+                indicatorVisibleProgress = menuSheetState.offsetProgress
+            ) {
+                PlayerMenuTabs.entries.forEach { tab ->
+                    tab.Tab(
+                        selectedIndex = tabPagerState.targetPage,
+                        onClick = {
+                            scope.launch {
+                                tabPagerState.scrollToPage(tab.index)
+                                menuSheetState.sheetState.bottomSheetState.expand()
                             }
-                        }
-                    }
+                        }, textVisibleProgress = playerScreenVisibleProgress
+                    )
                 }
             }
         },
         sheetShadowElevation = 0.dp,
         sheetTonalElevation = 0.dp,
-        sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = draggableStatePercentage),
+        sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = playerScreenVisibleProgress),
         content = {}
     )
 }
@@ -201,7 +141,52 @@ enum class PlayerMenuTabs(
     val label: String
 ) {
     PLAYLIST(0, "Playlist"),
-    LYRICS(1, "Lyrics")
+    LYRICS(1, "Lyrics");
+
+    @Composable
+    fun Tab(
+        selectedIndex: Int,
+        onClick: (PlayerMenuTabs) -> Unit,
+        textVisibleProgress: Float
+    ) {
+        Tab(
+            selected = selectedIndex == index,
+            onClick = { onClick(this) }
+        ) {
+            Text(
+                text = label,
+                style = NcsTypography.PlayerTypography.bottomMenuText.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = textVisibleProgress),
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+fun PlayerMenuTabRow(
+    modifier: Modifier = Modifier,
+    selectedIndex: Int,
+    indicatorVisibleProgress: Float,
+    tabs: @Composable () -> Unit
+) {
+    TabRow(
+        selectedTabIndex = selectedIndex,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        divider = {},
+        indicator = { tabPositions ->
+            TabRowDefaults.SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = indicatorVisibleProgress)
+            )
+        },
+        modifier = modifier,
+        tabs = tabs
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -214,7 +199,6 @@ class PlayerMenuBottomSheetState(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     val sheetPeekHeight: Dp get() = sheetDragHandleHeight + windowInsetPaddings.calculateBottomPadding()
-    val bodyHeight: Dp get() = screenHeight - sheetDragHandleHeight
     val bottomSheetStateMinOffset: Dp get() = windowInsetPaddings.calculateTopPadding()
     val bottomSheetStateMaxOffset: Dp get() = screenHeight - sheetPeekHeight
 
@@ -234,7 +218,7 @@ class PlayerMenuBottomSheetState(
             snapshotFlow {
                 try {
                     sheetState.bottomSheetState.requireOffset()
-                } catch (e: Throwable) {
+                } catch (e: IllegalStateException) {
                     0f
                 }
             }.collectLatest { offset ->
