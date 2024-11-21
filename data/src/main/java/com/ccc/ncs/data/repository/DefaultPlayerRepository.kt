@@ -1,6 +1,8 @@
 package com.ccc.ncs.data.repository
 
 import com.ccc.ncs.datastore.PlayerDataStore
+import com.ccc.ncs.domain.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.PlayList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +15,7 @@ import javax.inject.Inject
 internal class DefaultPlayerRepository @Inject constructor(
     private val playlistRepository: PlayListRepository,
     private val playerDataSource: PlayerDataStore
-) : PlayerRepository {
+): PlayerRepository {
     override val playlist: Flow<PlayList?>
         get() = playerDataSource.playlistId.flatMapLatest { playlistId ->
             if (playlistId == null) flowOf(null)

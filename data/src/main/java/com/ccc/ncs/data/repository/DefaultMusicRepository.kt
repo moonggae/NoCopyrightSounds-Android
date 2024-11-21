@@ -37,7 +37,7 @@ internal class DefaultMusicRepository @Inject constructor(
     private val musicDao: MusicDao,
     private val playListDao: PlayListDao,
     private val downloadDirectory: File?
-) : MusicRepository {
+): MusicRepository {
     override fun getSearchResultStream(
         query: String?,
         genreId: Int?,

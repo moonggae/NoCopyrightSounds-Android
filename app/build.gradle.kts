@@ -92,8 +92,8 @@ secrets {
 }
 
 dependencies {
-    implementation(project(":model"))
     implementation(project(":data"))
+    implementation(project(":domain"))
     implementation(project(":designsystem"))
     implementation(project(":playback"))
     implementation(project(":cache"))

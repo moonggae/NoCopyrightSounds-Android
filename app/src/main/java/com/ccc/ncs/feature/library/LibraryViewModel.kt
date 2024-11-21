@@ -2,8 +2,8 @@ package com.ccc.ncs.feature.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.PlayListRepository
-import com.ccc.ncs.data.repository.PlayerRepository
+import com.ccc.ncs.domain.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,8 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    private val playListRepository: PlayListRepository,
-    private val playerRepository: PlayerRepository
+    playListRepository: PlayListRepository,
+    playerRepository: PlayerRepository
 ) : ViewModel() {
     val playListUiState = combine(
         playListRepository.getPlayLists(),

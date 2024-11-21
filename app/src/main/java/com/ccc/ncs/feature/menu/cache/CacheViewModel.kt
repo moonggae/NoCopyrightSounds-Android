@@ -2,7 +2,7 @@ package com.ccc.ncs.feature.menu.cache
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.MusicCacheRepository
+import com.ccc.ncs.domain.repository.MusicCacheRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

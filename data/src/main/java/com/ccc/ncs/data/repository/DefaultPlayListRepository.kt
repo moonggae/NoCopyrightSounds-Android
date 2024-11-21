@@ -6,6 +6,7 @@ import com.ccc.ncs.database.dao.PlayListDao
 import com.ccc.ncs.database.model.PlayListEntity
 import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
 import com.ccc.ncs.database.model.relation.asModel
+import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import kotlinx.coroutines.flow.Flow
@@ -15,9 +16,8 @@ import javax.inject.Inject
 
 class DefaultPlayListRepository @Inject constructor(
     private val playListDao: PlayListDao,
-    private val musicRepository: MusicRepository,
     private val database: NcsDatabase
-) : PlayListRepository {
+): PlayListRepository {
     override fun getPlayLists(): Flow<List<PlayList>> = playListDao
         .getAllPlayList()
         .map { list -> list.map { it.asModel() } }

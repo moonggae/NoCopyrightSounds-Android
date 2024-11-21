@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":database"))
     implementation(project(":datastore"))
     implementation(project(":cache"))
+    implementation(project(":domain"))
     testImplementation(project(":database-test"))
     androidTestImplementation(project(":network"))
 

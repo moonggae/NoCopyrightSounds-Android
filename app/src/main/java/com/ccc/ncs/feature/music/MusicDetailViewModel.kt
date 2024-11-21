@@ -3,8 +3,8 @@ package com.ccc.ncs.feature.music
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.LyricsRepository
 import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Music
 import dagger.hilt.android.lifecycle.HiltViewModel

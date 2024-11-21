@@ -7,10 +7,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
-import com.ccc.ncs.data.repository.PlayerRepository
+import com.ccc.ncs.domain.repository.PlayerRepository
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -63,12 +62,12 @@ internal class LibrarySessionCallback @Inject constructor(
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
-    ): ListenableFuture<MediaItemsWithStartPosition> {
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
         return scope.future {
             val mediaItems = playerRepository.playlist.first()?.musics?.map { it.asMediaItem() } ?: emptyList()
             val startIndex = playerRepository.musicIndex.first() ?: C.INDEX_UNSET
             val startPosition = playerRepository.position.first() ?: C.TIME_UNSET
-            MediaItemsWithStartPosition(mediaItems, startIndex, startPosition)
+            MediaSession.MediaItemsWithStartPosition(mediaItems, startIndex, startPosition)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ccc.ncs.data.repository
+package com.ccc.ncs.domain.repository
 
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList

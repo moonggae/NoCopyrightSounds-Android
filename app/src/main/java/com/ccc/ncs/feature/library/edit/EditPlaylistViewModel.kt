@@ -3,7 +3,7 @@ package com.ccc.ncs.feature.library.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

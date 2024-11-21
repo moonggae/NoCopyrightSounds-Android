@@ -2,10 +2,10 @@ package com.ccc.ncs.feature.play
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.MusicRepository
-import com.ccc.ncs.data.repository.PlayListRepository
-import com.ccc.ncs.data.repository.PlayerRepository
+import com.ccc.ncs.domain.repository.LyricsRepository
+import com.ccc.ncs.domain.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.util.reorder

@@ -19,6 +19,7 @@ package com.ccc.ncs.data.repository
 import com.ccc.ncs.database.dao.RecentSearchQueryDao
 import com.ccc.ncs.database.model.RecentSearchQueryEntity
 import com.ccc.ncs.database.model.asExternalModel
+import com.ccc.ncs.domain.repository.RecentSearchRepository
 import com.ccc.ncs.model.RecentSearchQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,7 +28,7 @@ import javax.inject.Inject
 
 internal class DefaultRecentSearchRepository @Inject constructor(
     private val recentSearchQueryDao: RecentSearchQueryDao,
-) : RecentSearchRepository {
+): RecentSearchRepository {
     override suspend fun insertOrReplaceRecentSearch(searchQuery: String) {
         recentSearchQueryDao.insertOrReplaceRecentSearchQuery(
             RecentSearchQueryEntity(

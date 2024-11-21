@@ -2,8 +2,8 @@ package com.ccc.ncs.feature.home.addmusictoplaylistdialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.PlayListRepository
-import com.ccc.ncs.data.repository.PlayerRepository
+import com.ccc.ncs.domain.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddMusicsToPlaylistViewModel @Inject constructor(
-    private val playlistRepository: PlayListRepository,
-    private val playerRepository: PlayerRepository
+    private val playlistRepository: com.ccc.ncs.domain.repository.PlayListRepository,
+    private val playerRepository: com.ccc.ncs.domain.repository.PlayerRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<AddMusicsToPlaylistUiState>(AddMusicsToPlaylistUiState.Loading)
     val uiState: StateFlow<AddMusicsToPlaylistUiState> = _uiState
