@@ -1,5 +1,6 @@
 package com.ccc.ncs.ui.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -43,7 +44,7 @@ fun ReorderableMusicList(
     onMusicOrderChanged: (prevIndex: Int, currentIndex: Int) -> Unit,
     onClick: (Int) -> Unit = {},
     onDelete: (Music) -> Unit,
-    topLayout: @Composable () -> Unit = {}
+    topLayout: @Composable () -> Unit = { Box(Modifier.size(1.dp)) }
 ) {
     var currentMusics by remember(playlistId, musics.toSet()) { mutableStateOf(musics) }
 
