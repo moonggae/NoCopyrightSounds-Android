@@ -6,8 +6,6 @@ import com.ccc.ncs.data.repository.MusicCacheRepository
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicStatus
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OfflineMusicViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
-    private val musicCacheRepository: MusicCacheRepository,
-    private val analytics: FirebaseAnalytics
+    private val musicCacheRepository: MusicCacheRepository
 ) : ViewModel() {
     val uiState: StateFlow<OfflineMusicUiState> = musicRepository
         .getMusicsByStatus(listOf(MusicStatus.Downloaded(""), MusicStatus.FullyCached))
@@ -36,10 +33,6 @@ class OfflineMusicViewModel @Inject constructor(
         )
 
     fun deleteMusics(uuids: List<UUID>) {
-        analytics.logEvent("pl_offline_delete_musics") {
-            param("music_ids", uuids.joinToString())
-        }
-
         viewModelScope.launch {
             val (downloadedMusics, cachedMusics) = uiState
                 .filterIsInstance(OfflineMusicUiState.Success::class)

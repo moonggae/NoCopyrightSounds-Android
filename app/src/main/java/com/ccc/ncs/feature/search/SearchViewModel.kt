@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.RecentSearchRepository
 import com.ccc.ncs.model.RecentSearchQuery
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val recentSearchRepository: RecentSearchRepository,
-    private val analytics: FirebaseAnalytics
+    private val recentSearchRepository: RecentSearchRepository
 ) : ViewModel() {
     private val searchQuery: StateFlow<String?> = savedStateHandle.getStateFlow(SEARCH_QUERY_ARG, null)
 
@@ -48,10 +45,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchTriggered(query: String) {
-        analytics.logEvent("search_triggered") {
-            param("query", query)
-        }
-
         if (query.isBlank()) return
         viewModelScope.launch {
             recentSearchRepository.insertOrReplaceRecentSearch(searchQuery = query)
@@ -59,10 +52,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteRecentSearch(query: String) {
-        analytics.logEvent("search_delete") {
-            param("query", query)
-        }
-
         viewModelScope.launch {
             recentSearchRepository.deleteRecentSearch(query)
         }

@@ -9,8 +9,6 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.util.reorder
 import com.ccc.ncs.playback.PlayerController
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +30,7 @@ class PlaylistDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
     private val playerController: PlayerController,
-    private val playerRepository: PlayerRepository,
-    private val analytics: FirebaseAnalytics
+    private val playerRepository: PlayerRepository
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<PlaylistDetailUiState> = MutableStateFlow(PlaylistDetailUiState.Loading)
     val uiState = _uiState as StateFlow<PlaylistDetailUiState>
@@ -55,9 +52,6 @@ class PlaylistDetailViewModel @Inject constructor(
                     _uiState.value = it
                     if (it is PlaylistDetailUiState.Success) {
                         observePlayingMusic()
-                        analytics.logEvent("pl_detail_init") {
-                            param("playlist_id", "${it.playlist.id}")
-                        }
                     }
                 }
         }
@@ -82,11 +76,6 @@ class PlaylistDetailViewModel @Inject constructor(
     }
 
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
-        analytics.logEvent("pl_detail_update_music_order") {
-            param("prev", prevIndex.toLong())
-            param("current", currentIndex.toLong())
-        }
-
         viewModelScope.launch {
             (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 val playlist = state.playlist
@@ -100,10 +89,6 @@ class PlaylistDetailViewModel @Inject constructor(
     }
 
     fun deletePlaylist(playlistId: UUID) {
-        analytics.logEvent("pl_detail_delete") {
-            param("playlist_id", "$playlistId")
-        }
-
         viewModelScope.launch {
             playlistRepository.deletePlayList(playlistId)
             playerRepository.clear()
@@ -112,10 +97,6 @@ class PlaylistDetailViewModel @Inject constructor(
     }
 
     fun deleteMusic(music: Music) {
-        analytics.logEvent("pl_detail_delete_music") {
-            param("playlist_id", "${music.id}")
-        }
-
         viewModelScope.launch {
             (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 val playlist = state.playlist

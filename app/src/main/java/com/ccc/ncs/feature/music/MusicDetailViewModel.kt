@@ -7,8 +7,6 @@ import com.ccc.ncs.data.repository.LyricsRepository
 import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Music
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +30,6 @@ class MusicDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val musicRepository: MusicRepository,
     private val lyricsRepository: LyricsRepository,
-    private val analytics: FirebaseAnalytics,
     private val musicDownloader: MusicDownloader,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MusicDetailUiState>(MusicDetailUiState.Loading)
@@ -55,17 +52,9 @@ class MusicDetailViewModel @Inject constructor(
                         musicRepository.getMusic(musicId).map { music ->
                             when (music) {
                                 null -> {
-                                    analytics.logEvent("music_detail_init") {
-                                        param("id", "$musicId")
-                                        param("success", "false")
-                                    }
                                     MusicDetailUiState.Fail
                                 }
                                 else -> {
-                                    analytics.logEvent("music_detail_init") {
-                                        param("id", "$musicId")
-                                        param("success", "true")
-                                    }
                                     MusicDetailUiState.Success(music, null)
                                 }
                             }
@@ -103,10 +92,6 @@ class MusicDetailViewModel @Inject constructor(
     }
 
     fun downloadMusic(musicId: UUID) {
-        analytics.logEvent("home_download_music") {
-            param("music_id", "$musicId")
-        }
-
         viewModelScope.launch {
             musicRepository.getMusic(musicId).first()?.let { music ->
                 musicDownloader.download(music)

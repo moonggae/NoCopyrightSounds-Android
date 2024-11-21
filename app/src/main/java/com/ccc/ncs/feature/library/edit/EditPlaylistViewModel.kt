@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.PlayListRepository
 import com.ccc.ncs.model.PlayList
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditPlaylistViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val playlistRepository: PlayListRepository,
-    private val analytics: FirebaseAnalytics
+    private val playlistRepository: PlayListRepository
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<EditPlayListUiState> = savedStateHandle
@@ -47,21 +44,12 @@ class EditPlaylistViewModel @Inject constructor(
 
 
     fun addPlaylist(name: String) {
-        analytics.logEvent("pl_edit_add") {
-            param("name", name)
-        }
-
         viewModelScope.launch {
             playlistRepository.insertPlayList(name, true)
         }
     }
 
     fun updatePlaylistName(id: UUID, name: String) {
-        analytics.logEvent("pl_edit_update") {
-            param("id", "$id")
-            param("name", name)
-        }
-
         viewModelScope.launch {
             playlistRepository.updatePlayListName(id, name)
         }
