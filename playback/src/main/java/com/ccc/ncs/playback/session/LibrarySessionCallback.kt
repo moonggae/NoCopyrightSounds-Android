@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
@@ -17,41 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.guava.future
 import javax.inject.Inject
 
-
-// 커스텀 커맨드 정의
-val customCommandRepeat = SessionCommand("ACTION_REPEAT", Bundle())
-val customCommandShuffle = SessionCommand("ACTION_SHUFFLE", Bundle())
-
-// 현재 상태에 따라 Repeat 버튼 생성
-fun createRepeatButton(session: MediaSession): CommandButton {
-    val repeatIconResId = when (session.player.repeatMode) {
-        Player.REPEAT_MODE_OFF -> androidx.media3.session.R.drawable.media3_icon_repeat_off
-        Player.REPEAT_MODE_ONE -> androidx.media3.session.R.drawable.media3_icon_repeat_one
-        Player.REPEAT_MODE_ALL -> androidx.media3.session.R.drawable.media3_icon_repeat_all
-        else -> androidx.media3.session.R.drawable.media3_icon_repeat_off
-    }
-
-    return CommandButton.Builder()
-        .setSessionCommand(customCommandRepeat)
-        .setIconResId(repeatIconResId) // 현재 repeat 모드에 맞는 아이콘 설정
-        .setDisplayName("Repeat")
-        .build()
-}
-
-// 현재 상태에 따라 Shuffle 버튼 생성
-fun createShuffleButton(session: MediaSession): CommandButton {
-    val shuffleIconResId = if (session.player.shuffleModeEnabled) {
-        androidx.media3.session.R.drawable.media3_icon_shuffle_on
-    } else {
-        androidx.media3.session.R.drawable.media3_icon_shuffle_off
-    }
-
-    return CommandButton.Builder()
-        .setSessionCommand(customCommandShuffle)
-        .setIconResId(shuffleIconResId) // 현재 shuffle 상태에 맞는 아이콘 설정
-        .setDisplayName("Shuffle")
-        .build()
-}
 
 @UnstableApi
 internal class LibrarySessionCallback @Inject constructor(
@@ -100,7 +64,7 @@ internal class LibrarySessionCallback @Inject constructor(
         args: Bundle
     ): ListenableFuture<SessionResult> {
         when (customCommand.customAction) {
-            "ACTION_REPEAT" -> {
+            ACTION_REPEAT -> {
                 session.player.repeatMode = when (session.player.repeatMode) {
                     Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ONE
                     Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_ALL
@@ -108,7 +72,7 @@ internal class LibrarySessionCallback @Inject constructor(
                     else -> Player.REPEAT_MODE_OFF
                 }
             }
-            "ACTION_SHUFFLE" -> {
+            ACTION_SHUFFLE -> {
                 session.player.shuffleModeEnabled = !session.player.shuffleModeEnabled
             }
         }
@@ -119,7 +83,6 @@ internal class LibrarySessionCallback @Inject constructor(
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
     }
 
-    // 상태 변경 후 MediaSession의 Custom Layout을 갱신하는 메서드
     private fun updateCustomLayout(session: MediaSession) {
         session.setCustomLayout(
             ImmutableList.of(
