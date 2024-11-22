@@ -9,11 +9,13 @@ import com.ccc.ncs.data.repository.DefaultPlayListRepository
 import com.ccc.ncs.data.repository.DefaultPlayerRepository
 import com.ccc.ncs.data.repository.DefaultRecentSearchRepository
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.data.repository.PlaybackStateRepositoryImpl
 import com.ccc.ncs.data.util.ConnectivityManagerNetworkMonitor
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.domain.repository.LyricsRepository
 import com.ccc.ncs.domain.repository.MusicCacheRepository
 import com.ccc.ncs.domain.repository.PlayListRepository
+import com.ccc.ncs.domain.repository.PlaybackStateRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.domain.repository.RecentSearchRepository
 import dagger.Binds
@@ -63,4 +65,9 @@ abstract class DataModule {
     internal abstract fun bindMusicCacheRepository(
         musicCacheRepository: DefaultMusicCacheRepository
     ): MusicCacheRepository
+
+    @Binds
+    internal abstract fun bindPlaybackStateRepository(
+        playbackStateRepository: PlaybackStateRepositoryImpl
+    ): PlaybackStateRepository
 }

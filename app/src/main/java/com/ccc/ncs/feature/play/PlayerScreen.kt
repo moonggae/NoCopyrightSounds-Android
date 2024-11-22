@@ -78,20 +78,19 @@ import com.ccc.ncs.designsystem.component.ListItemCardDefaults
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
+import com.ccc.ncs.domain.model.PlaybackState
+import com.ccc.ncs.domain.model.PlayingStatus
+import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.feature.music.ArtistList
 import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Music
-import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.artistText
 import com.ccc.ncs.model.util.toTimestampMMSS
-import com.ccc.ncs.playback.playstate.PlayingStatus
-import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.ui.model.getContentDescription
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -161,7 +160,7 @@ fun PlayerScreen(
                     PlayerScreenBigContent(
                         music = music,
                         draggableStatePercentage = draggableState.percentage,
-                        uiState = playerUiState,
+                        playbackState = playerUiState.playbackState,
                         onSeekTo = onSeekTo,
                         onPlay = onPlay,
                         onSkipPrevious = onSkipPrevious,
@@ -185,8 +184,8 @@ fun PlayerScreen(
                         )
 
                         PlayerScreenSmallController(
-                            isPlaying = playerUiState.playingStatus == PlayingStatus.PLAYING,
-                            hasNext = playerUiState.hasNext,
+                            isPlaying = playerUiState.playbackState.playingStatus == PlayingStatus.PLAYING,
+                            hasNext = playerUiState.playbackState.hasNext,
                             onPlay = onPlay,
                             onSkipPrevious = onSkipPrevious,
                             onSkipNext = onSkipNext,
@@ -199,8 +198,8 @@ fun PlayerScreen(
 
                 LinearProgressIndicator(
                     progress = {
-                        if (playerUiState.duration == 0L) 0f
-                        else (playerUiState.position / playerUiState.duration.toFloat())
+                        if (playerUiState.playbackState.duration == 0L) 0f
+                        else (playerUiState.playbackState.position / playerUiState.playbackState.duration.toFloat())
                     },
                     color = MaterialTheme.colorScheme.onSurface,
                     trackColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -233,7 +232,7 @@ private fun PlayerScreenBigContent(
     modifier: Modifier = Modifier,
     draggableStatePercentage: Float,
     music: Music,
-    uiState: PlayerUiState.Success,
+    playbackState: PlaybackState,
     onSeekTo: (position: Long) -> Unit,
     onPlay: () -> Unit,
     onSkipPrevious: () -> Unit,
@@ -289,8 +288,8 @@ private fun PlayerScreenBigContent(
             )
 
             PlayerPositionProgressBar(
-                duration = uiState.duration,
-                position = uiState.position,
+                duration = playbackState.duration,
+                position = playbackState.position,
                 onSeekTo = onSeekTo,
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -300,10 +299,10 @@ private fun PlayerScreenBigContent(
             )
 
             PlayerScreenBigController(
-                isPlaying = uiState.playingStatus == PlayingStatus.PLAYING,
-                hasNext = uiState.hasNext,
-                repeatMode = uiState.repeatMode,
-                isOnShuffle = uiState.isShuffleOn,
+                isPlaying = playbackState.playingStatus == PlayingStatus.PLAYING,
+                hasNext = playbackState.hasNext,
+                repeatMode = playbackState.repeatMode,
+                isOnShuffle = playbackState.isShuffleOn,
                 onPlay = onPlay,
                 onSkipPrevious = onSkipPrevious,
                 onSkipNext = onSkipNext,
@@ -709,18 +708,7 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 modifier = modifier,
                 draggableStatePercentage = 1f,
                 music = mockMusics.first(),
-                uiState = PlayerUiState.Success(
-                    playingStatus = PlayingStatus.PLAYING,
-                    currentIndex = 0,
-                    duration = 10,
-                    position = 3,
-                    playlist = PlayList(
-                        id = UUID.randomUUID(),
-                        name = "My Playlist",
-                        musics = mockMusics,
-                        isUserCreated = true
-                    )
-                ),
+                playbackState = PlaybackState(),
                 onSeekTo = {},
                 onPlay = {},
                 onSkipPrevious = {},

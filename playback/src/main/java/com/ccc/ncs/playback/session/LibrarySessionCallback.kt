@@ -9,12 +9,11 @@ import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
-import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.playback.data.PlaybackSessionDataSource
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.future
 import javax.inject.Inject
 
@@ -57,16 +56,16 @@ fun createShuffleButton(session: MediaSession): CommandButton {
 @UnstableApi
 internal class LibrarySessionCallback @Inject constructor(
     private val scope: CoroutineScope,
-    private val playerRepository: PlayerRepository
+    private val playbackSessionDataSource: PlaybackSessionDataSource
 ) : MediaLibrarySession.Callback {
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
         return scope.future {
-            val mediaItems = playerRepository.playlist.first()?.musics?.map { it.asMediaItem() } ?: emptyList()
-            val startIndex = playerRepository.musicIndex.first() ?: C.INDEX_UNSET
-            val startPosition = playerRepository.position.first() ?: C.TIME_UNSET
+            val mediaItems = playbackSessionDataSource.getCurrentPlaylist()?.musics?.map { it.asMediaItem() } ?: emptyList()
+            val startIndex = playbackSessionDataSource.getCurrentMusicIndex() ?: C.INDEX_UNSET
+            val startPosition = playbackSessionDataSource.getCurrentPosition() ?: C.TIME_UNSET
             MediaSession.MediaItemsWithStartPosition(mediaItems, startIndex, startPosition)
         }
     }

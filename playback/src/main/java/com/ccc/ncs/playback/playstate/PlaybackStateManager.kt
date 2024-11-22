@@ -1,5 +1,6 @@
 package com.ccc.ncs.playback.playstate
 
+import com.ccc.ncs.domain.model.PlaybackState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

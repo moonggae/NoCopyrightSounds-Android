@@ -31,12 +31,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":model"))
     implementation(project(":network"))
     implementation(project(":database"))
     implementation(project(":datastore"))
     implementation(project(":cache"))
     implementation(project(":domain"))
+    implementation(project(":playback"))
     testImplementation(project(":database-test"))
     androidTestImplementation(project(":network"))
 

@@ -11,13 +11,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.ccc.ncs.cache.di.CacheManager
-import com.ccc.ncs.data.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
+import com.ccc.ncs.playback.data.PlaybackServiceDataSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -33,7 +32,7 @@ class PlaybackService : MediaLibraryService() {
     lateinit var player: ExoPlayer
 
     @Inject
-    lateinit var musicRepository: MusicRepository
+    lateinit var dataSource: PlaybackServiceDataSource
 
 
     private val serviceJob = SupervisorJob()
@@ -108,7 +107,7 @@ class PlaybackService : MediaLibraryService() {
             key = mediaItem.mediaId,
             scope = serviceScope
         ) { isFullyCached ->
-            musicRepository.updateMusicStatus(
+            dataSource.updateMusicStatus(
                 musicId = UUID.fromString(mediaItem.mediaId),
                 status = if (isFullyCached) MusicStatus.FullyCached else MusicStatus.PartiallyCached
             )
@@ -117,8 +116,8 @@ class PlaybackService : MediaLibraryService() {
 
     private suspend fun handleMissingLocalFile(mediaItem: MediaItem) {
         val currentMusicId = UUID.fromString(mediaItem.mediaId)
-        musicRepository.updateMusicStatus(currentMusicId, MusicStatus.None)
-        musicRepository.getMusic(currentMusicId).firstOrNull()?.let { musicItem ->
+        dataSource.updateMusicStatus(currentMusicId, MusicStatus.None)
+        dataSource.getMusic(currentMusicId)?.let { musicItem ->
             withContext(Dispatchers.Main) {
                 player.replaceMediaItem(player.currentMediaItemIndex, musicItem.asMediaItem())
             }
@@ -134,7 +133,7 @@ class PlaybackService : MediaLibraryService() {
             // 재생중:     true  STATE_IDLE
             // not 재생중: false STATE_IDLE
 
-            musicRepository.deleteMusic(UUID.fromString(mediaItem.mediaId))
+            dataSource.deleteMusic(UUID.fromString(mediaItem.mediaId))
             withContext(Dispatchers.Main) {
                 player.removeMediaItem(player.currentMediaItemIndex)
                 if (wasPlaying) {

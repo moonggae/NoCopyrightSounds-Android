@@ -3,6 +3,9 @@ package com.ccc.ncs.playback.playstate
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
+import com.ccc.ncs.domain.model.PlaybackState
+import com.ccc.ncs.domain.model.PlayingStatus
+import com.ccc.ncs.domain.model.RepeatMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -94,12 +97,10 @@ internal class PlaybackStateListener @Inject constructor(
             hasNext = player.hasNextMediaItem(),
             position = player.contentPosition,
             duration = player.duration,
-            speed = player.playbackParameters.speed,
-            title = player.currentMediaItem?.mediaMetadata?.title?.toString(),
-            artist = player.currentMediaItem?.mediaMetadata?.artist?.toString(),
-            artworkUri = player.currentMediaItem?.mediaMetadata?.artworkUri,
-            isShuffleEnabled = player.shuffleModeEnabled,
+            isShuffleOn = player.shuffleModeEnabled,
             repeatMode = RepeatMode.valueOf(player.repeatMode)
         )
+
+        Player.REPEAT_MODE_ALL
     }
 }

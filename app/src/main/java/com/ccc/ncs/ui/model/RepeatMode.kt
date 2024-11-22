@@ -3,7 +3,7 @@ package com.ccc.ncs.ui.model
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.ccc.ncs.R
-import com.ccc.ncs.playback.playstate.RepeatMode
+import com.ccc.ncs.domain.model.RepeatMode
 
 @Composable
 fun RepeatMode.getContentDescription(): String = when (this) {

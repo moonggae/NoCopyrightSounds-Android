@@ -6,8 +6,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.model.Music
-import com.ccc.ncs.playback.playstate.RepeatMode
 import com.ccc.ncs.playback.session.PlaybackService
 import com.ccc.ncs.playback.session.asMediaItem
 import kotlinx.coroutines.CoroutineScope
@@ -104,8 +104,7 @@ class PlayerController @Inject constructor(
         musics: List<Music>,
         startIndex: Int = 0
     ) = executeAfterPrepare { controller ->
-        controller.setMediaItems(musics.map { it.asMediaItem() }, startIndex, 0)
-        controller.prepare()
+        prepare(musics, startIndex, 0)
         controller.play()
     }
 

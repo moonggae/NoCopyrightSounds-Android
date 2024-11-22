@@ -3,28 +3,24 @@ package com.ccc.ncs.feature.play
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.MusicRepository
-import com.ccc.ncs.domain.repository.LyricsRepository
+import com.ccc.ncs.domain.model.PlayerState
+import com.ccc.ncs.domain.model.RepeatMode
+import com.ccc.ncs.domain.model.TIME_UNSET
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.util.reorder
 import com.ccc.ncs.playback.PlayerController
-import com.ccc.ncs.playback.playstate.PlaybackStateManager
-import com.ccc.ncs.playback.playstate.PlayingStatus
-import com.ccc.ncs.playback.playstate.RepeatMode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -32,79 +28,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val playbackStateManager: PlaybackStateManager,
     private val playerController: PlayerController,
     private val playerRepository: PlayerRepository,
     private val playlistRepository: PlayListRepository,
-    private val lyricsRepository: LyricsRepository,
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
+    getPlayerStateUseCase: GetPlayerStateUseCase
 ) : ViewModel() {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val lyricsFlow: StateFlow<String?> = combine(
-        playerRepository.playlist.filterNotNull(),
-        playbackStateManager.flow
-    ) { playlist, playbackState ->
-        val currentMusic = playlist.musics.getOrNull(playbackState.currentIndex)
-        currentMusic
-    }.filterNotNull()
-        .distinctUntilChangedBy { music -> music.id }
-        .flatMapLatest { music ->
-            lyricsRepository.getLyrics(music.title)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
-
-
-    val playerUiState: StateFlow<PlayerUiState> = combine(
-        playerRepository.playlist,
-        playerRepository.musicIndex,
-        playbackStateManager.flow,
-        lyricsFlow
-    ) { playlist, musicIndex, playbackState, lyrics ->
-        when {
-            playlist == null || playlist.musics.isEmpty() -> PlayerUiState.Loading
-            else -> PlayerUiState.Success(
-                playlist = playlist,
-                currentIndex = playbackState.currentIndex.takeIf { it >= 0 } ?: musicIndex ?: 0,
-                position = playbackState.position,
-                playingStatus = playbackState.playingStatus,
-                hasPrevious = playbackState.hasPrevious,
-                hasNext = playbackState.hasNext,
-                duration = playbackState.duration,
-                speed = playbackState.speed,
-                isShuffleOn = playbackState.isShuffleEnabled,
-                repeatMode = playbackState.repeatMode,
-                lyrics = lyrics
-            )
+    val playerUiState: StateFlow<PlayerUiState> = getPlayerStateUseCase().map { playerState ->
+        if (playerState == null) PlayerUiState.Idle
+        else PlayerUiState.Success(playerState)
+    }.onStart {
+        val musics = playerRepository.playlist.first()?.musics
+        val index = playerRepository.musicIndex.first()
+        val position = playerRepository.position.first() ?: TIME_UNSET
+        if (musics != null && index != null) {
+            playerController.prepare(musics, index, position)
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
-        initialValue = PlayerUiState.Loading
+        initialValue = PlayerUiState.Idle
     )
-
-    private fun observerCurrentPlayingMusicIndex() {
-        viewModelScope.launch {
-            playerUiState
-                .filterNotNull()
-                .filterIsInstance(PlayerUiState.Success::class)
-                .distinctUntilChangedBy { it.currentIndex }
-                .map { it.currentIndex }
-                .collect { currentIndex ->
-                    if (playerRepository.musicIndex.first() != currentIndex && currentIndex != -1) {
-                        playerRepository.updateMusicIndex(currentIndex)
-                    }
-                }
-        }
-    }
-
-    init {
-        observerCurrentPlayingMusicIndex()
-    }
 
     // Player control functions
     fun playPause() {
@@ -164,15 +109,6 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun addNewMusicsToPlaylist(playlist: PlayList, newMusicIds: List<UUID>): Pair<PlayList, List<Music>> {
-        val newMusics = musicRepository.getMusics(newMusicIds).first()
-        val distinctNewMusics = newMusics.filterNot { playlist.musics.contains(it) }
-        val updatedMusics = playlist.musics + distinctNewMusics
-        val updatedPlaylist = playlist.copy(musics = updatedMusics)
-        playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
-        return updatedPlaylist to distinctNewMusics
-    }
-
     fun addQueueToCurrentPlaylist(newMusicIds: List<UUID>): Job = viewModelScope.launch {
         val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
         val newMusics = musicRepository.getMusics(newMusicIds).first()
@@ -213,7 +149,7 @@ class PlayerViewModel @Inject constructor(
     fun addToQueueAndPlay(musicId: UUID) {
         viewModelScope.launch {
             when (playerUiState.value) {
-                is PlayerUiState.Loading -> playMusicWithRecentPlaylist(listOf(musicId))
+                is PlayerUiState.Idle -> playMusicWithRecentPlaylist(listOf(musicId))
                 is PlayerUiState.Success -> playMusicWithCurrentPlaylist(musicId)
             }
         }
@@ -234,22 +170,13 @@ class PlayerViewModel @Inject constructor(
 
 
 sealed interface PlayerUiState {
-    object Loading : PlayerUiState
+    object Idle : PlayerUiState
     data class Success(
-        val playlist: PlayList,
-        val playingStatus: PlayingStatus = PlayingStatus.IDLE,
-        val currentIndex: Int = -1,
-        val hasPrevious: Boolean = false,
-        val hasNext: Boolean = false,
-        val position: Long = 0,
-        val duration: Long = 0,
-        val speed: Float = 1f,
-        val isShuffleOn: Boolean = false,
-        val repeatMode: RepeatMode = RepeatMode.REPEAT_MODE_OFF,
-        val lyrics: String? = null
+        val playerState: PlayerState
     ) : PlayerUiState {
-        val currentMusic: Music?
-            get() = playlist.musics.getOrNull(currentIndex)
+        val playlist by playerState::playlist
+        val playbackState by playerState::playbackState
+        val lyrics by playerState::lyrics
+        val currentMusic by playerState::currentMusic
     }
 }
-

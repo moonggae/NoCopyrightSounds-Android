@@ -56,7 +56,7 @@ fun NcsApp(
     HandleOfflineStatus(isOffline, snackbarHostState)
 
     LaunchedEffect(playerUiState) {
-        if (playerUiState is PlayerUiState.Loading) {
+        if (playerUiState is PlayerUiState.Idle) {
             playingScreenHeightWeight = 0f
         }
     }

@@ -33,7 +33,6 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":data"))
     implementation(project(":cache"))
 
     implementation(libs.androidx.core.ktx)
