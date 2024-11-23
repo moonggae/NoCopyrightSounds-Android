@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -32,7 +32,8 @@ class PlaylistDetailViewModel @Inject constructor(
     private val playlistRepository: PlayListRepository,
     private val playbackController: MediaPlaybackController,
     private val playerRepository: PlayerRepository,
-    private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase
+    private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
+    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<PlaylistDetailUiState> = MutableStateFlow(PlaylistDetailUiState.Loading)
     val uiState = _uiState as StateFlow<PlaylistDetailUiState>
@@ -100,11 +101,8 @@ class PlaylistDetailViewModel @Inject constructor(
     fun deleteMusic(music: Music) {
         viewModelScope.launch {
             (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
-                val playlist = state.playlist
-                val updatedMusics = playlist.musics - music
-                playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
-                if (playlist.id == playerRepository.playlist.first()?.id) {
-                    playbackController.removeMusic(music)
+                deletePlaylistMusicUseCase(state.playlist.id, music).onFailure {
+                    Log.e(TAG, "deleteMusic", it)
                 }
             }
         }

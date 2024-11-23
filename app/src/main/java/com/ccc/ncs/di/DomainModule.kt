@@ -5,6 +5,7 @@ import com.ccc.ncs.domain.repository.LyricsRepository
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlaybackStateRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import dagger.Module
@@ -32,6 +33,17 @@ object DomainModule {
         playerRepository: PlayerRepository,
         playbackController: MediaPlaybackController,
     ) = UpdatePlaylistMusicOrderUseCase(
+        playlistRepository = playlistRepository,
+        playerRepository = playerRepository,
+        playbackController = playbackController
+    )
+
+    @Provides
+    fun providesDeletePlaylistMusicUseCase(
+        playlistRepository: PlayListRepository,
+        playerRepository: PlayerRepository,
+        playbackController: MediaPlaybackController,
+    ) = DeletePlaylistMusicUseCase(
         playlistRepository = playlistRepository,
         playerRepository = playerRepository,
         playbackController = playbackController

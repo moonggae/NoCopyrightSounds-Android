@@ -10,6 +10,7 @@ import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.domain.model.TIME_UNSET
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
@@ -32,7 +33,8 @@ class PlayerViewModel @Inject constructor(
     private val playlistRepository: PlayListRepository,
     private val musicRepository: MusicRepository,
     getPlayerStateUseCase: GetPlayerStateUseCase,
-    private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase
+    private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
+    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase
 ) : ViewModel() {
 
     val playerUiState: StateFlow<PlayerUiState> = getPlayerStateUseCase().map { playerState ->
@@ -141,9 +143,9 @@ class PlayerViewModel @Inject constructor(
     fun removeFromQueue(music: Music) {
         viewModelScope.launch {
             val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
-            val updatedMusics = currentPlaylist.musics - music
-            playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
-            playbackController.removeMusic(music)
+            deletePlaylistMusicUseCase(currentPlaylist.id, music).onFailure {
+                Log.e(TAG, "removeFromQueue", it)
+            }
         }
     }
 
