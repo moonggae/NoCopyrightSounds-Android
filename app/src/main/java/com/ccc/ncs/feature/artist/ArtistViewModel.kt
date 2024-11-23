@@ -10,13 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
     private val artistRepository: ArtistRepository
-): ViewModel() {
+) : ViewModel() {
     private val _searchUiState: MutableStateFlow<ArtistSearchUiState> = MutableStateFlow(ArtistSearchUiState())
     val searchUiState: StateFlow<ArtistSearchUiState> get() = _searchUiState
 
@@ -24,33 +23,27 @@ class ArtistViewModel @Inject constructor(
     val artists = _searchUiState
         .flatMapLatest { uiState ->
             artistRepository.getSearchResultStream(
-                    query = uiState.query,
-                    sort = uiState.sort.query,
-                    year = uiState.year
-                )
+                query = uiState.query,
+                sort = uiState.sort.query,
+                year = uiState.year
+            )
         }.cachedIn(viewModelScope)
 
     fun updateSearchQuery(query: String?) {
-        viewModelScope.launch {
-            _searchUiState.update {
-                it.copy(query = query)
-            }
+        _searchUiState.update {
+            it.copy(query = query)
         }
     }
 
     fun updateSort(sort: ArtistSort) {
-        viewModelScope.launch {
-            _searchUiState.update {
-                it.copy(sort = sort)
-            }
+        _searchUiState.update {
+            it.copy(sort = sort)
         }
     }
 
     fun updateYear(year: Int?) {
-        viewModelScope.launch {
-            _searchUiState.update {
-                it.copy(year = year)
-            }
+        _searchUiState.update {
+            it.copy(year = year)
         }
     }
 

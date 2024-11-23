@@ -88,86 +88,74 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
 
 
     fun onSearchQueryChanged(query: String?) {
-        viewModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    searchUiState = state.searchUiState.copy(query = query)
-                )
-            }
+        _uiState.update { state ->
+            state.copy(
+                searchUiState = state.searchUiState.copy(query = query)
+            )
         }
     }
 
     fun onSearchGenreChanged(genre: Genre?) {
-        viewModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    searchUiState = state.searchUiState.copy(genre = genre)
-                )
-            }
+        _uiState.update { state ->
+            state.copy(
+                searchUiState = state.searchUiState.copy(genre = genre)
+            )
         }
     }
 
     fun onSearchMoodChanged(mood: Mood?) {
-        viewModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    searchUiState = state.searchUiState.copy(mood = mood)
-                )
-            }
+        _uiState.update { state ->
+            state.copy(
+                searchUiState = state.searchUiState.copy(mood = mood)
+            )
         }
     }
 
     fun <T : MusicTag> onUpdateTagFromDetail(tag: T) {
-        viewModelScope.launch {
-            _uiState.update { state ->
-                val updateState = when (tag) {
-                    is Genre -> state.copy(
-                        searchUiState = state.searchUiState.copy(
-                            genre = tag,
-                            mood = null,
-                            query = null
-                        )
+        _uiState.update { state ->
+            val updateState = when (tag) {
+                is Genre -> state.copy(
+                    searchUiState = state.searchUiState.copy(
+                        genre = tag,
+                        mood = null,
+                        query = null
                     )
+                )
 
-                    is Mood -> state.copy(
-                        searchUiState = state.searchUiState.copy(
-                            mood = tag,
-                            genre = null,
-                            query = null
-                        )
+                is Mood -> state.copy(
+                    searchUiState = state.searchUiState.copy(
+                        mood = tag,
+                        genre = null,
+                        query = null
                     )
+                )
 
-                    else -> state
-                }
-                updateState
+                else -> state
             }
-
-            updateSelectMode(false)
+            updateState
         }
+
+        updateSelectMode(false)
     }
 
     fun updateSelectMode(on: Boolean) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    selectedMusicIds = if (on) it.selectedMusicIds else mutableListOf(),
-                    isSelectMode = on
-                )
-            }
+        _uiState.update {
+            it.copy(
+                selectedMusicIds = if (on) it.selectedMusicIds else mutableListOf(),
+                isSelectMode = on
+            )
         }
     }
 
     fun updateSelectMusic(musicId: UUID) {
         if (!_uiState.value.isSelectMode) return
 
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    selectedMusicIds = currentState.selectedMusicIds.toMutableList().apply {
-                        if (contains(musicId)) remove(musicId) else add(musicId)
-                    }
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedMusicIds = currentState.selectedMusicIds.toMutableList().apply {
+                    if (contains(musicId)) remove(musicId) else add(musicId)
+                }
+            )
         }
     }
 
@@ -183,7 +171,7 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
 data class HomeUiState(
     val searchUiState: SearchUiState = SearchUiState(),
     val isSelectMode: Boolean = false,
-    val selectedMusicIds: MutableList<UUID> = mutableListOf(),
+    val selectedMusicIds: List<UUID> = listOf(),
     val genres: List<Genre> = emptyList(),
     val moods: List<Mood> = emptyList()
 )
