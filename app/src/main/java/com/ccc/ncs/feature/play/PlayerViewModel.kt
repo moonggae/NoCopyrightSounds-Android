@@ -1,5 +1,6 @@
 package com.ccc.ncs.feature.play
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.MusicRepository
@@ -10,9 +11,9 @@ import com.ccc.ncs.domain.model.TIME_UNSET
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
+import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
-import com.ccc.ncs.model.util.reorder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +31,8 @@ class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     private val playlistRepository: PlayListRepository,
     private val musicRepository: MusicRepository,
-    getPlayerStateUseCase: GetPlayerStateUseCase
+    getPlayerStateUseCase: GetPlayerStateUseCase,
+    private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase
 ) : ViewModel() {
 
     val playerUiState: StateFlow<PlayerUiState> = getPlayerStateUseCase().map { playerState ->
@@ -84,19 +86,9 @@ class PlayerViewModel @Inject constructor(
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
         viewModelScope.launch {
             val state = playerUiState.value as? PlayerUiState.Success ?: return@launch
-            val prevPlayingMusicId = state.currentMusic?.id
-
-            val prevMusicList = state.playlist.musics
-            val reorderedMusicList = prevMusicList.reorder(prevIndex, currentIndex)
-
-            playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
-            playbackController.moveMediaItem(prevIndex, currentIndex)
-
-            reorderedMusicList
-                .indexOfFirst { it.id == prevPlayingMusicId }
-                .takeIf { it > 0 }
-                ?.let {
-                    playerRepository.updateMusicIndex(it)
+            updatePlaylistMusicOrderUseCase(state.playlist.id, prevIndex, currentIndex)
+                .onFailure {
+                    Log.e(TAG, "updateMusicOrder", it)
                 }
         }
     }
@@ -153,6 +145,10 @@ class PlayerViewModel @Inject constructor(
             playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
             playbackController.removeMusic(music)
         }
+    }
+
+    companion object {
+        private const val TAG = "PlayerViewModel"
     }
 }
 
