@@ -90,10 +90,9 @@ fun NcsApp(
                             duration = Short,
                         ) == ActionPerformed
                     },
-                    onPlayMusics = playerViewModel::playMusicWithRecentPlaylist,
-                    onPlayPlaylist = playerViewModel::playPlayList,
-                    onAddToQueue = playerViewModel::addQueueToCurrentPlaylist,
-                    addToQueueAndPlayMusic = playerViewModel::addToQueueAndPlay
+                    onPlayMusics = playerViewModel::playMusics,
+                    onPlayPlaylist = playerViewModel::playPlaylist,
+                    onAddToQueue = playerViewModel::addQueueToCurrentPlaylist
                 )
             }
 

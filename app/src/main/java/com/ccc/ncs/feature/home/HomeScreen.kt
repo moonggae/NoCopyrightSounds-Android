@@ -76,7 +76,6 @@ fun HomeRoute(
     onPlayMusics: (List<UUID>) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit,
     navigateToMusicDetail: (UUID) -> Unit,
-    onClickMusic: (UUID) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -94,7 +93,7 @@ fun HomeRoute(
         onPlayMusics = onPlayMusics,
         onAddToQueue = onAddToQueue,
         onMoveToDetailPage = navigateToMusicDetail,
-        onClickMusic = onClickMusic,
+        onClickMusic = { onPlayMusics(listOf(it)) },
         downloadMusic = viewModel::downloadMusic
     )
 }

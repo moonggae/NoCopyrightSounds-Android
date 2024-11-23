@@ -39,8 +39,7 @@ fun NcsNavHost(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<UUID>) -> Unit,
     onPlayPlaylist: (PlayList, Int) -> Unit,
-    onAddToQueue: (List<UUID>) -> Unit,
-    addToQueueAndPlayMusic: (UUID) -> Unit
+    onAddToQueue: (List<UUID>) -> Unit
 ) {
     val navController = appState.navController
 
@@ -54,8 +53,7 @@ fun NcsNavHost(
             onShowSnackbar = onShowSnackbar,
             onPlayMusics = onPlayMusics,
             onAddToQueue = onAddToQueue,
-            navigateToMusicDetail = { navController.navigateToMusicDetail(it) },
-            addToQueueAndPlayMusic = addToQueueAndPlayMusic
+            navigateToMusicDetail = { navController.navigateToMusicDetail(it) }
         )
         artistScreen(
             onMoveToSearchScreen = { navController.navigateToSearch(it) },
