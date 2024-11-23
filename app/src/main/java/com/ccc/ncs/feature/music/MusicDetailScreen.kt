@@ -66,13 +66,15 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.MusicTag
 import com.ccc.ncs.model.util.toString
+import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.conditional
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
 
-
+// TODO: close 버튼으로 모든 ArtistDetail, MusicDetail pop하기
+// TODO: Genre, Mood 클릭했을 때 히스토리 확인하고 보내기
 @Composable
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
@@ -87,10 +89,10 @@ fun MusicDetailRoute(
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when (val uiState = musicDetailUiState) {
+    when (musicDetailUiState) {
         is MusicDetailUiState.Success -> MusicDetailScreen(
             modifier = modifier,
-            uiState = uiState,
+            uiState = musicDetailUiState as MusicDetailUiState.Success,
             onShowSnackbar = onShowSnackbar,
             onClickMood = onClickMood,
             onClickGenre = onClickGenre,
@@ -100,10 +102,8 @@ fun MusicDetailRoute(
             onClickArtist = onMoveToArtistDetail,
             onDownloadMusic = viewModel::downloadMusic
         )
-
-        else -> {
-
-        }
+        is MusicDetailUiState.Loading -> LoadingScreen()
+        is MusicDetailUiState.Fail -> onBack()
     }
 }
 
