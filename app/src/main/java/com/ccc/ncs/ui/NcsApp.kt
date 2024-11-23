@@ -103,7 +103,8 @@ fun NcsApp(
                         playingScreenHeightWeight = percentage
                     },
                     playerUiState = playerUiState as PlayerUiState.Success,
-                    onPlay = playerViewModel::playPause,
+                    onPlay = playerViewModel::play,
+                    onPause = playerViewModel::pause,
                     onSkipPrevious = playerViewModel::prev,
                     onSkipNext = playerViewModel::next,
                     onSeekTo = playerViewModel::setPosition,

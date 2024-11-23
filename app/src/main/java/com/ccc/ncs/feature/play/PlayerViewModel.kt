@@ -49,8 +49,12 @@ class PlayerViewModel @Inject constructor(
         initialValue = PlayerUiState.Idle
     )
 
-    fun playPause() {
-        playerController.playPause()
+    fun play() {
+        playerController.play()
+    }
+
+    fun pause() {
+        playerController.pause()
     }
 
     fun prev() {

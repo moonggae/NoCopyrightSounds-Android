@@ -101,6 +101,7 @@ fun PlayerScreen(
     onUpdateScreenSize: (percentage: Float) -> Unit,
     playerUiState: PlayerUiState.Success,
     onPlay: () -> Unit,
+    onPause: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
     onSeekTo: (position: Long) -> Unit,
@@ -163,6 +164,7 @@ fun PlayerScreen(
                         playbackState = playerUiState.playbackState,
                         onSeekTo = onSeekTo,
                         onPlay = onPlay,
+                        onPause = onPause,
                         onSkipPrevious = onSkipPrevious,
                         onSkipNext = onSkipNext,
                         onShuffle = onShuffle,
@@ -187,6 +189,7 @@ fun PlayerScreen(
                             isPlaying = playerUiState.playbackState.playingStatus == PlayingStatus.PLAYING,
                             hasNext = playerUiState.playbackState.hasNext,
                             onPlay = onPlay,
+                            onPause = onPause,
                             onSkipPrevious = onSkipPrevious,
                             onSkipNext = onSkipNext,
                             modifier = Modifier
@@ -235,6 +238,7 @@ private fun PlayerScreenBigContent(
     playbackState: PlaybackState,
     onSeekTo: (position: Long) -> Unit,
     onPlay: () -> Unit,
+    onPause: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
@@ -304,6 +308,7 @@ private fun PlayerScreenBigContent(
                 repeatMode = playbackState.repeatMode,
                 isOnShuffle = playbackState.isShuffleOn,
                 onPlay = onPlay,
+                onPause = onPause,
                 onSkipPrevious = onSkipPrevious,
                 onSkipNext = onSkipNext,
                 onShuffle = onShuffle,
@@ -372,6 +377,7 @@ fun PlayerScreenBigController(
     repeatMode: RepeatMode,
     hasNext: Boolean,
     onPlay: () -> Unit,
+    onPause: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
     onShuffle: (Boolean) -> Unit,
@@ -408,7 +414,12 @@ fun PlayerScreenBigController(
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(onClick = onPlay)
+                .clickable(onClick = {
+                    when (isPlaying) {
+                        true -> onPause()
+                        false -> onPlay()
+                    }
+                })
                 .size(40.dp)
         )
 
@@ -606,6 +617,7 @@ fun PlayerScreenSmallController(
     isPlaying: Boolean,
     hasNext: Boolean,
     onPlay: () -> Unit,
+    onPause: () -> Unit,
     onSkipPrevious: () -> Unit,
     onSkipNext: () -> Unit,
 ) {
@@ -632,7 +644,12 @@ fun PlayerScreenSmallController(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(48.dp)
-                .clickable(onClick = onPlay)
+                .clickable(onClick = {
+                    when (isPlaying) {
+                        true -> onPause()
+                        false -> onPlay()
+                    }
+                })
                 .padding(8.dp)
         )
 
@@ -711,6 +728,7 @@ fun PlayerScreenBigContentPreview(modifier: Modifier = Modifier) {
                 playbackState = PlaybackState(),
                 onSeekTo = {},
                 onPlay = {},
+                onPause = {},
                 onSkipPrevious = {},
                 onSkipNext = {},
                 onShuffle = {},
