@@ -1,6 +1,7 @@
 package com.ccc.ncs.di
 
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.download.DownloadCompletedWorker
 import dagger.Module
 import dagger.Provides
@@ -13,6 +14,10 @@ object WorkerModule {
 
     @Provides
     fun providesDownloadCompletedWorkerFactory(
-        musicRepository: MusicRepository
-    ): DownloadCompletedWorker.Factory = DownloadCompletedWorker.Factory(musicRepository)
+        musicRepository: MusicRepository,
+        mediaPlaybackController: MediaPlaybackController
+    ): DownloadCompletedWorker.Factory = DownloadCompletedWorker.Factory(
+        musicRepository = musicRepository,
+        mediaPlaybackController = mediaPlaybackController
+    )
 }

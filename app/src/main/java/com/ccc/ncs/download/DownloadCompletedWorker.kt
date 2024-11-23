@@ -9,8 +9,8 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.model.MusicStatus
-import com.ccc.ncs.playback.PlayerController
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -24,13 +24,12 @@ import javax.inject.Inject
 class DownloadCompletedWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
+    private val mediaPlaybackController: MediaPlaybackController
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            val playerController = PlayerController(applicationContext)
-
             val downloadStatus = inputData.getInt(DownloadManager.COLUMN_STATUS, -1)
             val downloadUri = inputData.getString(DownloadManager.COLUMN_LOCAL_URI)
 
@@ -44,7 +43,7 @@ class DownloadCompletedWorker @AssistedInject constructor(
 
                 if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
                     musicRepository.updateMusicStatus(music.id, music.status)
-                    playerController.updateCurrentPlaylistMusic(music)
+                    mediaPlaybackController.updateCurrentPlaylistMusic(music)
                 } else {
                     musicRepository.updateMusicStatus(music.id, MusicStatus.None)
                 }
@@ -57,14 +56,15 @@ class DownloadCompletedWorker @AssistedInject constructor(
     }
 
     class Factory @Inject constructor(
-        private val musicRepository: MusicRepository
+        private val musicRepository: MusicRepository,
+        private val mediaPlaybackController: MediaPlaybackController
     ) : WorkerFactory() {
         override fun createWorker(
             appContext: Context,
             workerClassName: String,
             workerParameters: WorkerParameters
         ): ListenableWorker {
-            return DownloadCompletedWorker(appContext, workerParameters, musicRepository)
+            return DownloadCompletedWorker(appContext, workerParameters, musicRepository, mediaPlaybackController)
         }
     }
 }

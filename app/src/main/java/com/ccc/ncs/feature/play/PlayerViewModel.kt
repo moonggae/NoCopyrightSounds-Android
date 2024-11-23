@@ -3,6 +3,7 @@ package com.ccc.ncs.feature.play
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.model.PlayerState
 import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.domain.model.TIME_UNSET
@@ -12,7 +13,6 @@ import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.util.reorder
-import com.ccc.ncs.playback.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val playerController: PlayerController,
+    private val playbackController: MediaPlaybackController,
     private val playerRepository: PlayerRepository,
     private val playlistRepository: PlayListRepository,
     private val musicRepository: MusicRepository,
@@ -41,7 +41,7 @@ class PlayerViewModel @Inject constructor(
         val index = playerRepository.musicIndex.first()
         val position = playerRepository.position.first() ?: TIME_UNSET
         if (musics != null && index != null) {
-            playerController.prepare(musics, index, position)
+            playbackController.prepare(musics, index, position)
         }
     }.stateIn(
         scope = viewModelScope,
@@ -50,35 +50,35 @@ class PlayerViewModel @Inject constructor(
     )
 
     fun play() {
-        playerController.play()
+        playbackController.play()
     }
 
     fun pause() {
-        playerController.pause()
+        playbackController.pause()
     }
 
     fun prev() {
-        playerController.previous()
+        playbackController.previous()
     }
 
     fun next() {
-        playerController.next()
+        playbackController.next()
     }
 
     fun setPosition(position: Long) {
-        playerController.setPosition(position)
+        playbackController.setPosition(position)
     }
 
     fun setShuffleMode(isOn: Boolean) {
-        playerController.setShuffleMode(isOn)
+        playbackController.setShuffleMode(isOn)
     }
 
     fun setRepeatMode(repeatMode: RepeatMode) {
-        playerController.setRepeatMode(repeatMode)
+        playbackController.setRepeatMode(repeatMode)
     }
 
     fun seekToMusic(musicIndex: Int) {
-        playerController.seekTo(musicIndex)
+        playbackController.seekTo(musicIndex)
     }
 
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
@@ -90,7 +90,7 @@ class PlayerViewModel @Inject constructor(
             val reorderedMusicList = prevMusicList.reorder(prevIndex, currentIndex)
 
             playlistRepository.setPlayListMusics(state.playlist.id, reorderedMusicList)
-            playerController.moveMediaItem(prevIndex, currentIndex)
+            playbackController.moveMediaItem(prevIndex, currentIndex)
 
             reorderedMusicList
                 .indexOfFirst { it.id == prevPlayingMusicId }
@@ -110,12 +110,12 @@ class PlayerViewModel @Inject constructor(
     private suspend fun setPlaylistAndPlay(playList: PlayList, startIndex: Int = 0) {
         playerRepository.setPlaylist(playList.id)
         playerRepository.updateMusicIndex(startIndex)
-        playerController.playMusics(playList.musics, startIndex)
+        playbackController.playMusics(playList.musics, startIndex)
     }
 
     fun closePlayer() {
         viewModelScope.launch {
-            playerController.stop()
+            playbackController.stop()
             playerRepository.clear()
         }
     }
@@ -127,7 +127,7 @@ class PlayerViewModel @Inject constructor(
             val distinctNewMusics = newMusics.filterNot { currentPlaylist.musics.contains(it) }
             val updatedMusics = currentPlaylist.musics + distinctNewMusics
             playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
-            playerController.appendMusics(distinctNewMusics)
+            playbackController.appendMusics(distinctNewMusics)
         }
     }
 
@@ -151,7 +151,7 @@ class PlayerViewModel @Inject constructor(
             val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
             val updatedMusics = currentPlaylist.musics - music
             playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
-            playerController.removeMusic(music)
+            playbackController.removeMusic(music)
         }
     }
 }

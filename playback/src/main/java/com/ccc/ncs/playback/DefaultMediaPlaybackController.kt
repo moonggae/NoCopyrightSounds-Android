@@ -6,6 +6,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.playback.session.PlaybackService
@@ -19,9 +20,9 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
-class PlayerController @Inject constructor(
+internal class DefaultMediaPlaybackController @Inject constructor(
     private val context: Context
-) {
+): MediaPlaybackController {
     private var controllerDeferred: Deferred<MediaController> = newControllerAsync()
 
     private fun newControllerAsync() = MediaController
@@ -43,87 +44,83 @@ class PlayerController @Inject constructor(
         }
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
-    fun setPosition(positionMs: Long) = executeAfterPrepare { controller ->
+    override fun setPosition(positionMs: Long) = executeAfterPrepare { controller ->
         controller.seekTo(positionMs)
     }
 
-    fun fastForward() = executeAfterPrepare { controller ->
+    override fun fastForward() = executeAfterPrepare { controller ->
         controller.seekForward()
     }
 
-    fun rewind() = executeAfterPrepare { controller ->
+    override fun rewind() = executeAfterPrepare { controller ->
         controller.seekBack()
     }
 
-    fun setRepeatMode(repeatMode: RepeatMode) = executeAfterPrepare { controller ->
+    override fun setRepeatMode(repeatMode: RepeatMode) = executeAfterPrepare { controller ->
         controller.setRepeatMode(repeatMode.value)
     }
 
-    fun setShuffleMode(isOn: Boolean) = executeAfterPrepare { controller ->
+    override fun setShuffleMode(isOn: Boolean) = executeAfterPrepare { controller ->
         controller.setShuffleModeEnabled(isOn)
     }
 
-    fun previous() = executeAfterPrepare { controller ->
+    override fun previous() = executeAfterPrepare { controller ->
         controller.seekToPrevious()
     }
 
-    fun next() = executeAfterPrepare { controller ->
+    override fun next() = executeAfterPrepare { controller ->
         controller.seekToNext()
     }
 
-    fun play() = executeAfterPrepare { controller ->
+    override fun play() = executeAfterPrepare { controller ->
         controller.play()
     }
 
-    fun moveMediaItem(currentIndex: Int, newIndex: Int) = executeAfterPrepare { controller ->
+    override fun pause() = executeAfterPrepare { controller ->
+        controller.pause()
+    }
+
+    override fun moveMediaItem(currentIndex: Int, newIndex: Int) = executeAfterPrepare { controller ->
         controller.moveMediaItem(currentIndex, newIndex)
     }
 
-    fun seekTo(musicIndex: Int) = executeAfterPrepare { controller ->
+    override fun seekTo(musicIndex: Int) = executeAfterPrepare { controller ->
         controller.seekToDefaultPosition(musicIndex)
     }
 
-    fun playPause() = executeAfterPrepare { controller ->
-        if (controller.isPlaying) {
-            controller.pause()
-        } else {
-            controller.play()
-        }
-    }
-
-    fun setSpeed(speed: Float) = executeAfterPrepare { controller ->
+    override fun setSpeed(speed: Float) = executeAfterPrepare { controller ->
         controller.setPlaybackSpeed(speed)
     }
 
-    fun prepare(musics: List<Music>, index: Int, positionMs: Long) = executeAfterPrepare { controller ->
+    override fun prepare(musics: List<Music>, index: Int, positionMs: Long) = executeAfterPrepare { controller ->
         controller.setMediaItems(musics.map { it.asMediaItem() }, index, positionMs)
         controller.prepare()
     }
 
-    fun playMusics(
+    override fun playMusics(
         musics: List<Music>,
-        startIndex: Int = 0
+        startIndex: Int
     ) = executeAfterPrepare { controller ->
         prepare(musics, startIndex, 0)
         controller.play()
     }
 
-    fun stop() = executeAfterPrepare { controller ->
+    override fun stop() = executeAfterPrepare { controller ->
         controller.stop()
         controller.release()
     }
 
-    fun appendMusics(musics: List<Music>) = executeAfterPrepare { controller ->
+    override fun appendMusics(musics: List<Music>) = executeAfterPrepare { controller ->
         controller.addMediaItems(musics.map { it.asMediaItem() })
     }
 
-    fun removeMusic(music: Music) = executeAfterPrepare { controller ->
+    override fun removeMusic(music: Music) = executeAfterPrepare { controller ->
         val index = controller.getMediaItemIndex(music.asMediaItem())
         if (index != null)
             controller.removeMediaItem(index)
     }
 
-    fun updateCurrentPlaylistMusic(music: Music) = executeAfterPrepare { controller ->
+    override fun updateCurrentPlaylistMusic(music: Music) = executeAfterPrepare { controller ->
         val mediaItem = music.asMediaItem()
         val index = controller.getMediaItemIndex(mediaItem) ?: return@executeAfterPrepare
 

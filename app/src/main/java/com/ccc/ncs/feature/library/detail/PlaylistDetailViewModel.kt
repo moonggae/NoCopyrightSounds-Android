@@ -3,12 +3,12 @@ package com.ccc.ncs.feature.library.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.model.util.reorder
-import com.ccc.ncs.playback.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class PlaylistDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
-    private val playerController: PlayerController,
+    private val playbackController: MediaPlaybackController,
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<PlaylistDetailUiState> = MutableStateFlow(PlaylistDetailUiState.Loading)
@@ -82,7 +82,7 @@ class PlaylistDetailViewModel @Inject constructor(
                 val reorderedMusicList = playlist.musics.reorder(prevIndex, currentIndex)
                 playlistRepository.setPlayListMusics(playlist.id, reorderedMusicList)
                 if (playlist.id == playerRepository.playlist.first()?.id) {
-                    playerController.moveMediaItem(prevIndex, currentIndex)
+                    playbackController.moveMediaItem(prevIndex, currentIndex)
                 }
             }
         }
@@ -92,7 +92,7 @@ class PlaylistDetailViewModel @Inject constructor(
         viewModelScope.launch {
             playlistRepository.deletePlayList(playlistId)
             playerRepository.clear()
-            playerController.stop()
+            playbackController.stop()
         }
     }
 
@@ -103,7 +103,7 @@ class PlaylistDetailViewModel @Inject constructor(
                 val updatedMusics = playlist.musics - music
                 playlistRepository.setPlayListMusics(playlist.id, updatedMusics)
                 if (playlist.id == playerRepository.playlist.first()?.id) {
-                    playerController.removeMusic(music)
+                    playbackController.removeMusic(music)
                 }
             }
         }
