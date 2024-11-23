@@ -10,6 +10,7 @@ import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.domain.model.TIME_UNSET
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.domain.usecase.AddPlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
@@ -34,7 +35,8 @@ class PlayerViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     getPlayerStateUseCase: GetPlayerStateUseCase,
     private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
-    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase
+    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase,
+    private val addPlaylistMusicUseCase: AddPlaylistMusicUseCase
 ) : ViewModel() {
 
     val playerUiState: StateFlow<PlayerUiState> = getPlayerStateUseCase().map { playerState ->
@@ -117,11 +119,9 @@ class PlayerViewModel @Inject constructor(
     fun addQueueToCurrentPlaylist(newMusicIds: List<UUID>) {
         viewModelScope.launch {
             val currentPlaylist = (playerUiState.value as? PlayerUiState.Success)?.playlist ?: return@launch
-            val newMusics = musicRepository.getMusics(newMusicIds).first()
-            val distinctNewMusics = newMusics.filterNot { currentPlaylist.musics.contains(it) }
-            val updatedMusics = currentPlaylist.musics + distinctNewMusics
-            playlistRepository.setPlayListMusics(currentPlaylist.id, updatedMusics)
-            playbackController.appendMusics(distinctNewMusics)
+            addPlaylistMusicUseCase(currentPlaylist.id, newMusicIds).onFailure {
+                Log.e(TAG, "addQueueToCurrentPlaylist", it)
+            }
         }
     }
 

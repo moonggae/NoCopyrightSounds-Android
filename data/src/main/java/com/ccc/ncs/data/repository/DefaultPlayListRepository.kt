@@ -56,14 +56,14 @@ class DefaultPlayListRepository @Inject constructor(
     override suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>) {
         setPlayListMusicsWithId(
             playListId = playListId,
-            musicIds = musics.map { it.id }
+            musicIds = musics.map { it.id }.distinct()
         )
     }
 
     override suspend fun setPlayListMusicsWithId(playListId: UUID, musicIds: List<UUID>) {
         database.withTransaction {
             playListDao.unLinkAllMusic(playListId)
-            playListDao.linkMusicToPlayList(musicIds.map {
+            playListDao.linkMusicToPlayList(musicIds.distinct().map {
                 PlayListMusicCrossRef(
                     playListId = playListId,
                     musicId = it
