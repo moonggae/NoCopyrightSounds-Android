@@ -321,8 +321,8 @@ private fun ArtistAppBar(
         padding = PaddingValues(
             top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 12.dp,
             bottom = 20.dp,
-            start = 12.dp,
-            end = 12.dp
+            start = 16.dp,
+            end = 16.dp
         ),
         onBack = onBack,
         modifier = Modifier.background(if (coverVisibility == 0f) MaterialTheme.colorScheme.surface else Color.Transparent)
