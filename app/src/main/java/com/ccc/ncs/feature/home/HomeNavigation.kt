@@ -7,8 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
+import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 const val HOME_ROUTE = "home"
@@ -25,7 +25,7 @@ fun NavGraphBuilder.homeScreen(
     onAddToQueue: (List<UUID>) -> Unit,
     navigateToMusicDetail: (UUID) -> Unit
 ) {
-    composable(route = HOME_ROUTE) { backStackEntry ->
+    noneTransitionComposable(route = HOME_ROUTE) { backStackEntry ->
         val viewModel: HomeViewModel = hiltViewModel()
         val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 

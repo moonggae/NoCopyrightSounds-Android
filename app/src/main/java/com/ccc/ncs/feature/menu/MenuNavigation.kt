@@ -3,7 +3,7 @@ package com.ccc.ncs.feature.menu
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
+import com.ccc.ncs.navigation.noneTransitionComposable
 
 const val MENU_ROUTE = "menu"
 
@@ -13,7 +13,7 @@ fun NavGraphBuilder.menuScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onMoveCacheScreen: () -> Unit
 ) {
-    composable(route = MENU_ROUTE) {
+    noneTransitionComposable(route = MENU_ROUTE) {
         MenuRoute(
             onShowSnackbar = onShowSnackbar,
             onMoveCacheScreen = onMoveCacheScreen

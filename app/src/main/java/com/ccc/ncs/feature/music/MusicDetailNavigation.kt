@@ -2,13 +2,12 @@ package com.ccc.ncs.feature.music
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.ccc.ncs.feature.home.SELECTED_GENRE_ID
 import com.ccc.ncs.feature.home.SELECTED_MOOD_ID
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
-import com.ccc.ncs.model.Music
+import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 
@@ -51,7 +50,7 @@ fun NavGraphBuilder.musicDetailScreen(
     onAddToQueue: (List<UUID>) -> Unit,
     navigateToArtistDetail: (artistDetailPath: String) -> Unit
 ) {
-    composable(route = MUSIC_DETAIL_ROUTE) {
+    noneTransitionComposable(route = MUSIC_DETAIL_ROUTE) {
         MusicDetailRoute(
             onBack = onBack,
             onShowSnackbar = onShowSnackbar,

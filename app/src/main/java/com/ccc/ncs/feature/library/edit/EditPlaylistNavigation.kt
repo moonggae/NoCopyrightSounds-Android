@@ -3,8 +3,8 @@ package com.ccc.ncs.feature.library.edit
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 private const val EDIT_PLAYLIST_BASE_ROUTE = "editplaylist"
@@ -28,7 +28,7 @@ fun NavController.navigateToEditPlaylist(
 fun NavGraphBuilder.editPlaylistScreen(
     onBack: () -> Unit
 ) {
-    composable(
+    noneTransitionComposable(
         route = EDIT_PLAYLIST_ROUTE,
         arguments = listOf(
             navArgument(EDIT_PLAYLIST_ID_ARG) {

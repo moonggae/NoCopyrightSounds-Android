@@ -3,10 +3,10 @@ package com.ccc.ncs.feature.artist.detail
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ccc.ncs.feature.artist.ARTIST_ROUTE
 import com.ccc.ncs.model.Artist
+import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 
@@ -34,7 +34,7 @@ fun NavGraphBuilder.artistDetailScreen(
     onNavigateToArtistDetail: (Artist) -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
-    composable(
+    noneTransitionComposable(
         route = ARTIST_DETAIL_ROUTE,
         arguments = listOf(
             navArgument(ARTIST_DETAIL_PATH_ARG) {

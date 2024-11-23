@@ -3,9 +3,9 @@ package com.ccc.ncs.feature.library.detail
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ccc.ncs.model.PlayList
+import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 
@@ -21,7 +21,7 @@ fun NavGraphBuilder.playlistDetailScreen(
     navigateToEditPlaylist: (UUID) -> Unit,
     onPlayPlaylist: (PlayList, Int) -> Unit
 ) {
-    composable(
+    noneTransitionComposable(
         route = PLAYLIST_DETAIL_ROUTE,
         arguments = listOf(
             navArgument(PLAYLIST_DETAIL_ID_ARG) {

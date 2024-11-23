@@ -3,8 +3,8 @@ package com.ccc.ncs.feature.search
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ccc.ncs.navigation.noneTransitionComposable
 
 
 private const val SEARCH_BASE_ROUTE = "search"
@@ -37,7 +37,7 @@ fun NavController.backFromSearch(
 fun NavGraphBuilder.searchScreen(
     onSearch: (String) -> Unit
 ) {
-    composable(
+    noneTransitionComposable(
         route = SEARCH_ROUTE,
         arguments = listOf(
             navArgument(SEARCH_QUERY_ARG) {

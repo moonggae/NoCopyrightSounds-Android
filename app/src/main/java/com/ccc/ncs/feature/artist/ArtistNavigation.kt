@@ -7,8 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
+import com.ccc.ncs.navigation.noneTransitionComposable
 
 const val ARTIST_ROUTE = "artist"
 
@@ -18,7 +18,7 @@ fun NavGraphBuilder.artistScreen(
     onMoveToSearchScreen: (String?) -> Unit,
     onMoveToDetail: (String) -> Unit
 ) {
-    composable(route = ARTIST_ROUTE) { backStackEntry ->
+    noneTransitionComposable(route = ARTIST_ROUTE) { backStackEntry ->
         val viewModel: ArtistViewModel = hiltViewModel()
         val searchedQuery: String? by backStackEntry.savedStateHandle.getStateFlow(SEARCHED_QUERY, null).collectAsStateWithLifecycle()
 
