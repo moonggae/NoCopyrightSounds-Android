@@ -11,13 +11,11 @@ const val LIBRARY_ROUTE = "library"
 fun NavController.navigateToLibrary(navOptions: NavOptions) = navigate(LIBRARY_ROUTE, navOptions)
 
 fun NavGraphBuilder.libraryScreen(
-    navigateToEdit: () -> Unit,
     navigateToDetail: (PlayList) -> Unit,
     navigateToDetailOfflineMusics: () -> Unit
 ) {
     noneTransitionComposable(route = LIBRARY_ROUTE) {
         LibraryRoute(
-            onClickAddPlaylist = navigateToEdit,
             onClickPlaylist = navigateToDetail,
             onClickOfflineMusics = navigateToDetailOfflineMusics
         )

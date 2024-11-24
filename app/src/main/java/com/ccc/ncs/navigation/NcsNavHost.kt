@@ -66,7 +66,6 @@ fun NcsNavHost(
             onShowSnackbar = onShowSnackbar
         )
         libraryScreen(
-            navigateToEdit = navController::navigateToEditPlaylist,
             navigateToDetail = { navController.navigateToPlaylistDetail(it.id) },
             navigateToDetailOfflineMusics = { navController.navigateToOfflineMusic() }
         )

@@ -97,7 +97,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlayerScreen(
     modifier: Modifier = Modifier,
-    minHeight: Dp = 60.dp,
+    minHeight: Dp,
     onUpdateScreenSize: (percentage: Float) -> Unit,
     playerUiState: PlayerUiState.Success,
     onPlay: () -> Unit,

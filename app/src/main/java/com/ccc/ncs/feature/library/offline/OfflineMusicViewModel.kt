@@ -28,7 +28,7 @@ class OfflineMusicViewModel @Inject constructor(
             OfflineMusicUiState.Success(musics)
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(1000),
             initialValue = OfflineMusicUiState.Loading
         )
 

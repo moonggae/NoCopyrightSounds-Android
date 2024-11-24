@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -60,6 +61,7 @@ object NcsIcons {
     val ArrowForwardNoTail = Icons.AutoMirrored.Outlined.ArrowForwardIos
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val MoreVertical = Icons.Rounded.MoreVert
+    val Add = Icons.Outlined.Add
     val AddCircle = Icons.Rounded.AddCircle
     val BookmarkAdd = Icons.Rounded.BookmarkAdd
     val PlaylistAdd = Icons.AutoMirrored.Rounded.PlaylistAdd

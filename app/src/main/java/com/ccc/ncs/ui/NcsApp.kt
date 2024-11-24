@@ -1,13 +1,18 @@
 package com.ccc.ncs.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarDuration.Short
@@ -34,14 +39,18 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
+import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.artist.detail.navigateToArtistDetail
+import com.ccc.ncs.feature.library.edit.navigateToEditPlaylist
 import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.play.PlayerScreen
 import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
+
+val PLAYER_SMALL_HEIGHT_DEFAULT = 60.dp
 
 @Composable
 fun NcsApp(
@@ -73,6 +82,28 @@ fun NcsApp(
                     visibility = 1 - playingScreenHeightWeight
                 )
             }
+        },
+        floatingActionButton = {
+            val showFloatingButton = appState.currentTopLevelDestination == TopLevelDestination.LIBRARY && playingScreenHeightWeight == 0f
+            if (showFloatingButton) {
+                Column {
+                    FloatingActionButton(
+                        onClick = { appState.navController.navigateToEditPlaylist() },
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
+                        Icon(
+                            imageVector = NcsIcons.Add,
+                            contentDescription = stringResource(R.string.cd_add_playlist),
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+
+                    if (playerUiState !is PlayerUiState.Idle) {
+                        Spacer(modifier = Modifier.height(PLAYER_SMALL_HEIGHT_DEFAULT))
+                    }
+                }
+            }
         }
     ) { padding ->
         Box(
@@ -99,6 +130,7 @@ fun NcsApp(
             if (appState.currentTopLevelDestination != null && playerUiState is PlayerUiState.Success) {
                 PlayerScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
+                    minHeight = PLAYER_SMALL_HEIGHT_DEFAULT,
                     onUpdateScreenSize = { percentage ->
                         playingScreenHeightWeight = percentage
                     },
