@@ -8,15 +8,15 @@ import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
+import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -28,60 +28,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaylistDetailViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
     private val playbackController: MediaPlaybackController,
     private val playerRepository: PlayerRepository,
     private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
-    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase
+    private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase,
+    getPlayerStateUseCase: GetPlayerStateUseCase
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<PlaylistDetailUiState> = MutableStateFlow(PlaylistDetailUiState.Loading)
-    val uiState = _uiState as StateFlow<PlaylistDetailUiState>
-
-    init {
-        observePlaylistDetail()
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observePlaylistDetail() {
-        viewModelScope.launch {
-            savedStateHandle.getStateFlow(PLAYLIST_DETAIL_ID_ARG, "")
-                .flatMapLatest { id ->
-                    if (id.isEmpty()) flowOf(PlaylistDetailUiState.Loading)
-                    else playlistRepository.getPlayList(UUID.fromString(id))
-                        .map { playlist -> playlist?.let { PlaylistDetailUiState.Success(it) } ?: PlaylistDetailUiState.Fail }
-                }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), PlaylistDetailUiState.Loading)
-                .collectLatest {
-                    _uiState.value = it
-                    if (it is PlaylistDetailUiState.Success) {
-                        observePlayingMusic()
-                    }
-                }
-        }
-    }
-
-    private fun observePlayingMusic() {
-        viewModelScope.launch {
-            playerRepository.playlist.combine(playerRepository.musicIndex) { playlist, musicIndex ->
-                when (val state = _uiState.value) {
-                    is PlaylistDetailUiState.Success -> {
-                        if (state.playlist.id == playlist?.id) {
-                            state.copy(
-                                playingMusic = playlist.musics.getOrNull(musicIndex ?: 0),
-                                isPlaying = true
-                            )
-                        } else state
-                    }
-
-                    else -> state
-                }
-            }.collectLatest { _uiState.value = it }
-        }
-    }
+    val uiState: StateFlow<PlaylistDetailUiState> = savedStateHandle.getStateFlow<String?>(PLAYLIST_DETAIL_ID_ARG, null)
+        .flatMapLatest { idString ->
+            if (idString == null) flowOf(null)
+            else playlistRepository.getPlayList(UUID.fromString(idString))
+        }.map { playlist ->
+            if (playlist == null) throw Exception("Playlist not found")
+            playlist
+        }.combine(getPlayerStateUseCase()) { playlist, playerState ->
+            val isPlayingCurrentPlaylist = playerState?.playlist?.id == playlist.id
+            val currentPlayingMusic = if (isPlayingCurrentPlaylist) playerState?.currentMusic else null
+            PlaylistDetailUiState.Success(
+                playlist = playlist,
+                isPlaying = isPlayingCurrentPlaylist,
+                playingMusic = currentPlayingMusic
+            )
+        }.catch<PlaylistDetailUiState> {
+            Log.e(TAG, "init uiState", it)
+            emit(PlaylistDetailUiState.Fail)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = PlaylistDetailUiState.Loading
+        )
 
     fun updateMusicOrder(prevIndex: Int, currentIndex: Int) {
         viewModelScope.launch {
-            (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
+            (uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 updatePlaylistMusicOrderUseCase(state.playlist.id, prevIndex, currentIndex)
                     .onFailure {
                         Log.e(TAG, "updateMusicOrder", it)
@@ -100,7 +83,7 @@ class PlaylistDetailViewModel @Inject constructor(
 
     fun deleteMusic(music: Music) {
         viewModelScope.launch {
-            (_uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
+            (uiState.value as? PlaylistDetailUiState.Success)?.let { state ->
                 deletePlaylistMusicUseCase(state.playlist.id, music).onFailure {
                     Log.e(TAG, "deleteMusic", it)
                 }
