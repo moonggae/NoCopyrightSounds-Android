@@ -73,7 +73,7 @@ fun PlaylistDetailRoute(
             LoadingScreen()
         }
 
-        is PlaylistDetailUiState.Fail -> {
+        is PlaylistDetailUiState.Fail, PlaylistDetailUiState.Deleted -> {
             onBack()
         }
 

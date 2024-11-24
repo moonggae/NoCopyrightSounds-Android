@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.repository.PlayListRepository
-import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
+import com.ccc.ncs.domain.usecase.DeletePlaylistUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -30,10 +28,9 @@ import javax.inject.Inject
 class PlaylistDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
-    private val playbackController: MediaPlaybackController,
-    private val playerRepository: PlayerRepository,
     private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
     private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase,
+    private val deletePlaylistUseCase: DeletePlaylistUseCase,
     getPlayerStateUseCase: GetPlayerStateUseCase
 ) : ViewModel() {
 
@@ -42,17 +39,19 @@ class PlaylistDetailViewModel @Inject constructor(
         .flatMapLatest { idString ->
             if (idString == null) flowOf(null)
             else playlistRepository.getPlayList(UUID.fromString(idString))
-        }.map { playlist ->
-            if (playlist == null) throw Exception("Playlist not found")
-            playlist
         }.combine(getPlayerStateUseCase()) { playlist, playerState ->
-            val isPlayingCurrentPlaylist = playerState?.playlist?.id == playlist.id
-            val currentPlayingMusic = if (isPlayingCurrentPlaylist) playerState?.currentMusic else null
-            PlaylistDetailUiState.Success(
-                playlist = playlist,
-                isPlaying = isPlayingCurrentPlaylist,
-                playingMusic = currentPlayingMusic
-            )
+            when {
+                playlist == null -> PlaylistDetailUiState.Deleted
+                else -> {
+                    val isPlayingCurrentPlaylist = playerState?.playlist?.id == playlist.id
+                    val currentPlayingMusic = if (isPlayingCurrentPlaylist) playerState?.currentMusic else null
+                    PlaylistDetailUiState.Success(
+                        playlist = playlist,
+                        isPlaying = isPlayingCurrentPlaylist,
+                        playingMusic = currentPlayingMusic
+                    )
+                }
+            }
         }.catch<PlaylistDetailUiState> {
             Log.e(TAG, "init uiState", it)
             emit(PlaylistDetailUiState.Fail)
@@ -75,9 +74,9 @@ class PlaylistDetailViewModel @Inject constructor(
 
     fun deletePlaylist(playlistId: UUID) {
         viewModelScope.launch {
-            playlistRepository.deletePlayList(playlistId)
-            playerRepository.clear()
-            playbackController.stop()
+            deletePlaylistUseCase(playlistId).onFailure {
+                Log.e(TAG, "deletePlaylist", it)
+            }
         }
     }
 
@@ -97,11 +96,12 @@ class PlaylistDetailViewModel @Inject constructor(
 }
 
 sealed interface PlaylistDetailUiState {
-    data object Loading : PlaylistDetailUiState
-    data object Fail : PlaylistDetailUiState
+    data object Loading: PlaylistDetailUiState
+    data object Fail: PlaylistDetailUiState
     data class Success(
         val playlist: PlayList,
         val isPlaying: Boolean = false,
         val playingMusic: Music? = null
-    ) : PlaylistDetailUiState
+    ): PlaylistDetailUiState
+    data object Deleted: PlaylistDetailUiState
 }
