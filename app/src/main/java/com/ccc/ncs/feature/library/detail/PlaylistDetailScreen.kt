@@ -237,7 +237,7 @@ fun PlaylistDetailContent(
 
         Text(
             text = name,
-            style = NcsTypography.PlaylistDetailTypography.name.copy(
+            style = NcsTypography.PlaylistDetail.name.copy(
                 color = MaterialTheme.colorScheme.onSurface
             ),
             modifier = Modifier

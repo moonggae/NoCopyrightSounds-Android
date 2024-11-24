@@ -54,14 +54,14 @@ fun ClickableSearchBar(
         if (query.isNullOrBlank()) {
             Text(
                 text = placeholder,
-                style = NcsTypography.SearchTypography.placeholder.copy(
+                style = NcsTypography.Search.placeholder.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         } else {
             Text(
                 text = query,
-                style = NcsTypography.SearchTypography.content.copy(
+                style = NcsTypography.Search.content.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 ),
                 modifier = Modifier.weight(1f)

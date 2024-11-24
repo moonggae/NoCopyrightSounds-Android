@@ -155,7 +155,7 @@ enum class PlayerMenuTabs(
         ) {
             Text(
                 text = label,
-                style = NcsTypography.PlayerTypography.bottomMenuText.copy(
+                style = NcsTypography.Player.bottomMenuText.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = textVisibleProgress),
                     textAlign = TextAlign.Center
                 ),

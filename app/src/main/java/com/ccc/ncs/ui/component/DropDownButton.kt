@@ -39,7 +39,7 @@ fun DropDownButton(
         ) {
             Text(
                 text = label,
-                style = NcsTypography.LabelTypography.button
+                style = NcsTypography.Label.button
             )
 
             Icon(

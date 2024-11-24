@@ -34,7 +34,7 @@ fun TransparentTextField(
     showUnderline: Boolean = false,
     underLineColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     onFocusChanged: (Boolean) -> Unit = {},
-    textStyle: TextStyle = NcsTypography.SearchTypography.placeholder.copy(
+    textStyle: TextStyle = NcsTypography.Search.placeholder.copy(
         color = MaterialTheme.colorScheme.onSurface
     )
 ) {
@@ -64,7 +64,7 @@ fun TransparentTextField(
                     if (isPlaceholderVisible) {
                         Text(
                             text = placeholder,
-                            style = NcsTypography.SearchTypography.placeholder.copy(
+                            style = NcsTypography.Search.placeholder.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )

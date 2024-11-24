@@ -7,21 +7,8 @@ import androidx.compose.ui.unit.sp
 
 
 object NcsTypography {
-    val Music = MusicTypography
-    val Search = SearchTypography
-    val Label = LabelTypography
-    val Dialog = DialogTypography
-    val Player = PlayerTypography
-    val ArtistDetail = ArtistDetailTypography
-    val ActionCard = ActionCardTypography
-
-    object MusicTypography {
-        val Title = TitleTypography
-        val Artist = ArtistTypography
-        val ReleaseData = ReleaseDataTypography
-        val Lyrics = LyricsTypography
-
-        object TitleTypography {
+    object Music {
+        object Title {
             val large = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -42,7 +29,7 @@ object NcsTypography {
             )
         }
 
-        object ArtistTypography {
+        object Artist {
             val large = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -63,7 +50,7 @@ object NcsTypography {
             )
         }
 
-        object ReleaseDataTypography {
+        object ReleaseDate {
             val large = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -72,7 +59,7 @@ object NcsTypography {
             )
         }
 
-        object LyricsTypography {
+        object Lyrics {
             val musicDetail = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
@@ -82,7 +69,7 @@ object NcsTypography {
         }
     }
 
-    object SearchTypography {
+    object Search {
         val placeholder = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
@@ -97,7 +84,7 @@ object NcsTypography {
         )
     }
 
-    object LabelTypography {
+    object Label {
         val button = TextStyle(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
@@ -151,7 +138,7 @@ object NcsTypography {
         )
     }
 
-    object PlaylistDetailTypography {
+    object PlaylistDetail {
         val name = TextStyle(
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
@@ -160,7 +147,7 @@ object NcsTypography {
         )
     }
 
-    object DialogTypography {
+    object Dialog {
         val title = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
@@ -181,7 +168,7 @@ object NcsTypography {
         )
     }
 
-    object PlayerTypography {
+    object Player {
         val timestamp = TextStyle(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
@@ -197,7 +184,7 @@ object NcsTypography {
         )
     }
 
-    object ArtistDetailTypography {
+    object ArtistDetail {
         val name = TextStyle(
             fontSize = 28.sp,
             fontWeight = FontWeight.SemiBold,
@@ -209,7 +196,7 @@ object NcsTypography {
         )
     }
 
-    object ActionCardTypography {
+    object ActionCard {
         val text = TextStyle(
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,

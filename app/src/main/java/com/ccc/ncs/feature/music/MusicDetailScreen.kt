@@ -383,7 +383,7 @@ private fun MusicDetailReleaseDateText(
 ) {
     Text(
         text = releaseDate.toString("dd MMM yyyy"),
-        style = NcsTypography.Music.ReleaseData.large.copy(
+        style = NcsTypography.Music.ReleaseDate.large.copy(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.End
         ),

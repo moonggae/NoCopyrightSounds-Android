@@ -63,16 +63,16 @@ object ListItemCardDefaults {
         fun small(): ListItemCardStyle =
             ListItemCardStyle(
                 thumbnailSize = 40.dp,
-                labelTextStyle = NcsTypography.MusicTypography.TitleTypography.small,
-                descriptionTextStyle = NcsTypography.MusicTypography.ArtistTypography.small
+                labelTextStyle = NcsTypography.Music.Title.small,
+                descriptionTextStyle = NcsTypography.Music.Artist.small
             )
 
         @Composable
         fun medium(): ListItemCardStyle =
             ListItemCardStyle(
                 thumbnailSize = 58.dp,
-                labelTextStyle = NcsTypography.MusicTypography.TitleTypography.medium,
-                descriptionTextStyle = NcsTypography.MusicTypography.ArtistTypography.medium
+                labelTextStyle = NcsTypography.Music.Title.medium,
+                descriptionTextStyle = NcsTypography.Music.Artist.medium
             )
     }
 }
