@@ -38,20 +38,19 @@ class EditPlaylistViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Lazily,
             initialValue = EditPlayListUiState.Loading
         )
 
-
-    fun addPlaylist(name: String) {
+    fun savePlaylist(name: String) {
         viewModelScope.launch {
-            playlistRepository.insertPlayList(name, true)
-        }
-    }
+            val currentState = uiState.value as? EditPlayListUiState.Success ?: return@launch
 
-    fun updatePlaylistName(id: UUID, name: String) {
-        viewModelScope.launch {
-            playlistRepository.updatePlayListName(id, name)
+            if (currentState.playList != null) {
+                playlistRepository.updatePlayListName(currentState.playList.id, name)
+            } else {
+                playlistRepository.insertPlayList(name, true)
+            }
         }
     }
 

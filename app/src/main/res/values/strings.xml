@@ -30,6 +30,12 @@
     <string name="playlist_detail_menu_save_recent_playlist">Save Playlist</string>
     <string name="playlist_detail_menu_delete_playlist">Delete Playlist</string>
 
+    <string name="playlist_edit_title_new">New Playlist</string>
+    <string name="playlist_edit_title_update">Edit Playlist</string>
+    <string name="playlist_edit_name_placeholder">My Playlist</string>
+    <string name="playlist_edit_error_too_long">Name is too long.</string>
+    <string name="playlist_edit_error_empty">Name is empty.</string>
+
     <string name="player_menu_lyrics_empty">There is no Lyrics</string>
     <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[You can post the lyrics to click <annotation>here</annotation>]]></string>
 
@@ -53,6 +59,7 @@
     <string name="Tags">Tags</string>
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
+    <string name="save">save</string>
     <string name="playlist_name_auto_generated">Recent Playlist</string>
     <string name="playlist_name_offline_musics">Offline Musics</string>
 
