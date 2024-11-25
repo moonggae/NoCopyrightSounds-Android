@@ -22,8 +22,8 @@ android {
         applicationId = "com.ccc.ncs"
         minSdk = 29
         targetSdk = 34
-        versionCode = 22
-        versionName = "0.2.16"
+        versionCode = 24
+        versionName = "0.2.18"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,3 +1,29 @@
+### 0.2.18
+```
+<ko-KR>
+- UI 개선 및 음악 재생 안정화
+- Genre, Mood 검색 기능 버그 수정
+- 기타 버그 수정
+</ko-KR>
+
+<en-US>
+- Improved UI and stabilized music playback
+- Fixed genre and mood search functionality
+- General bug fixes
+</en-US>
+
+<es-ES>
+- Mejoras en la interfaz y estabilización de la reproducción
+- Corrección de búsqueda por género y estado de ánimo
+- Corrección de errores generales
+</es-ES>
+
+<es-419>
+- Mejoras en la interfaz y estabilización de la reproducción
+- Se corrigió la búsqueda por género y estado de ánimo
+- Correcciones generales del sistema
+</es-419>
+```
 ### 0.2.16
 ### 0.2.13
 ```
