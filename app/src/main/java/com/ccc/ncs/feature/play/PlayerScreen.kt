@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -86,8 +85,13 @@ import com.ccc.ncs.model.Artist
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.artistText
 import com.ccc.ncs.model.util.toTimestampMMSS
+import com.ccc.ncs.ui.component.PlayerControllerType
+import com.ccc.ncs.ui.component.PlayerPlayingButton
+import com.ccc.ncs.ui.component.PlayerRepeatButton
+import com.ccc.ncs.ui.component.PlayerShuffleButton
+import com.ccc.ncs.ui.component.PlayerSkipNextButton
+import com.ccc.ncs.ui.component.PlayerSkipPreviousButton
 import com.ccc.ncs.ui.component.mockMusics
-import com.ccc.ncs.ui.model.getContentDescription
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
 import kotlinx.coroutines.launch
@@ -186,7 +190,7 @@ fun PlayerScreen(
                         )
 
                         PlayerScreenSmallController(
-                            isPlaying = playerUiState.playbackState.playingStatus == PlayingStatus.PLAYING,
+                            playingStatus = playerUiState.playbackState.playingStatus,
                             hasNext = playerUiState.playbackState.hasNext,
                             onPlay = onPlay,
                             onPause = onPause,
@@ -303,7 +307,7 @@ private fun PlayerScreenBigContent(
             )
 
             PlayerScreenBigController(
-                isPlaying = playbackState.playingStatus == PlayingStatus.PLAYING,
+                playingStatus = playbackState.playingStatus,
                 hasNext = playbackState.hasNext,
                 repeatMode = playbackState.repeatMode,
                 isOnShuffle = playbackState.isShuffleOn,
@@ -372,7 +376,7 @@ private fun PlayerScreenAppBar(
 @Composable
 fun PlayerScreenBigController(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
+    playingStatus: PlayingStatus,
     isOnShuffle: Boolean,
     repeatMode: RepeatMode,
     hasNext: Boolean,
@@ -388,67 +392,29 @@ fun PlayerScreenBigController(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth(),
     ) {
-        Icon(
-            imageVector = NcsIcons.Shuffle,
-            contentDescription = if (isOnShuffle) stringResource(R.string.cd_player_shuffle_on) else stringResource(R.string.cd_player_shuffle_off),
-            tint = if (isOnShuffle) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(32.dp)
-                .clickable(onClick = { onShuffle(!isOnShuffle) })
+        PlayerShuffleButton(
+            isOnShuffle = isOnShuffle,
+            onClick = { onShuffle(!isOnShuffle) }
+        )
+        
+        PlayerSkipPreviousButton(
+            onClick = onSkipPrevious
+        )
+        
+        PlayerPlayingButton(
+            playingStatus = playingStatus,
+            onPlay = onPlay,
+            onPause = onPause
         )
 
-        Icon(
-            imageVector = NcsIcons.SkipPrevious,
-            contentDescription = stringResource(R.string.cd_player_skip_previous),
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(32.dp)
-                .clickable(onClick = onSkipPrevious)
+        PlayerSkipNextButton(
+            hasNext = hasNext,
+            onClick = onSkipNext
         )
 
-        Icon(
-            imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
-            contentDescription = if (isPlaying) stringResource(R.string.cd_player_play) else stringResource(R.string.cd_player_pause),
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable(onClick = {
-                    when (isPlaying) {
-                        true -> onPause()
-                        false -> onPlay()
-                    }
-                })
-                .size(40.dp)
-        )
-
-        Icon(
-            imageVector = NcsIcons.SkipNext,
-            contentDescription = if (hasNext) stringResource(R.string.cd_player_skip_next) else stringResource(R.string.cd_player_skip_next_disabled),
-            tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(32.dp)
-                .conditional(hasNext) {
-                    clickable(onClick = onSkipNext)
-                }
-        )
-
-        Icon(
-            imageVector = when (repeatMode) {
-                RepeatMode.REPEAT_MODE_ONE -> NcsIcons.RepeatOne
-                else -> NcsIcons.Repeat
-            },
-            contentDescription = repeatMode.getContentDescription(),
-            tint = when (repeatMode) {
-                RepeatMode.REPEAT_MODE_OFF -> MaterialTheme.colorScheme.onSurfaceVariant
-                else -> MaterialTheme.colorScheme.onSurface
-            },
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(32.dp)
-                .clickable(onClick = { onChangeRepeatMode(repeatMode.next()) })
+        PlayerRepeatButton(
+            repeatMode = repeatMode,
+            onClick = { onChangeRepeatMode(repeatMode.next()) }
         )
     }
 }
@@ -614,7 +580,7 @@ fun PlayerScreenSmallInformation(
 @Composable
 fun PlayerScreenSmallController(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
+    playingStatus: PlayingStatus,
     hasNext: Boolean,
     onPlay: () -> Unit,
     onPause: () -> Unit,
@@ -623,47 +589,24 @@ fun PlayerScreenSmallController(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier,
     ) {
-        Icon(
-            imageVector = NcsIcons.SkipPrevious,
-            tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = stringResource(R.string.cd_player_skip_previous),
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(48.dp)
-                .clickable(onClick = onSkipPrevious)
-                .padding(12.dp)
+        PlayerSkipPreviousButton(
+            type = PlayerControllerType.Small,
+            onClick = onSkipPrevious
         )
 
-        Icon(
-            imageVector = if (isPlaying) NcsIcons.Pause else NcsIcons.Play,
-            tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = if (isPlaying) stringResource(R.string.cd_player_play) else stringResource(R.string.cd_player_pause),
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(48.dp)
-                .clickable(onClick = {
-                    when (isPlaying) {
-                        true -> onPause()
-                        false -> onPlay()
-                    }
-                })
-                .padding(8.dp)
+        PlayerPlayingButton(
+            type = PlayerControllerType.SmallCenter,
+            playingStatus = playingStatus,
+            onPlay = onPlay,
+            onPause = onPause
         )
 
-        Icon(
-            imageVector = NcsIcons.SkipNext,
-            contentDescription = if (hasNext) stringResource(R.string.cd_player_skip_next) else stringResource(R.string.cd_player_skip_next_disabled),
-            tint = if (hasNext) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(48.dp)
-                .conditional(hasNext) {
-                    clickable(onClick = onSkipNext)
-                }
-                .padding(12.dp)
+        PlayerSkipNextButton(
+            type = PlayerControllerType.Small,
+            hasNext = hasNext,
+            onClick = onSkipNext
         )
     }
 }
