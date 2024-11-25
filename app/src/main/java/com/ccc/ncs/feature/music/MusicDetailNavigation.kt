@@ -2,6 +2,7 @@ package com.ccc.ncs.feature.music
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.SELECTED_GENRE_ID
 import com.ccc.ncs.feature.home.SELECTED_MOOD_ID
 import com.ccc.ncs.feature.search.SEARCHED_QUERY
@@ -24,21 +25,29 @@ fun NavController.navigateToMusicDetail(musicId: UUID) {
 }
 
 fun NavController.backWithGenre(genreId: Int) {
-    previousBackStackEntry?.savedStateHandle?.apply {
+    getBackStackEntry(HOME_ROUTE).savedStateHandle.apply {
         set(SELECTED_MOOD_ID, null)
         set(SEARCHED_QUERY, null)
         set(SELECTED_GENRE_ID, genreId)
     }
-    navigateUp()
+    popBackStack(
+        route = HOME_ROUTE,
+        inclusive = false,
+        saveState = true
+    )
 }
 
 fun NavController.backWithMood(moodId: Int) {
-    previousBackStackEntry?.savedStateHandle?.apply {
+    getBackStackEntry(HOME_ROUTE).savedStateHandle.apply {
         set(SELECTED_GENRE_ID, null)
         set(SEARCHED_QUERY, null)
         set(SELECTED_MOOD_ID, moodId)
     }
-    navigateUp()
+    popBackStack(
+        route = HOME_ROUTE,
+        inclusive = false,
+        saveState = true
+    )
 }
 
 fun NavGraphBuilder.musicDetailScreen(

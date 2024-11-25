@@ -74,7 +74,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 // TODO: close 버튼으로 모든 ArtistDetail, MusicDetail pop하기
-// TODO: Genre, Mood 클릭했을 때 히스토리 확인하고 보내기
 @Composable
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
