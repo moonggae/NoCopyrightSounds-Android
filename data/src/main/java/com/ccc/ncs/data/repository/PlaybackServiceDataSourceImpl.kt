@@ -1,5 +1,6 @@
 package com.ccc.ncs.data.repository
 
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.playback.data.PlaybackServiceDataSource

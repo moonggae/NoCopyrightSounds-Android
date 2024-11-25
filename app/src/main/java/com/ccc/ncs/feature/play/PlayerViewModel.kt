@@ -3,7 +3,7 @@ package com.ccc.ncs.feature.play
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.model.PlayerState
 import com.ccc.ncs.domain.model.RepeatMode

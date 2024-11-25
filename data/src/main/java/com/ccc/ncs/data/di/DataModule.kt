@@ -1,6 +1,6 @@
 package com.ccc.ncs.data.di
 
-import com.ccc.ncs.data.repository.ArtistRepository
+import com.ccc.ncs.domain.repository.ArtistRepository
 import com.ccc.ncs.data.repository.DefaultArtistRepository
 import com.ccc.ncs.data.repository.DefaultLyricsRepository
 import com.ccc.ncs.data.repository.DefaultMusicCacheRepository
@@ -8,7 +8,7 @@ import com.ccc.ncs.data.repository.DefaultMusicRepository
 import com.ccc.ncs.data.repository.DefaultPlayListRepository
 import com.ccc.ncs.data.repository.DefaultPlayerRepository
 import com.ccc.ncs.data.repository.DefaultRecentSearchRepository
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.data.repository.PlaybackStateRepositoryImpl
 import com.ccc.ncs.data.util.ConnectivityManagerNetworkMonitor
 import com.ccc.ncs.data.util.NetworkMonitor

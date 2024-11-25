@@ -1,10 +1,5 @@
 package com.ccc.ncs.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.ccc.ncs.data.paging.MUSIC_LOAD_SIZE
-import com.ccc.ncs.data.paging.MusicPagingSource
 import com.ccc.ncs.database.dao.GenreDao
 import com.ccc.ncs.database.dao.MoodDao
 import com.ccc.ncs.database.dao.MusicDao
@@ -16,6 +11,7 @@ import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
 import com.ccc.ncs.database.model.relation.MusicWithGenreAndMood
 import com.ccc.ncs.database.model.relation.asModel
 import com.ccc.ncs.database.model.toStatusString
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -38,28 +34,6 @@ internal class DefaultMusicRepository @Inject constructor(
     private val playListDao: PlayListDao,
     private val downloadDirectory: File?
 ): MusicRepository {
-    override fun getSearchResultStream(
-        query: String?,
-        genreId: Int?,
-        moodId: Int?,
-        version: String?
-    ): Flow<PagingData<Music>> = Pager(
-        PagingConfig(
-            pageSize = MUSIC_LOAD_SIZE,
-            enablePlaceholders = false,
-            prefetchDistance = MUSIC_LOAD_SIZE * 2
-        )
-    ) {
-        MusicPagingSource(
-            dataSource = network,
-            syncLocalMusics = this::insertNotExistMusics,
-            query = query,
-            genreId = genreId,
-            moodId = moodId,
-            version = version
-        )
-    }.flow
-
     override fun getMusics(musicIds: List<UUID>): Flow<List<Music>> = musicDao
         .getMusics(musicIds)
         .map(List<MusicWithGenreAndMood>::asModel)

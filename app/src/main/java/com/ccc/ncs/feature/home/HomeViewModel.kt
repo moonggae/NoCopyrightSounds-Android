@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.data.paging.MusicPagingData
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
@@ -33,7 +34,8 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
 @Inject constructor(
     private val musicRepository: MusicRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val musicDownloader: MusicDownloader
+    private val musicDownloader: MusicDownloader,
+    musicPagingData: MusicPagingData
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> get() = _uiState
@@ -50,7 +52,7 @@ class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
     val musics = uiState
         .distinctUntilChangedBy { it.searchUiState }
         .flatMapLatest { state ->
-            musicRepository.getSearchResultStream(
+            musicPagingData.getData(
                 query = state.searchUiState.query,
                 genreId = state.searchUiState.genre?.id,
                 moodId = state.searchUiState.mood?.id

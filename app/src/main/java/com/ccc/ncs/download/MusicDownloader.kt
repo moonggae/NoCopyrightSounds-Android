@@ -3,7 +3,7 @@ package com.ccc.ncs.download
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.artistText

@@ -1,6 +1,7 @@
 package com.ccc.ncs.domain.usecase
 
 import com.ccc.ncs.domain.MediaPlaybackController
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
 import com.ccc.ncs.model.Music
@@ -9,6 +10,7 @@ import java.util.UUID
 
 class AddPlaylistMusicUseCase (
     private val playlistRepository: PlayListRepository,
+    private val musicRepository: MusicRepository,
     private val playerRepository: PlayerRepository,
     private val playbackController: MediaPlaybackController
 ) {
@@ -22,11 +24,8 @@ class AddPlaylistMusicUseCase (
 
         playerRepository.playlist.first()?.id?.let { currentPlaylistId ->
             if (currentPlaylistId == playlist.id) {
-                playlistRepository.getPlayList(playlistId).first()?.musics?.filter {
-                    it.id in appendMusicIds
-                }?.let { appendedMusics ->
-                    playbackController.appendMusics(appendedMusics)
-                }
+                val appendedMusics = musicRepository.getMusics(appendMusicIds).first()
+                playbackController.appendMusics(appendedMusics)
             }
         }
     }

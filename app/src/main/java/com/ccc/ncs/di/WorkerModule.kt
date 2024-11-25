@@ -1,6 +1,6 @@
 package com.ccc.ncs.di
 
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.download.DownloadCompletedWorker
 import dagger.Module

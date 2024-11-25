@@ -3,7 +3,7 @@ package com.ccc.ncs.feature.artist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.ccc.ncs.data.repository.ArtistRepository
+import com.ccc.ncs.data.paging.ArtistPagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-    private val artistRepository: ArtistRepository
+    artistPagingData: ArtistPagingData
 ) : ViewModel() {
     private val _searchUiState: MutableStateFlow<ArtistSearchUiState> = MutableStateFlow(ArtistSearchUiState())
     val searchUiState: StateFlow<ArtistSearchUiState> get() = _searchUiState
@@ -22,7 +22,7 @@ class ArtistViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val artists = _searchUiState
         .flatMapLatest { uiState ->
-            artistRepository.getSearchResultStream(
+            artistPagingData.getData(
                 query = uiState.query,
                 sort = uiState.sort.query,
                 year = uiState.year

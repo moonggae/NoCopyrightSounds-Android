@@ -2,7 +2,7 @@ package com.ccc.ncs.di
 
 import android.content.Context
 import android.os.Environment
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics

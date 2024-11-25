@@ -3,6 +3,7 @@ package com.ccc.ncs.data.repository
 import com.ccc.ncs.cache.di.CacheManager
 import com.ccc.ncs.datastore.CacheDataStore
 import com.ccc.ncs.domain.repository.MusicCacheRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

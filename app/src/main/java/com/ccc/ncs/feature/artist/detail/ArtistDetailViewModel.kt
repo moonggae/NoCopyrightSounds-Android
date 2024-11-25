@@ -3,7 +3,7 @@ package com.ccc.ncs.feature.artist.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.data.repository.ArtistRepository
+import com.ccc.ncs.domain.repository.ArtistRepository
 import com.ccc.ncs.model.ArtistDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

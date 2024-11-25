@@ -1,6 +1,5 @@
-package com.ccc.ncs.data.repository
+package com.ccc.ncs.domain.repository
 
-import androidx.paging.PagingData
 import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.Music
@@ -9,13 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 interface MusicRepository {
-    fun getSearchResultStream(
-        query: String? = null,
-        genreId: Int? = null,
-        moodId: Int? = null,
-        version: String? = null
-    ): Flow<PagingData<Music>>
-
     fun getMusics(musicIds: List<UUID>): Flow<List<Music>>
 
     fun getMusic(musicId: UUID): Flow<Music?>

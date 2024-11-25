@@ -8,7 +8,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.ccc.ncs.data.repository.MusicRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.model.MusicStatus
 import dagger.assisted.Assisted
