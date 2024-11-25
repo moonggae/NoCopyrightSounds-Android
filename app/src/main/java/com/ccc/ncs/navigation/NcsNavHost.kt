@@ -27,7 +27,6 @@ import com.ccc.ncs.feature.music.navigateToMusicDetail
 import com.ccc.ncs.feature.search.backFromSearch
 import com.ccc.ncs.feature.search.navigateToSearch
 import com.ccc.ncs.feature.search.searchScreen
-import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.ui.NcsAppState
 import java.util.UUID
 
@@ -38,7 +37,6 @@ fun NcsNavHost(
     startDestination: String = HOME_ROUTE,
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onPlayMusics: (List<UUID>) -> Unit,
-    onPlayPlaylist: (PlayList, Int) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit
 ) {
     val navController = appState.navController
@@ -87,8 +85,7 @@ fun NcsNavHost(
         editPlaylistScreen(onBack = navController::navigateUp)
         playlistDetailScreen(
             onBack = navController::navigateUp,
-            navigateToEditPlaylist = { navController.navigateToEditPlaylist(it) },
-            onPlayPlaylist = onPlayPlaylist
+            navigateToEditPlaylist = { navController.navigateToEditPlaylist(it) }
         )
         musicDetailScreen(
             onBack = navController::navigateUp,

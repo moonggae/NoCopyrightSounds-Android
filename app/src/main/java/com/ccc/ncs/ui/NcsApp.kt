@@ -122,7 +122,6 @@ fun NcsApp(
                         ) == ActionPerformed
                     },
                     onPlayMusics = playerViewModel::playMusics,
-                    onPlayPlaylist = playerViewModel::playPlaylist,
                     onAddToQueue = playerViewModel::addQueueToCurrentPlaylist
                 )
             }

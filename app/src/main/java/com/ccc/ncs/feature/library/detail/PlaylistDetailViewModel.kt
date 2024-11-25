@@ -8,6 +8,7 @@ import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.DeletePlaylistUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
+import com.ccc.ncs.domain.usecase.PlayPlaylistUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class PlaylistDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val playlistRepository: PlayListRepository,
+    private val playPlaylistUseCase: PlayPlaylistUseCase,
     private val updatePlaylistMusicOrderUseCase: UpdatePlaylistMusicOrderUseCase,
     private val deletePlaylistMusicUseCase: DeletePlaylistMusicUseCase,
     private val deletePlaylistUseCase: DeletePlaylistUseCase,
@@ -86,6 +88,14 @@ class PlaylistDetailViewModel @Inject constructor(
                 deletePlaylistMusicUseCase(state.playlist.id, music).onFailure {
                     Log.e(TAG, "deleteMusic", it)
                 }
+            }
+        }
+    }
+
+    fun playPlaylist(playlist: PlayList, startIndex: Int) {
+        viewModelScope.launch {
+            playPlaylistUseCase(playlist.id, startIndex).onFailure {
+                Log.e(TAG, "playPlaylist", it)
             }
         }
     }

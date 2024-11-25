@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
@@ -18,8 +17,7 @@ fun NavController.navigateToPlaylistDetail(playlistId: UUID) =
 
 fun NavGraphBuilder.playlistDetailScreen(
     onBack: () -> Unit,
-    navigateToEditPlaylist: (UUID) -> Unit,
-    onPlayPlaylist: (PlayList, Int) -> Unit
+    navigateToEditPlaylist: (UUID) -> Unit
 ) {
     noneTransitionComposable(
         route = PLAYLIST_DETAIL_ROUTE,
@@ -32,8 +30,7 @@ fun NavGraphBuilder.playlistDetailScreen(
     ) {
         PlaylistDetailRoute(
             onBack = onBack,
-            onClickModifyName = navigateToEditPlaylist,
-            onPlay = onPlayPlaylist,
+            onClickModifyName = navigateToEditPlaylist
         )
     }
 }

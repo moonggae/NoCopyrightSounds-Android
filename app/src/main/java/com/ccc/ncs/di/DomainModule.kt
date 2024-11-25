@@ -2,6 +2,7 @@ package com.ccc.ncs.di
 
 import com.ccc.ncs.domain.MediaPlaybackController
 import com.ccc.ncs.domain.repository.LyricsRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.domain.repository.PlaybackStateRepository
 import com.ccc.ncs.domain.repository.PlayerRepository
@@ -9,6 +10,8 @@ import com.ccc.ncs.domain.usecase.AddPlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.DeletePlaylistMusicUseCase
 import com.ccc.ncs.domain.usecase.DeletePlaylistUseCase
 import com.ccc.ncs.domain.usecase.GetPlayerStateUseCase
+import com.ccc.ncs.domain.usecase.PlayMusicsUseCase
+import com.ccc.ncs.domain.usecase.PlayPlaylistUseCase
 import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import dagger.Module
 import dagger.Provides
@@ -54,10 +57,12 @@ object DomainModule {
     @Provides
     fun providesAddPlaylistMusicUseCase(
         playlistRepository: PlayListRepository,
+        musicRepository: MusicRepository,
         playerRepository: PlayerRepository,
         playbackController: MediaPlaybackController,
     ) = AddPlaylistMusicUseCase(
         playlistRepository = playlistRepository,
+        musicRepository = musicRepository,
         playerRepository = playerRepository,
         playbackController = playbackController
     )
@@ -71,5 +76,29 @@ object DomainModule {
         playlistRepository = playlistRepository,
         playerRepository = playerRepository,
         playbackController = playbackController
+    )
+
+    @Provides
+    fun providesPlayPlaylistUseCase(
+        playlistRepository: PlayListRepository,
+        playerRepository: PlayerRepository,
+        playbackController: MediaPlaybackController,
+    ) = PlayPlaylistUseCase(
+        playlistRepository = playlistRepository,
+        playerRepository = playerRepository,
+        playbackController = playbackController
+    )
+
+    @Provides
+    fun providesPlayMusicsUseCase(
+        playlistRepository: PlayListRepository,
+        playerRepository: PlayerRepository,
+        musicRepository: MusicRepository,
+        playPlaylistUseCase: PlayPlaylistUseCase
+    ) = PlayMusicsUseCase(
+        playlistRepository = playlistRepository,
+        playerRepository = playerRepository,
+        musicRepository = musicRepository,
+        playPlaylistUseCase = playPlaylistUseCase
     )
 }

@@ -63,8 +63,7 @@ import java.util.UUID
 fun PlaylistDetailRoute(
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    onClickModifyName: (UUID) -> Unit,
-    onPlay: (PlayList, Int) -> Unit
+    onClickModifyName: (UUID) -> Unit
 ) {
     val playListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -89,7 +88,7 @@ fun PlaylistDetailRoute(
                     viewModel.deletePlaylist(uiState.playlist.id)
                     onBack()
                 },
-                onPlay = { playMusicIndex -> onPlay(uiState.playlist, playMusicIndex) },
+                onPlay = { playMusicIndex -> viewModel.playPlaylist(uiState.playlist, playMusicIndex) },
                 isPlaying = uiState.isPlaying,
                 onDeleteMusicInList = viewModel::deleteMusic
             )
