@@ -75,7 +75,7 @@ internal fun EditPlaylistScreen(
     val errorMessage: String = remember(textState.text) {
         when {
             textState.text.length > PLAYLIST_NAME_LENGTH_LIMIT -> tooLongMessage
-            textState.undoState.canUndo && textState.text.isEmpty() -> emptyMessage
+            textState.undoState.canUndo && textState.text.isBlank() -> emptyMessage
             else -> ""
         }
     }
@@ -128,7 +128,7 @@ internal fun EditPlaylistScreen(
 
             Button(
                 onClick = { onSave(textState.text.toString()) },
-                enabled = errorMessage.isEmpty()
+                enabled = errorMessage.isEmpty() && textState.text.isNotBlank()
             ) {
                 Text(text = stringResource(R.string.save))
             }
