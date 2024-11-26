@@ -7,7 +7,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.ccc.ncs.cache.di.CacheManager
@@ -29,9 +28,6 @@ class PlaybackService : MediaLibraryService() {
     lateinit var session: MediaLibrarySession
 
     @Inject
-    lateinit var player: ExoPlayer
-
-    @Inject
     lateinit var dataSource: PlaybackServiceDataSource
 
 
@@ -44,31 +40,22 @@ class PlaybackService : MediaLibraryService() {
     }
 
     override fun onDestroy() {
-        release()
+        session.player.release()
+        session.release()
         super.onDestroy()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        release()
+        session.player.pause()
+        session.player.stop()
         stopSelf()
         super.onTaskRemoved(rootIntent)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
 
-    private fun release() {
-        try {
-            player.pause()
-            session.release()
-            player.release()
-            serviceJob.cancel()
-        } catch (e: Exception) {
-            Log.e(TAG, "release", e)
-        }
-    }
-
     private fun setupPlayer() {
-        player.addListener(object : Player.Listener {
+        session.player.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
                 mediaItem?.let {
@@ -119,26 +106,26 @@ class PlaybackService : MediaLibraryService() {
         dataSource.updateMusicStatus(currentMusicId, MusicStatus.None)
         dataSource.getMusic(currentMusicId)?.let { musicItem ->
             withContext(Dispatchers.Main) {
-                player.replaceMediaItem(player.currentMediaItemIndex, musicItem.asMediaItem())
+                session.player.replaceMediaItem(session.player.currentMediaItemIndex, musicItem.asMediaItem())
             }
         }
     }
 
     private suspend fun handleNetworkMusicBadStatus() {
-        player.currentMediaItem?.let { mediaItem ->
-            val wasPlaying = player.playWhenReady
-            Log.d("TAG", "handleNetworkMusicBadStatus - player.playWhenReady: ${player.playWhenReady}")
-            Log.d("TAG", "handleNetworkMusicBadStatus - player.playbackState: ${player.playbackState}")
+        session.player.currentMediaItem?.let { mediaItem ->
+            val wasPlaying = session.player.playWhenReady
+            Log.d("TAG", "handleNetworkMusicBadStatus - session.player.playWhenReady: ${session.player.playWhenReady}")
+            Log.d("TAG", "handleNetworkMusicBadStatus - session.player.playbackState: ${session.player.playbackState}")
 
             // 재생중:     true  STATE_IDLE
             // not 재생중: false STATE_IDLE
 
             dataSource.deleteMusic(UUID.fromString(mediaItem.mediaId))
             withContext(Dispatchers.Main) {
-                player.removeMediaItem(player.currentMediaItemIndex)
+                session.player.removeMediaItem(session.player.currentMediaItemIndex)
                 if (wasPlaying) {
-                    player.prepare()
-                    player.play()
+                    session.player.prepare()
+                    session.player.play()
                 }
             }
         }
