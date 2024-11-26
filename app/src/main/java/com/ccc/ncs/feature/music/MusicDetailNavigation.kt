@@ -12,7 +12,7 @@ import com.ccc.ncs.navigation.noneTransitionComposable
 import java.util.UUID
 
 
-private const val MUSIC_DETAIL_BASE_ROUTE = "musicdetail"
+const val MUSIC_DETAIL_BASE_ROUTE = "musicdetail"
 const val MUSIC_DETAIL_ID_ARG = "musicId"
 private const val MUSIC_DETAIL_ROUTE = "$MUSIC_DETAIL_BASE_ROUTE?$MUSIC_DETAIL_ID_ARG={$MUSIC_DETAIL_ID_ARG}"
 
@@ -51,13 +51,14 @@ fun NavController.backWithMood(moodId: Int) {
 }
 
 fun NavGraphBuilder.musicDetailScreen(
-    onBack: () -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean,
     onClickMood: (Mood) -> Unit,
     onClickGenre: (Genre) -> Unit,
     onPlayMusics: (List<UUID>) -> Unit,
     onAddToQueue: (List<UUID>) -> Unit,
-    navigateToArtistDetail: (artistDetailPath: String) -> Unit
+    navigateToArtistDetail: (artistDetailPath: String) -> Unit,
+    onBack: () -> Unit,
+    onClose: () -> Unit
 ) {
     noneTransitionComposable(route = MUSIC_DETAIL_ROUTE) {
         MusicDetailRoute(
@@ -67,7 +68,8 @@ fun NavGraphBuilder.musicDetailScreen(
             onClickGenre = onClickGenre,
             onPlayMusic = { onPlayMusics(listOf(it)) },
             onAddToQueue = { onAddToQueue(listOf(it)) },
-            onMoveToArtistDetail = { navigateToArtistDetail(it.detailUrl) }
+            onMoveToArtistDetail = { navigateToArtistDetail(it.detailUrl) },
+            onClose = onClose
         )
     }
 }

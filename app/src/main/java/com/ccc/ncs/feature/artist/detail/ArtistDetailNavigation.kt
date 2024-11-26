@@ -30,6 +30,7 @@ fun NavController.navigateToArtistDetail(
 
 fun NavGraphBuilder.artistDetailScreen(
     onBack: () -> Unit,
+    onClose: () -> Unit,
     onNavigateToMusicDetail: (UUID) -> Unit,
     onNavigateToArtistDetail: (Artist) -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean
@@ -45,6 +46,7 @@ fun NavGraphBuilder.artistDetailScreen(
     ) {
         ArtistDetailRoute(
             onBack = onBack,
+            onClose = onClose,
             onMoveToMusicDetail = onNavigateToMusicDetail,
             onMoveToArtistDetail = onNavigateToArtistDetail,
             onShowSnackbar = onShowSnackbar

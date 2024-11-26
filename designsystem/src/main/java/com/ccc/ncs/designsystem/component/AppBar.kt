@@ -28,9 +28,8 @@ fun CommonAppBar(
     modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
     onBack: () -> Unit,
-    menuIcon: ImageVector = NcsIcons.MoreVertical,
-    onClickMenu: (() -> Unit)? = null,
-    content: @Composable () -> Unit,
+    suffix: (@Composable () -> Unit)? = null,
+    content: (@Composable () -> Unit)? = null,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -50,21 +49,17 @@ fun CommonAppBar(
         )
 
 
-        content()
-
-
-        if (onClickMenu == null) {
+        if (content == null) {
             Spacer(Modifier.size(28.dp))
         } else {
-            Icon(
-                imageVector = menuIcon,
-                contentDescription = stringResource(R.string.cd_menu),
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .clickable(onClick = onClickMenu)
-            )
+            content()
+        }
+
+
+        if (suffix == null) {
+            Spacer(Modifier.size(28.dp))
+        } else {
+            suffix()
         }
     }
 }
@@ -72,11 +67,39 @@ fun CommonAppBar(
 @Composable
 fun CommonAppBar(
     modifier: Modifier = Modifier,
+    padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+    onBack: () -> Unit,
+    suffixIcon: ImageVector = NcsIcons.MoreVertical,
+    onClickSuffix: (() -> Unit)? = null,
+    content: @Composable () -> Unit,
+) = CommonAppBar(
+    modifier = modifier,
+    padding = padding,
+    onBack = onBack,
+    suffix = {
+        if (onClickSuffix != null) {
+            Icon(
+                imageVector = suffixIcon,
+                contentDescription = stringResource(R.string.cd_menu),
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClickSuffix)
+            )
+        }
+    },
+    content = content,
+)
+
+@Composable
+fun CommonAppBar(
+    modifier: Modifier = Modifier,
     title: String?,
     padding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
     onBack: () -> Unit,
-    menuIcon: ImageVector = NcsIcons.MoreVertical,
-    onClickMenu: (() -> Unit)? = null
+    suffixIcon: ImageVector = NcsIcons.MoreVertical,
+    onClickSuffix: (() -> Unit)? = null
 ) = CommonAppBar(
     modifier = modifier,
     content = {
@@ -89,6 +112,6 @@ fun CommonAppBar(
     },
     padding = padding,
     onBack = onBack,
-    menuIcon = menuIcon,
-    onClickMenu = onClickMenu
+    suffixIcon = suffixIcon,
+    onClickSuffix = onClickSuffix
 )

@@ -175,8 +175,8 @@ fun TopAppBar(
             onBack = onBack,
             padding = PaddingValues(horizontal = 20.dp, vertical = 24.dp),
             title = stringResource(R.string.playlist_name_offline_musics),
-            menuIcon = NcsIcons.Delete,
-            onClickMenu = { onSelectModeChanged(true) }
+            suffixIcon = NcsIcons.Delete,
+            onClickSuffix = { onSelectModeChanged(true) }
         )
     }
 }

@@ -189,7 +189,7 @@ fun PlaylistDetailScreenAppBar(
         CommonAppBar(
             title = stringResource(R.string.feature_playlist_title),
             onBack = onBack,
-            onClickMenu = onClickMenu,
+            onClickSuffix = onClickMenu,
         )
     }
 }

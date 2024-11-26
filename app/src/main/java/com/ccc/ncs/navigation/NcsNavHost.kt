@@ -59,6 +59,7 @@ fun NcsNavHost(
         )
         artistDetailScreen(
             onBack = navController::navigateUp,
+            onClose = appState::popNearestTopLevelDestination,
             onNavigateToMusicDetail = { navController.navigateToMusicDetail(it) },
             onNavigateToArtistDetail = { navController.navigateToArtistDetail(it.detailUrl) },
             onShowSnackbar = onShowSnackbar
@@ -88,13 +89,14 @@ fun NcsNavHost(
             navigateToEditPlaylist = { navController.navigateToEditPlaylist(it) }
         )
         musicDetailScreen(
-            onBack = navController::navigateUp,
             onShowSnackbar = onShowSnackbar,
-            onClickGenre = { navController.backWithGenre(it.id) },
             onClickMood = { navController.backWithMood(it.id) },
+            onClickGenre = { navController.backWithGenre(it.id) },
             onPlayMusics = onPlayMusics,
             onAddToQueue = onAddToQueue,
-            navigateToArtistDetail = navController::navigateToArtistDetail
+            navigateToArtistDetail = navController::navigateToArtistDetail,
+            onBack = navController::navigateUp,
+            onClose = appState::popNearestTopLevelDestination
         )
     }
 }

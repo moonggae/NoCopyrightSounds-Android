@@ -11,13 +11,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ccc.ncs.data.util.NetworkMonitor
-import com.ccc.ncs.feature.artist.ARTIST_ROUTE
 import com.ccc.ncs.feature.artist.navigateToArtist
-import com.ccc.ncs.feature.home.HOME_ROUTE
 import com.ccc.ncs.feature.home.navigateToHome
-import com.ccc.ncs.feature.library.LIBRARY_ROUTE
 import com.ccc.ncs.feature.library.navigateToLibrary
-import com.ccc.ncs.feature.menu.MENU_ROUTE
 import com.ccc.ncs.feature.menu.navigateToMenu
 import com.ccc.ncs.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
@@ -55,13 +51,7 @@ class NcsAppState(
             .currentBackStackEntryAsState().value?.destination
 
     val currentTopLevelDestination: TopLevelDestination?
-        @Composable get() = when (currentDestination?.route) {
-            HOME_ROUTE -> TopLevelDestination.HOME
-            ARTIST_ROUTE -> TopLevelDestination.ARTIST
-            LIBRARY_ROUTE -> TopLevelDestination.LIBRARY
-            MENU_ROUTE -> TopLevelDestination.MENU
-            else -> null
-        }
+        @Composable get() = TopLevelDestination.entries.find { it.route == currentDestination?.route }
 
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
@@ -93,6 +83,24 @@ class NcsAppState(
             TopLevelDestination.ARTIST -> navController.navigateToArtist(topLevelNavOptions)
             TopLevelDestination.LIBRARY -> navController.navigateToLibrary(topLevelNavOptions)
             TopLevelDestination.MENU -> navController.navigateToMenu(topLevelNavOptions)
+        }
+    }
+
+    fun popNearestTopLevelDestination() {
+        // HOME_ROUTE 는 항상 첫번째에 위치하기 떄문에 마지막에 검색
+        val topLevelRoutes = TopLevelDestination
+            .entries
+            .reversed()
+            .map(TopLevelDestination::route)
+
+        val destination = topLevelRoutes
+            .firstNotNullOfOrNull { route ->
+                try { navController.getBackStackEntry(route) }
+                catch (e: IllegalArgumentException) { null }
+            }
+
+        destination?.let {
+            navController.popBackStack(it.destination.id, false)
         }
     }
 }

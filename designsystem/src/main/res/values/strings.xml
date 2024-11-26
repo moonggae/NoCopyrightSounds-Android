@@ -3,4 +3,5 @@
     <string name="cd_menu">Menu</string>
     <string name="cd_delete_item">Delete item</string>
     <string name="cd_list_item_image">Item image</string>
+    <string name="cd_close">close</string>
 </resources>

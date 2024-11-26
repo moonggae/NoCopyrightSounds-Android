@@ -3,6 +3,7 @@ package com.ccc.ncs.feature.artist.detail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -29,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -50,6 +55,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.component.ListItemCardDefaults
+import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.music.ContentLabelText
@@ -70,6 +76,7 @@ fun ArtistDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ArtistDetailViewModel = hiltViewModel(),
     onBack: () -> Unit,
+    onClose: () -> Unit,
     onMoveToMusicDetail: (UUID) -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit,
     onShowSnackbar: suspend (String, String?) -> Boolean
@@ -83,6 +90,7 @@ fun ArtistDetailRoute(
                 modifier = modifier,
                 artistDetail = state.artistDetail,
                 onBack = onBack,
+                onClose = onClose,
                 onClickMusic = onMoveToMusicDetail,
                 onClickArtist = onMoveToArtistDetail
             )
@@ -109,6 +117,7 @@ internal fun ArtistDetailScreen(
     modifier: Modifier = Modifier,
     artistDetail: ArtistDetail,
     onBack: () -> Unit,
+    onClose: () -> Unit,
     onClickMusic: (UUID) -> Unit,
     onClickArtist: (Artist) -> Unit
 ) {
@@ -116,7 +125,8 @@ internal fun ArtistDetailScreen(
         imageUrl = artistDetail.artist.photoUrl,
         name = artistDetail.artist.name,
         tags = artistDetail.artist.tags,
-        onBack = onBack
+        onBack = onBack,
+        onClose = onClose
     ) {
         Column(
             Modifier
@@ -198,6 +208,7 @@ private fun ArtistDetailLayout(
     name: String,
     tags: String,
     onBack: () -> Unit,
+    onClose: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val isExpanded = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
@@ -239,7 +250,8 @@ private fun ArtistDetailLayout(
             ArtistAppBar(
                 name = name,
                 coverVisibility = coverVisibility,
-                onBack = onBack
+                onBack = onBack,
+                onClose = onClose
             )
         }
     }
@@ -315,7 +327,8 @@ private fun ArtistInfo(
 private fun ArtistAppBar(
     name: String,
     coverVisibility: Float,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onClose: () -> Unit
 ) {
     CommonAppBar(
         padding = PaddingValues(
@@ -325,17 +338,29 @@ private fun ArtistAppBar(
             end = 16.dp
         ),
         onBack = onBack,
-        modifier = Modifier.background(if (coverVisibility == 0f) MaterialTheme.colorScheme.surface else Color.Transparent)
-    ) {
-        if (coverVisibility < 0.85f) {
-            Text(
-                text = name,
-                style = NcsTypography.Label.appbarTitle.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f - coverVisibility)
+        modifier = Modifier.background(if (coverVisibility == 0f) MaterialTheme.colorScheme.surface else Color.Transparent),
+        content = {
+            if (coverVisibility < 0.85f) {
+                Text(
+                    text = name,
+                    style = NcsTypography.Label.appbarTitle.copy(
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f - coverVisibility)
+                    )
                 )
+            }
+        },
+        suffix = {
+            Icon(
+                imageVector = NcsIcons.Close,
+                contentDescription = stringResource(com.ccc.ncs.designsystem.R.string.cd_close),
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClose)
             )
         }
-    }
+    )
 }
 
 private fun calculatePaddingSize(screenWidth: Dp, density: Density): Dp {
@@ -372,6 +397,7 @@ private fun ArtistDetailScreenPreview() {
                     musics = mockMusics,
                 ),
                 onBack = {},
+                onClose = {},
                 onClickMusic = {},
                 onClickArtist = {}
             )

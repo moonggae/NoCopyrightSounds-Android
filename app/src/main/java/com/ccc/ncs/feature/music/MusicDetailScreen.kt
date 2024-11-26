@@ -73,7 +73,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
 
-// TODO: close 버튼으로 모든 ArtistDetail, MusicDetail pop하기
 @Composable
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
@@ -84,6 +83,7 @@ fun MusicDetailRoute(
     onPlayMusic: (UUID) -> Unit,
     onAddToQueue: (UUID) -> Unit,
     onBack: () -> Unit,
+    onClose: () -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -98,6 +98,7 @@ fun MusicDetailRoute(
             onPlayMusic = onPlayMusic,
             onAddToQueue = onAddToQueue,
             onBack = onBack,
+            onClose = onClose,
             onClickArtist = onMoveToArtistDetail,
             onDownloadMusic = viewModel::downloadMusic
         )
@@ -116,6 +117,7 @@ internal fun MusicDetailScreen(
     onPlayMusic: (UUID) -> Unit,
     onAddToQueue: (UUID) -> Unit,
     onBack: () -> Unit,
+    onClose: () -> Unit,
     onClickArtist: (Artist) -> Unit,
     onDownloadMusic: (UUID) -> Unit
 ) {
@@ -137,12 +139,33 @@ internal fun MusicDetailScreen(
 
         CommonAppBar(
             onBack = onBack,
-            title = null,
             padding = PaddingValues(
                 top = 12.dp,
                 bottom = 16.dp
             ),
-            onClickMenu = { showMenu = true }
+            suffix = {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Icon(
+                        imageVector = NcsIcons.Close,
+                        contentDescription = stringResource(com.ccc.ncs.designsystem.R.string.cd_close),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = onClose)
+                    )
+
+                    Icon(
+                        imageVector = NcsIcons.MoreVertical,
+                        contentDescription = stringResource(com.ccc.ncs.designsystem.R.string.cd_menu),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = { showMenu = true })
+                    )
+                }
+            }
         )
 
         Row(
@@ -456,6 +479,7 @@ private fun MusicDetailScreenPreview() {
                 onPlayMusic = {},
                 onAddToQueue = {},
                 onBack = {},
+                onClose = {},
                 onClickArtist = {},
                 onDownloadMusic = {}
             )
