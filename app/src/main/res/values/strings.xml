@@ -45,6 +45,11 @@
     <string name="artist_sort_label_z_to_a">Z - A</string>
     <string name="artist_year_all_release_years">All Release Years</string>
 
+    <string name="menu_open_source_licenses">Open Source Licenses</string>
+    <string name="menu_cache">Cache</string>
+    <string name="menu_contact">Contact</string>
+    <string name="menu_github_repository">Github Repository</string>
+
     <string name="menu_cache_screen_title">Cache</string>
     <string name="menu_cache_screen_cached_size_label">Cached Size</string>
     <string name="menu_cache_screen_enable_cache_label">Enable Cache</string>
@@ -112,6 +117,7 @@
     <!-- Menu Screen -->
     <string name="cd_email_icon">Email icon</string>
     <string name="cd_copy_icon">Copy to clipboard</string>
+    <string name="cd_code_icon">Code icon</string>
     <string name="cd_github_icon">Github repository icon</string>
     <string name="cd_expand_menu_arrow">Expand menu</string>
     <string name="cd_shrink_menu_arrow">Shrink menu</string>

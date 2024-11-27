@@ -69,15 +69,15 @@ internal fun MenuScreen(
     Column {
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
-        MenuItem(label = "Open Source Licenses") {
+        MenuItem(label = stringResource(R.string.menu_open_source_licenses)) {
             activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
         }
 
-        MenuItem(label = "Cache") {
+        MenuItem(label = stringResource(R.string.menu_cache)) {
             onMoveCacheScreen()
         }
 
-        ExpandableMenuItem(label = "Contact") {
+        ExpandableMenuItem(label = stringResource(R.string.menu_contact)) {
             ContactContent(
                 showSnackbar = {
                     scope.launch {
@@ -109,15 +109,20 @@ fun ContactContent(
             }
         )
 
-//        ClickableRow(
-//            icon = NcsIcons.Code,
-//            text = "Github Repository",
-//            onClick = { uriHandler.openUri(githubRepo) },
-//            onCopy = {
-//                clipboardManager.setText(AnnotatedString(githubRepo))
+        ClickableRow(
+            icon = {
+                Icon(
+                    imageVector = NcsIcons.Code,
+                    contentDescription = stringResource(R.string.cd_code_icon)
+                )
+            },
+            text = stringResource(R.string.menu_github_repository),
+            onClick = { uriHandler.openUri(githubRepo) },
+            onCopy = {
+                clipboardManager.setText(AnnotatedString(githubRepo))
 //                showSnackbar("Github repository URL copied to clipboard")
-//            }
-//        )
+            }
+        )
     }
 }
 
@@ -180,7 +185,7 @@ fun MenuItem(
                 .fillMaxWidth()
                 .padding(
                     horizontal = 20.dp,
-                    vertical = 16.dp
+                    vertical = 24.dp
                 ),
             style = NcsTypography.Menu.itemLabel.copy(
                 color = MaterialTheme.colorScheme.onSurface
@@ -206,7 +211,7 @@ fun ExpandableMenuItem(
             modifier = Modifier
                 .clickable { expanded = !expanded }
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 12.dp),
+                .padding(horizontal = 20.dp, vertical = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
