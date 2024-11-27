@@ -33,7 +33,7 @@ fun NavController.backWithGenre(genreId: Int) {
     popBackStack(
         route = HOME_ROUTE,
         inclusive = false,
-        saveState = true
+        saveState = false
     )
 }
 
@@ -46,7 +46,7 @@ fun NavController.backWithMood(moodId: Int) {
     popBackStack(
         route = HOME_ROUTE,
         inclusive = false,
-        saveState = true
+        saveState = false
     )
 }
 
