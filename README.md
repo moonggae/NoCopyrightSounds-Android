@@ -12,6 +12,7 @@
 - [x] 가사 보기
 - [x] 플레이리스트 관리 및 재생
 - [x] 음악 순서 변경
+- [x] 오프라인 재생 지원(캐시, 다운로드)
 
 <p>
 <img width="32.5%" src="resource/nmp_player_small.gif">
@@ -35,14 +36,14 @@
 - [ ] 백엔드 추가
     - [ ] 검색 및 필터링 변경
     - [ ] 추천 기능
-- [ ] 플레이리스트 제목 글자수 유효성
+- [x] 플레이리스트 제목 글자수 유효성
 - [ ] 플레이리스트 선택시 새로운 플레이리스트 추가
 - [x] 음악 클릭하여 재생
 - [ ] 음악 디테일 페이지 - 가사 없을 때 문구
 - [ ] 음악, 아티스트 리스트 페이지 - 결과 없을 때 문구
 - [x] 음악 선택시 선택한 개수 표시
-- [ ] 페이지 전환 애니매이션
-- [ ] 디테일 페이지 히스토리 처리
+- [x] 페이지 전환 애니매이션
+- [x] 디테일 페이지 히스토리 처리
 - [ ] 플레이 화면에서 음악, 아티스트 디테일 이동시 뒤로 왔을 때 작아지는 현상 수정
 - [x] 다운로드 기능
   - [x] 사용자가 직접 파일 다운로드
@@ -58,14 +59,6 @@
 
 ### 🛠️ Tech
 `Compose`, `Media3`, `Hilt`, `Coroutines`, `Flow`, `Retrofit`, `Room`, `Coil`, `Unit Test`
-
-### 📖 How to run
-- `local.properties`파일에 아래 항목 추가
-- add the below data to `local.properties`
-```
-WEB_URL="https://ncs.io"
-FANDOM_URL="https://nocopyrightsounds.fandom.com"
-```
 
 ### 📱 Result
 
