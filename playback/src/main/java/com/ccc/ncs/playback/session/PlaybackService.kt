@@ -78,14 +78,17 @@ class PlaybackService : MediaLibraryService() {
     }
 
     private suspend fun handleMediaItemTransition(mediaItem: MediaItem) {
-        CacheManager.clearOnCacheUpdateListener()
+        if (CacheManager.isInitialized) {
+            CacheManager.clearOnCacheUpdateListener()
 
-        if (mediaItem.isNetworkSource) {
-            setupCacheListener(mediaItem)
-        } else {
-            if (!mediaItem.isLocalFileExists) {
-                handleMissingLocalFile(mediaItem)
+            if (mediaItem.isNetworkSource) {
+                setupCacheListener(mediaItem)
+                return
             }
+        }
+
+        if (!mediaItem.isNetworkSource && !mediaItem.isLocalFileExists) {
+            handleMissingLocalFile(mediaItem)
         }
     }
 
