@@ -35,7 +35,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -310,7 +309,7 @@ fun PlaylistDetailMenuBottomSheetContent(
     }
 }
 
-@Preview(name = "Foldable", device = Devices.FOLDABLE)
+@Preview(name = "Foldable", device = "spec:width=673dp,height=841dp")
 @Preview
 @Composable
 fun PlaylistDetailContentPreview() {
