@@ -30,7 +30,7 @@ import com.ccc.ncs.database.util.InstantConverter
         PlayListMusicCrossRef::class,
         RecentSearchQueryEntity::class
     ],
-    version = 5
+    version = 6
 )
 @TypeConverters(
     InstantConverter::class,

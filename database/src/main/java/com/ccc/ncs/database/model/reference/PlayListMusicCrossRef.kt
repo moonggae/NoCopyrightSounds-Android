@@ -2,6 +2,7 @@ package com.ccc.ncs.database.model.reference
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.ccc.ncs.database.model.PlayListEntity
 import java.util.UUID
@@ -16,6 +17,10 @@ import java.util.UUID
             childColumns = ["playListId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("playListId"),
+        Index("musicId")
     ]
 )
 data class PlayListMusicCrossRef(
