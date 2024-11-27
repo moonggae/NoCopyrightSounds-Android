@@ -21,15 +21,11 @@ class CacheViewModel @Inject constructor(
         cacheRepository.usedSizeBytes,
         cacheRepository.enableCache
     ) { maxMb, usedBytes, enableCache ->
-        if (usedBytes != null) {
-            CacheUiState.Success(
-                maxCacheSizeMb = maxMb,
-                usedCacheSizeBytes = usedBytes,
-                enableCache = enableCache
-            )
-        } else {
-            CacheUiState.Loading(maxMb)
-        }
+        CacheUiState.Success(
+            maxCacheSizeMb = maxMb,
+            usedCacheSizeBytes = usedBytes ?: 0,
+            enableCache = enableCache
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(3000),
