@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.secrets)
+    alias(libs.plugins.ncs.config)
 }
 
 android {
@@ -14,10 +15,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildFeatures {
-        buildConfig = true
     }
 
     buildTypes {
@@ -34,11 +31,6 @@ android {
         jvmTarget = JavaVersion.VERSION_21.toString()
     }
 }
-
-secrets {
-    defaultPropertiesFileName = "local.properties"
-}
-
 
 dependencies {
     implementation(project(":model"))

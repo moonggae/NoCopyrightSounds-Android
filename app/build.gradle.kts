@@ -1,4 +1,3 @@
-
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -12,6 +11,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.service)
     alias(libs.plugins.google.firebase.crashlytics)
+    alias(libs.plugins.ncs.config)
 }
 
 android {
@@ -85,10 +85,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
-
-secrets {
-    defaultPropertiesFileName = "local.properties"
 }
 
 dependencies {
