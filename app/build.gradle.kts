@@ -16,12 +16,12 @@ plugins {
 
 android {
     namespace = "com.ccc.ncs"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.ccc.ncs"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 24
         versionName = "0.2.18"
 
@@ -67,11 +67,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
     buildFeatures {
         compose = true
