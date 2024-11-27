@@ -74,7 +74,7 @@ fun NcsApp(
         contentWindowInsets = WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            if (appState.currentTopLevelDestination != null) {
+            if (appState.currentDestination?.route != null) {
                 NcsBottomBar(
                     destinations = appState.topLevelDestinations,
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
@@ -126,7 +126,7 @@ fun NcsApp(
                 )
             }
 
-            if (appState.currentTopLevelDestination != null && playerUiState is PlayerUiState.Success) {
+            if (appState.currentDestination?.route != null && playerUiState is PlayerUiState.Success) {
                 PlayerScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     minHeight = PLAYER_SMALL_HEIGHT_DEFAULT,
@@ -179,11 +179,13 @@ private fun NcsBottomBar(
 
     val height = (contentHeight + navigationBarInsertHeight) * visibility
 
-    NcsNavigationBar(modifier = modifier.then(
-        Modifier
-            .height(height)
-            .alpha(visibility)
-    )) {
+    NcsNavigationBar(
+        modifier = modifier.then(
+            Modifier
+                .height(height)
+                .alpha(visibility)
+        )
+    ) {
         destinations.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
 
