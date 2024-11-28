@@ -21,13 +21,30 @@ kotlin {
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.android.tools.common)
+    compileOnly(libs.kotlin.gradlePlugin)
 }
 
 gradlePlugin {
     plugins {
-        register("androidApplicationCompose") {
-            id = "ncs.config"
-            implementationClass = "BaseConfigPlugin"
+        register("androidApplication") {
+            id = "ncs.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "ncs.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidCompose") {
+            id = "ncs.android.compose"
+            implementationClass = "AndroidComposeConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "ncs.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("hilt") {
+            id = "ncs.hilt"
+            implementationClass = "HiltConventionPlugin"
         }
     }
 }

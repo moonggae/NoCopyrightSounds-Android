@@ -2,30 +2,22 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.secrets)
+    alias(libs.plugins.ncs.android.application)
+    alias(libs.plugins.ncs.android.compose)
+    alias(libs.plugins.ncs.hilt)
     alias(libs.plugins.google.oss)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.service)
     alias(libs.plugins.google.firebase.crashlytics)
-    alias(libs.plugins.ncs.config)
 }
 
 android {
     namespace = "com.ccc.ncs"
-    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.ccc.ncs"
-        minSdk = 29
-        targetSdk = 35
         versionCode = 25
         versionName = "0.2.19"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -66,20 +58,6 @@ android {
 //            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
-    }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()
-//    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -92,16 +70,14 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":designsystem"))
     implementation(project(":playback"))
-    implementation(project(":cache"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.navigation.common.ktx)
@@ -114,9 +90,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.jsoup)
@@ -125,8 +99,6 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.coil.kt.compose)
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.work)
 
