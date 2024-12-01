@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":datastore"))
     implementation(project(":cache"))
     implementation(project(":domain"))
-    implementation(project(":playback"))
     androidTestImplementation(project(":network"))
 
     implementation(libs.androidx.core.ktx)
