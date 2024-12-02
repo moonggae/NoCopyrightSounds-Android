@@ -170,7 +170,7 @@ internal class DefaultMediaPlaybackController @Inject constructor(
     }
 }
 
-private fun  MediaController.getMediaItemIndex(mediaItem: MediaItem):Int? {
+private fun MediaController.getMediaItemIndex(mediaItem: MediaItem):Int? {
     repeat(this.mediaItemCount) { index ->
         val currentItem = this.getMediaItemAt(index)
         if (currentItem.mediaId == mediaItem.mediaId) return index

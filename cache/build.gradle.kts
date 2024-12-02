@@ -12,4 +12,5 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.media3)
+    implementation(libs.datastore.preferences)
 }

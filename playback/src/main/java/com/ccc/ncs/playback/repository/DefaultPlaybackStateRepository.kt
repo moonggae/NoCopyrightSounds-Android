@@ -6,7 +6,7 @@ import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DefaultPlaybackStateRepository @Inject constructor(
+internal class DefaultPlaybackStateRepository @Inject constructor(
     playbackStateManager: PlaybackStateManager
 ): PlaybackStateRepository {
     override val playbackState: Flow<PlaybackState> = playbackStateManager.flow

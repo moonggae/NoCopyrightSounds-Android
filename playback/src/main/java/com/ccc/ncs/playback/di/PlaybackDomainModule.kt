@@ -1,8 +1,10 @@
 package com.ccc.ncs.playback.di
 
 import com.ccc.ncs.domain.MediaPlaybackController
+import com.ccc.ncs.domain.repository.MusicCacheRepository
 import com.ccc.ncs.domain.repository.PlaybackStateRepository
 import com.ccc.ncs.playback.DefaultMediaPlaybackController
+import com.ccc.ncs.playback.repository.DefaultMusicCacheRepository
 import com.ccc.ncs.playback.repository.DefaultPlaybackStateRepository
 import dagger.Binds
 import dagger.Module
@@ -21,4 +23,9 @@ internal abstract class PlaybackDomainModule {
     internal abstract fun bindsPlaybackStateRepository(
         default: DefaultPlaybackStateRepository
     ): PlaybackStateRepository
+
+    @Binds
+    internal abstract fun bindsMusicCacheRepository(
+        default: DefaultMusicCacheRepository
+    ): MusicCacheRepository
 }

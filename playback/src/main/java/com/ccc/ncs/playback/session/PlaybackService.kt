@@ -9,7 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
-import com.ccc.ncs.cache.di.CacheManager
+import com.ccc.ncs.cache.CacheManager
 import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +30,9 @@ class PlaybackService : MediaLibraryService() {
 
     @Inject
     lateinit var musicRepository: MusicRepository
+
+    @Inject
+    lateinit var cacheManager: CacheManager
 
 
     private val serviceJob = SupervisorJob()
@@ -55,7 +58,9 @@ class PlaybackService : MediaLibraryService() {
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession = session
 
+    @OptIn(UnstableApi::class)
     private fun setupPlayer() {
+        // TODO: isCurrentMediaItemLive true 일 때 처리, 상태 update 되는 시점 찾기
         session.player.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
@@ -78,8 +83,8 @@ class PlaybackService : MediaLibraryService() {
     }
 
     private suspend fun handleMediaItemTransition(mediaItem: MediaItem) {
-        if (CacheManager.isInitialized) {
-            CacheManager.clearOnCacheUpdateListener()
+        if (cacheManager.enableCache) {
+            cacheManager.clearOnCacheUpdateListener()
 
             if (mediaItem.isNetworkSource) {
                 setupCacheListener(mediaItem)
@@ -93,8 +98,8 @@ class PlaybackService : MediaLibraryService() {
     }
 
     @OptIn(UnstableApi::class)
-    suspend fun setupCacheListener(mediaItem: MediaItem) {
-        CacheManager.addOnCacheUpdateListener(
+    fun setupCacheListener(mediaItem: MediaItem) {
+        cacheManager.addOnCacheUpdateListener(
             key = mediaItem.mediaId,
             scope = serviceScope
         ) { isFullyCached ->

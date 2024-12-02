@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":model"))
+    api(project(":model"))
     androidTestImplementation(project(":database-test"))
 
     implementation(libs.androidx.core.ktx)

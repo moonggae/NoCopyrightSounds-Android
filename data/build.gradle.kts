@@ -11,7 +11,6 @@ dependencies {
     implementation(project(":network"))
     implementation(project(":database"))
     implementation(project(":datastore"))
-    implementation(project(":cache"))
     implementation(project(":domain"))
     androidTestImplementation(project(":network"))
 

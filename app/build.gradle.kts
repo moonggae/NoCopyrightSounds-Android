@@ -93,9 +93,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.jsoup)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.scalars)
     implementation(libs.coil.kt)
     implementation(libs.coil.kt.compose)
 
@@ -105,7 +102,6 @@ dependencies {
     implementation(libs.paing.runtime)
     implementation(libs.paing.compose)
 
-    implementation(libs.bundles.media3)
     implementation(libs.reorderable)
     implementation(libs.lottie.compose)
     implementation(libs.google.oss)

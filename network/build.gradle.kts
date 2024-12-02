@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":model"))
+    api(project(":model"))
 
     implementation(libs.androidx.core.ktx)
 

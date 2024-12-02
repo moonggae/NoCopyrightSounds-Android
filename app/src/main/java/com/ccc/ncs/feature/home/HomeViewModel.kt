@@ -3,7 +3,6 @@ package com.ccc.ncs.feature.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.UnstableApi
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ccc.ncs.data.paging.MusicPagingData
@@ -30,8 +29,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @androidx.annotation.OptIn(UnstableApi::class)
-@Inject constructor(
+class HomeViewModel @Inject constructor(
     private val musicRepository: MusicRepository,
     private val savedStateHandle: SavedStateHandle,
     private val musicDownloader: MusicDownloader,

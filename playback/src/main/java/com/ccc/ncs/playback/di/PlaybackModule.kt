@@ -5,13 +5,10 @@ import android.content.Context
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.cache.Cache
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaLibraryService
+import com.ccc.ncs.cache.CacheManager
 import com.ccc.ncs.playback.playstate.PlaybackStateListener
 import com.ccc.ncs.playback.session.LibrarySessionCallback
 import com.ccc.ncs.playback.session.PlaybackService
@@ -34,7 +31,7 @@ internal object PlaybackModule {
     fun providesPlayer(
         @ApplicationContext context: Context,
         service: Service,
-        cache: Cache?,
+        cacheManager: CacheManager,
         playbackStateListener: PlaybackStateListener,
     ): ExoPlayer {
         val audioAttributes = AudioAttributes.Builder()
@@ -45,21 +42,14 @@ internal object PlaybackModule {
         val renderersFactory = DefaultRenderersFactory(service)
             .forceEnableMediaCodecAsynchronousQueueing()
 
-
         val builder = ExoPlayer.Builder(service, renderersFactory)
             .setAudioAttributes(audioAttributes, true)
             .setHandleAudioBecomingNoisy(true)
 
-        if (cache != null) {
-            val cacheDataSourceFactory = CacheDataSource.Factory()
-                .setCacheKeyFactory { it.key ?: "" }
-                .setCache(cache)
-                .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
-
-            val progressiveMediaSourceFactory = ProgressiveMediaSource
-                .Factory(cacheDataSourceFactory)
-
-            builder.setMediaSourceFactory(progressiveMediaSourceFactory)
+        if (cacheManager.enableCache) {
+            cacheManager.getProgressiveMediaSourceFactory(context)?.let { mediaSourceFactory ->
+                builder.setMediaSourceFactory(mediaSourceFactory)
+            }
         }
 
         return builder.build()

@@ -12,7 +12,7 @@ import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.artistText
 
 @OptIn(UnstableApi::class)
-fun Music.asMediaItem(): MediaItem = MediaItem.Builder()
+internal fun Music.asMediaItem(): MediaItem = MediaItem.Builder()
     .setUri((status as? MusicStatus.Downloaded)?.localUri ?: dataUrl)
     .setCustomCacheKey(id.toString())
     .setMimeType(MimeTypes.AUDIO_MPEG)
