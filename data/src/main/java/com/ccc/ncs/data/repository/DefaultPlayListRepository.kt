@@ -1,10 +1,7 @@
 package com.ccc.ncs.data.repository
 
-import androidx.room.withTransaction
-import com.ccc.ncs.database.NcsDatabase
 import com.ccc.ncs.database.dao.PlayListDao
 import com.ccc.ncs.database.model.PlayListEntity
-import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
 import com.ccc.ncs.database.model.relation.asModel
 import com.ccc.ncs.domain.repository.PlayListRepository
 import com.ccc.ncs.model.Music
@@ -17,8 +14,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class DefaultPlayListRepository @Inject constructor(
-    private val playListDao: PlayListDao,
-    private val database: NcsDatabase
+    private val playListDao: PlayListDao
 ): PlayListRepository {
     override fun getPlayLists(): Flow<List<PlayList>> = playListDao
         .getAllPlayList()
@@ -53,22 +49,14 @@ class DefaultPlayListRepository @Inject constructor(
     }
 
     override suspend fun setPlayListMusics(playListId: UUID, musics: List<Music>) {
-        setPlayListMusicsWithId(
-            playListId = playListId,
+        playListDao.setMusics(
+            playlistId = playListId,
             musicIds = musics.map { it.id }.distinct()
         )
     }
 
     override suspend fun setPlayListMusicsWithId(playListId: UUID, musicIds: List<UUID>) {
-        database.withTransaction {
-            playListDao.unLinkAllMusic(playListId)
-            playListDao.linkMusicToPlayList(musicIds.distinct().map {
-                PlayListMusicCrossRef(
-                    playListId = playListId,
-                    musicId = it
-                )
-            })
-        }
+        playListDao.setMusics(playListId, musicIds)
     }
 
     override suspend fun updatePlayListName(playListId: UUID, name: String) {
