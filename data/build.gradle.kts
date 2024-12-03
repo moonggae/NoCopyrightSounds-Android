@@ -12,23 +12,13 @@ dependencies {
     implementation(project(":database"))
     implementation(project(":datastore"))
     implementation(project(":domain"))
-    androidTestImplementation(project(":network"))
 
     implementation(libs.androidx.core.ktx)
-
-    androidTestImplementation(project(":database-test"))
 
     implementation(libs.paing.runtime)
     implementation(libs.paing.compose)
 
+    testImplementation(project(":database-test"))
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
-
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.test.core.ktx)
-    androidTestImplementation(libs.coroutines.test)
-    androidTestImplementation(libs.room.testing)
-    androidTestImplementation(libs.okhttp.logging)
 }

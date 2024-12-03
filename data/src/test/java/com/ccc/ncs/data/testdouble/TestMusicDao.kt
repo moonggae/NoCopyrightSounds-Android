@@ -83,4 +83,36 @@ class TestMusicDao(
     override fun getMusics(ids: List<UUID>): Flow<List<MusicWithGenreAndMood>> = entitiesStateFlow.map { entities ->
         entities.filter { entity -> entity.music.id in ids }
     }
+
+    override fun getMusicsByStatus(status: List<String>): Flow<List<MusicWithGenreAndMood>> = entitiesStateFlow.map { entities ->
+        entities.filter { entity -> entity.music.status in status }
+    }
+
+    override fun getDownloadingMusics(): Flow<List<MusicWithGenreAndMood>> = entitiesStateFlow.map { entities ->
+        entities.filter { entity -> entity.music.status == "Downloading" }
+    }
+
+    override fun getDownloadedMusics(): Flow<List<MusicWithGenreAndMood>> = entitiesStateFlow.map { entities ->
+        entities.filter { entity -> entity.music.status == "Downloaded" }
+    }
+
+    override suspend fun updateMusic(music: MusicEntity) {
+        entitiesStateFlow.update { currentList ->
+            currentList.map { entity ->
+                if (entity.music.id == music.id) {
+                    entity.copy(music = music)
+                } else {
+                    entity
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteMusic(vararg musics: MusicEntity) {
+        entitiesStateFlow.update { currentList ->
+            currentList.filterNot { entity ->
+                musics.any { music -> music.id == entity.music.id }
+            }
+        }
+    }
 }

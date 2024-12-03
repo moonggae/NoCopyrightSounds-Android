@@ -4,10 +4,11 @@ import com.ccc.ncs.database.model.PlayListEntity
 import com.ccc.ncs.database.model.relation.PlayListWithMusics
 
 val MockPlayList = PlayListEntity(
-    name = "My PlayList"
+    name = "My PlayList",
+    isUserCreated = true
 )
 
 val MockPlayListWithMusics: PlayListWithMusics = PlayListWithMusics(
     playList = MockPlayList,
-    musics = listOf(MockMusicWithGenreAndMoodList[0])
+    musics = MockMusicWithGenreAndMoodList
 )
