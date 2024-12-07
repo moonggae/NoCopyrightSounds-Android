@@ -1,4 +1,4 @@
-### 0.2.20
+### 0.2.21
 ```
 <ko-KR>
 ✨ 새로운 기능
@@ -7,7 +7,8 @@
 
 🐛 버그 수정
 - 재생 목록 음악이 없을 때 플레이어 화면이 남아 있는 현상을 해결했어요.
-</ko-KR>
+- 화면 이동이 원할하지 않던 문제를 해결했어요.
+  </ko-KR>
 
 <en-US>
 ✨ New Features
@@ -15,7 +16,8 @@
 
 🐛 Bug Fixes
 - Fixed an issue where the player screen remained visible when the playlist was empty.
-</en-US>
+- Fixed navigation issues between screens.
+  </en-US>
 
 <es-ES>
 ✨ Nuevas funciones
@@ -24,7 +26,8 @@
 
 🐛 Corrección de errores
 - Se solucionó un problema donde la pantalla del reproductor permanecía visible cuando la lista de reproducción estaba vacía.
-</es-ES>
+- Se solucionó un problema con la navegación entre pantallas.
+  </es-ES>
 
 <es-419>
 ✨ Nuevas funciones
@@ -33,7 +36,8 @@
 
 🐛 Corrección de errores
 - Se solucionó un problema donde la pantalla del reproductor permanecía visible cuando la lista de reproducción estaba vacía.
-</es-419>
+- Se solucionó un problema con la navegación entre pantallas.
+  </es-419>
 
 <ar>
 ✨ ميزات جديدة
@@ -42,7 +46,8 @@
 
 🐛 إصلاح الأخطاء
 - تم إصلاح مشكلة بقاء شاشة المشغل مرئية عندما تكون قائمة التشغيل فارغة.
-</ar>
+- تم إصلاح مشكلة التنقل بين الشاشات.
+  </ar>
 
 <hi-IN>
 ✨ नई सुविधाएं
@@ -51,7 +56,8 @@
 
 🐛 बग फिक्स
 - प्लेलिस्ट खाली होने पर प्लेयर स्क्रीन दिखाई देने की समस्या को ठीक किया गया।
-</hi-IN>
+- स्क्रीन नेविगेशन की समस्या को ठीक किया गया।
+  </hi-IN>
 
 <id>
 ✨ Fitur Baru
@@ -60,7 +66,8 @@
 
 🐛 Perbaikan Bug
 - Memperbaiki masalah di mana layar pemutar tetap terlihat ketika daftar putar kosong.
-</id>
+- Memperbaiki masalah navigasi antar layar.
+  </id>
 ```
 
 ### 0.2.19
