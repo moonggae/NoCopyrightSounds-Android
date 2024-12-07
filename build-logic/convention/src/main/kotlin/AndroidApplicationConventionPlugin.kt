@@ -1,6 +1,7 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.ccc.ncs.configureAndroidBuildConfig
+import com.ccc.ncs.configureGenerateSymbols
 import com.ccc.ncs.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,6 +18,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
                 configureAndroidBuildConfig(this)
+                configureGenerateSymbols(this)
                 defaultConfig.targetSdk = 35
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             }
