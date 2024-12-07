@@ -1,3 +1,68 @@
+### 0.2.20
+```
+<ko-KR>
+✨ 새로운 기능
+- 한국어를 추가했어요.
+- 일부 UI를 수정했어요.
+
+🐛 버그 수정
+- 재생 목록 음악이 없을 때 플레이어 화면이 남아 있는 현상을 해결했어요.
+</ko-KR>
+
+<en-US>
+✨ New Features
+- Modified some UI elements.
+
+🐛 Bug Fixes
+- Fixed an issue where the player screen remained visible when the playlist was empty.
+</en-US>
+
+<es-ES>
+✨ Nuevas funciones
+- Se modificaron algunos elementos de la interfaz de usuario.
+- Se agregó el idioma español (España).
+
+🐛 Corrección de errores
+- Se solucionó un problema donde la pantalla del reproductor permanecía visible cuando la lista de reproducción estaba vacía.
+</es-ES>
+
+<es-419>
+✨ Nuevas funciones
+- Se modificaron algunos elementos de la interfaz de usuario.
+- Se agregó el idioma español (Latinoamérica).
+
+🐛 Corrección de errores
+- Se solucionó un problema donde la pantalla del reproductor permanecía visible cuando la lista de reproducción estaba vacía.
+</es-419>
+
+<ar>
+✨ ميزات جديدة
+- تم تعديل بعض عناصر واجهة المستخدم.
+- تمت إضافة اللغة العربية.
+
+🐛 إصلاح الأخطاء
+- تم إصلاح مشكلة بقاء شاشة المشغل مرئية عندما تكون قائمة التشغيل فارغة.
+</ar>
+
+<hi-IN>
+✨ नई सुविधाएं
+- कुछ UI तत्वों को संशोधित किया गया।
+- हिंदी भाषा जोड़ी गई है।
+
+🐛 बग फिक्स
+- प्लेलिस्ट खाली होने पर प्लेयर स्क्रीन दिखाई देने की समस्या को ठीक किया गया।
+</hi-IN>
+
+<id>
+✨ Fitur Baru
+- Memodifikasi beberapa elemen UI.
+- Menambahkan dukungan bahasa Indonesia.
+
+🐛 Perbaikan Bug
+- Memperbaiki masalah di mana layar pemutar tetap terlihat ketika daftar putar kosong.
+</id>
+```
+
 ### 0.2.19
 ```
 <ko-KR>

@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId = "com.ccc.ncs"
-        versionCode = 25
-        versionName = "0.2.19"
+        versionCode = 26
+        versionName = "0.2.20"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -62,6 +62,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    lint {
+        disable.add("Instantiatable")
     }
 }
 
