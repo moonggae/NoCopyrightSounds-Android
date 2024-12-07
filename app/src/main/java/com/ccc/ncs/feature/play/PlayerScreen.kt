@@ -32,9 +32,10 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsTopHeight
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -53,7 +54,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -262,12 +262,14 @@ private fun PlayerScreenBigContent(
                 modifier = Modifier.align(Alignment.Center)
             )
 
-            PlayerScreenAppBar(
-                modifier = modifier,
-                draggableStatePercentage = draggableStatePercentage,
-                screenWidth = screenWidth,
-                onClose = onClose
-            )
+            if (draggableStatePercentage > .2f) {
+                PlayerScreenAppBar(
+                    modifier = modifier,
+                    draggableStatePercentage = draggableStatePercentage,
+                    screenWidth = screenWidth,
+                    onClose = onClose
+                )
+            }
         }
 
         Column(
@@ -347,16 +349,20 @@ private fun PlayerScreenAppBar(
                 )
                 .widthIn(0.dp, screenWidth)
                 .width(screenWidth * draggableStatePercentage * 2),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
-            Icon(
-                imageVector = NcsIcons.Close,
-                contentDescription = stringResource(R.string.cd_close),
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(onClick = onClose)
-            )
+            IconButton(
+                onClick = onClose,
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Icon(
+                    imageVector = NcsIcons.Close,
+                    contentDescription = stringResource(R.string.cd_close)
+                )
+            }
+
 
             /*
             Icon(
