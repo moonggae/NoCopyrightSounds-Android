@@ -2,7 +2,6 @@ package com.ccc.ncs.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,8 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.NcsNavigationBar
 import com.ccc.ncs.designsystem.component.NcsNavigationBarItem
@@ -70,21 +71,24 @@ fun NcsApp(
         }
     }
 
+    val currentBackStackEntry by appState.navController.currentBackStackEntryAsState()
+
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            if (appState.currentDestination?.route != null) {
+            if (currentBackStackEntry?.currentTopLevelDestination != null) {
                 NcsBottomBar(
                     destinations = appState.topLevelDestinations,
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
-                    currentDestination = appState.currentDestination,
+                    currentDestination = currentBackStackEntry?.destination,
                     visibility = 1 - playingScreenHeightWeight
                 )
             }
         },
         floatingActionButton = {
-            val showFloatingButton = appState.currentTopLevelDestination == TopLevelDestination.LIBRARY && playingScreenHeightWeight == 0f
+            val showFloatingButton = currentBackStackEntry?.currentTopLevelDestination == TopLevelDestination.LIBRARY && playingScreenHeightWeight == 0f
             if (showFloatingButton) {
                 Column {
                     FloatingActionButton(
@@ -111,22 +115,20 @@ fun NcsApp(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Row(Modifier.fillMaxSize()) {
-                NcsNavHost(
-                    appState = appState,
-                    onShowSnackbar = { message, action ->
-                        snackbarHostState.showSnackbar(
-                            message = message,
-                            actionLabel = action,
-                            duration = Short,
-                        ) == ActionPerformed
-                    },
-                    onPlayMusics = playerViewModel::playMusics,
-                    onAddToQueue = playerViewModel::addQueueToCurrentPlaylist
-                )
-            }
+            NcsNavHost(
+                appState = appState,
+                onShowSnackbar = { message, action ->
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = action,
+                        duration = Short,
+                    ) == ActionPerformed
+                },
+                onPlayMusics = playerViewModel::playMusics,
+                onAddToQueue = playerViewModel::addQueueToCurrentPlaylist
+            )
 
-            if (appState.currentDestination?.route != null && playerUiState is PlayerUiState.Success) {
+            if (currentBackStackEntry?.currentTopLevelDestination != null && playerUiState is PlayerUiState.Success) {
                 PlayerScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     minHeight = PLAYER_SMALL_HEIGHT_DEFAULT,
@@ -205,3 +207,9 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
     this?.hierarchy?.any {
         it.route?.contains(destination.name, true) ?: false
     } ?: false
+
+
+private val NavBackStackEntry.currentTopLevelDestination
+    get() = TopLevelDestination.entries.find {
+        this.destination.route == it.route
+    }
