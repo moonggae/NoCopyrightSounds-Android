@@ -170,4 +170,4 @@ private fun rememberSwipeState(density: Density): AnchoredDraggableState<DragAnc
 private enum class DragAnchors { Start, Center, End }
 
 private val ACTION_SIZE = 80.dp
-private val VELOCITY_THRESHOLD = 100.dp
+private val VELOCITY_THRESHOLD = 160.dp
