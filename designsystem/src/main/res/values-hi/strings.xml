@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Cancel">रद्द करें</string>
+
+    <string name="cd_back">वापस</string>
+    <string name="cd_menu">मेनू</string>
+    <string name="cd_delete_item">आइटम हटाएं</string>
+    <string name="cd_list_item_image">आइटम छवि</string>
+    <string name="cd_close">बंद करें</string>
+</resources>

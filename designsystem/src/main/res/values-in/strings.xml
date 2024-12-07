@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Cancel">Batal</string>
+
+    <string name="cd_back">Kembali</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_delete_item">Hapus item</string>
+    <string name="cd_list_item_image">Gambar item</string>
+    <string name="cd_close">Tutup</string>
+</resources>

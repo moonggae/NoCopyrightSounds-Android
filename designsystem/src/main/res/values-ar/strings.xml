@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Cancel">إلغاء</string>
+
+    <string name="cd_back">رجوع</string>
+    <string name="cd_menu">القائمة</string>
+    <string name="cd_delete_item">حذف العنصر</string>
+    <string name="cd_list_item_image">صورة العنصر</string>
+    <string name="cd_close">إغلاق</string>
+</resources>

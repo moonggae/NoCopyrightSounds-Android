@@ -308,7 +308,7 @@ private fun MusicDetailLyrics(
 
     Column(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            ContentLabelText(text = "Lyrics")
+            ContentLabelText(text = stringResource(R.string.Lyrics))
             Icon(
                 imageVector = NcsIcons.ArrowDropDown,
                 contentDescription = stringResource(R.string.cd_toggle_lyrics_expansion),

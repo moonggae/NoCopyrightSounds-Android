@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Cancel">취소</string>
+
+    <string name="cd_back">뒤로</string>
+    <string name="cd_menu">메뉴</string>
+    <string name="cd_delete_item">항목 삭제</string>
+    <string name="cd_list_item_image">항목 이미지</string>
+    <string name="cd_close">닫기</string>
+</resources>

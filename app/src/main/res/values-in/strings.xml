@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NMP</string>
+    <string name="not_connected">⚠️ Anda tidak terhubung ke internet</string>
+    <string name="feature_home_title">Beranda</string>
+    <string name="feature_artist_title">Artis</string>
+    <string name="feature_library_title">Perpustakaan</string>
+    <string name="feature_menu_title">Menu</string>
+    <string name="feature_playlist_title">Daftar Putar</string>
+
+    <string name="home_select_musics_menu_details">Detail</string>
+    <string name="home_select_musics_menu_play_now">Putar sekarang</string>
+    <string name="home_select_musics_menu_add_to_playlist">Tambahkan ke daftar putar</string>
+    <string name="home_select_musics_menu_add_to_queue">Tambahkan ke antrean</string>
+    <string name="home_select_musics_menu_download">Unduh</string>
+
+    <string name="home_search_placeholder"><![CDATA[Cari Trek & Artis]]></string>
+    <string name="select_playlist_dialog_title">Pilih Daftar Putar</string>
+    <string name="select_playlist_dialog_no_playlist_available">Tidak ada daftar putar tersedia</string>
+
+    <string name="message_added_to_queue">Ditambahkan ke antrean</string>
+    <string name="message_added_to_playlist">Ditambahkan ke daftar putar</string>
+
+    <string name="add_new_playlist">Tambah Daftar Putar Baru</string>
+    <string name="songs_count">%1$s lagu</string>
+
+    <string name="delete_playlist_alert_title">Hapus Daftar Putar</string>
+    <string name="delete_playlist_alert_message">Apakah Anda yakin\ningin menghapus daftar putar ini?</string>
+
+    <string name="playlist_detail_menu_modify_name">Ubah nama</string>
+    <string name="playlist_detail_menu_save_recent_playlist">Simpan Daftar Putar</string>
+    <string name="playlist_detail_menu_delete_playlist">Hapus Daftar Putar</string>
+
+    <string name="playlist_edit_title_new">Daftar Putar Baru</string>
+    <string name="playlist_edit_title_update">Edit Daftar Putar</string>
+    <string name="playlist_edit_name_placeholder">Daftar Putar Saya</string>
+    <string name="playlist_edit_error_too_long">Nama terlalu panjang.</string>
+    <string name="playlist_edit_error_empty">Nama kosong.</string>
+
+    <string name="player_menu_playlist">Daftar Putar</string>
+    <string name="player_menu_lyrics_empty">Lirik tidak ditemukan</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[Anda dapat memposting lirik dengan mengklik <annotation>di sini</annotation>]]></string>
+
+    <string name="artist_search_placeholder">Cari Artis</string>
+    <string name="artist_sort_label_latest_artists">Artis Terbaru</string>
+    <string name="artist_sort_label_a_to_z">A - Z</string>
+    <string name="artist_sort_label_z_to_a">Z - A</string>
+    <string name="artist_year_all_release_years">Semua Tahun Rilis</string>
+
+    <string name="artist_detail_label_popular_tracks">Trek Populer</string>
+    <string name="artist_detail_label_similar_tag_artists">Artis yang Direkomendasikan</string>
+
+    <string name="menu_open_source_licenses">Lisensi Open Source</string>
+    <string name="menu_cache">Cache</string>
+    <string name="menu_contact">Kontak</string>
+    <string name="menu_github_repository">Github Repository</string>
+
+    <string name="menu_cache_screen_title">Cache</string>
+    <string name="menu_cache_screen_cached_size_label">Ukuran Cache</string>
+    <string name="menu_cache_screen_enable_cache_label">Aktifkan Cache</string>
+    <string name="menu_cache_screen_max_cache_size_label">Ukuran Cache Maksimal</string>
+    <string name="menu_cache_screen_clear_cache_label">Bersihkan Cache</string>
+    <string name="menu_cache_screen_apply_description">Pengaturan ini akan diterapkan setelah memulai ulang aplikasi.</string>
+
+    <string name="Genre">Genre</string>
+    <string name="Genres">Genre</string>
+    <string name="Lyrics">Lirik</string>
+    <string name="Mood">Suasana</string>
+    <string name="Moods">Suasana</string>
+    <string name="Tags">Tag</string>
+    <string name="Delete">Hapus</string>
+    <string name="Cancel">Batal</string>
+    <string name="save">Simpan</string>
+    <string name="Download">Unduh</string>
+    <string name="Cache">Cache</string>
+
+    <string name="playlist_name_auto_generated">Daftar Putar Terbaru</string>
+    <string name="playlist_name_offline_musics">Musik Offline</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
+
+    <string name="error_failed_to_load_musics">Gagal memuat musik</string>
+    <string name="error_failed_to_load_artists">Gagal memuat artis</string>
+    <string name="error_failed_to_load_artist_detail">Gagal memuat detail artis</string>
+    <string name="retry">Coba lagi</string>
+    <string name="exo_download_notification_channel_name">Saluran unduhan</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">Cari</string>
+    <string name="cd_close">Tutup</string>
+    <string name="cd_back">Kembali</string>
+    <string name="cd_more_options">Opsi lainnya</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_arrow_dropdown">Tampilkan menu dropdown</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">Musik yang diunduh</string>
+    <string name="cd_playing_music">Musik yang sedang diputar</string>
+    <string name="cd_music_thumbnail">Thumbnail musik</string>
+    <string name="cd_playlist_thumbnail">Thumbnail daftar putar</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">Buka/tutup lirik</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">Putar sekarang</string>
+    <string name="cd_library_music">Lihat detail musik</string>
+    <string name="cd_bookmark_add">Tambahkan ke daftar putar</string>
+    <string name="cd_playlist_add">Tambahkan ke antrean</string>
+    <string name="cd_download">Unduh</string>
+    <string name="cd_select_music_app_bar_menu">Menu</string>
+    <string name="cd_select_music_app_bar_close">Keluar mode pilih</string>
+    <string name="cd_music_option">Opsi musik %1$s</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">Buat daftar putar baru</string>
+    <string name="cd_playlist_cover">Gambar sampul daftar putar</string>
+    <string name="cd_music_cover">Gambar sampul musik</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">Edit nama daftar putar</string>
+    <string name="cd_delete">Hapus daftar putar</string>
+    <string name="cd_play_playlist">Putar daftar putar</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">Ikon email</string>
+    <string name="cd_copy_icon">Salin ke clipboard</string>
+    <string name="cd_code_icon">Ikon kode</string>
+    <string name="cd_github_icon">Ikon Github Repository</string>
+    <string name="cd_expand_menu_arrow">Buka menu</string>
+    <string name="cd_shrink_menu_arrow">Tutup menu</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">Ikon riwayat pencarian</string>
+    <string name="cd_delete_search_history">Hapus riwayat pencarian</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">Ikon informasi</string>
+    <string name="cd_cache_progress">Kemajuan penggunaan cache</string>
+
+    <!-- Artist -->
+    <string name="cd_artist_image">Gambar artis</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">Mode acak aktif</string>
+    <string name="cd_player_shuffle_off">Mode acak nonaktif</string>
+    <string name="cd_player_skip_previous">Lewati ke trek sebelumnya</string>
+    <string name="cd_player_pause">Jeda</string>
+    <string name="cd_player_play">Putar</string>
+    <string name="cd_player_skip_next">Lewati ke trek berikutnya</string>
+    <string name="cd_player_skip_next_disabled">Lewati ke trek berikutnya tidak tersedia</string>
+    <string name="cd_player_repeat_one">Ulangi trek saat ini</string>
+    <string name="cd_player_repeat_all">Ulangi semua trek</string>
+    <string name="cd_player_repeat_off">Mode pengulangan nonaktif</string>
+</resources>

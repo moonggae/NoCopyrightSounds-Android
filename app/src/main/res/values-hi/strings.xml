@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NMP</string>
+    <string name="not_connected">⚠️ आप इंटरनेट से कनेक्ट नहीं हैं</string>
+    <string name="feature_home_title">होम</string>
+    <string name="feature_artist_title">कलाकार</string>
+    <string name="feature_library_title">लाइब्रेरी</string>
+    <string name="feature_menu_title">मेनू</string>
+    <string name="feature_playlist_title">प्लेलिस्ट</string>
+
+    <string name="home_select_musics_menu_details">विवरण</string>
+    <string name="home_select_musics_menu_play_now">अभी चलाएं</string>
+    <string name="home_select_musics_menu_add_to_playlist">प्लेलिस्ट में जोड़ें</string>
+    <string name="home_select_musics_menu_add_to_queue">कतार में जोड़ें</string>
+    <string name="home_select_musics_menu_download">डाउनलोड</string>
+
+    <string name="home_search_placeholder"><![CDATA[ट्रैक और कलाकार खोजें]]></string>
+    <string name="select_playlist_dialog_title">प्लेलिस्ट चुनें</string>
+    <string name="select_playlist_dialog_no_playlist_available">कोई प्लेलिस्ट उपलब्ध नहीं</string>
+
+    <string name="message_added_to_queue">कतार में जोड़ा गया</string>
+    <string name="message_added_to_playlist">प्लेलिस्ट में जोड़ा गया</string>
+
+    <string name="add_new_playlist">नई प्लेलिस्ट जोड़ें</string>
+    <string name="songs_count">%1$s गाने</string>
+
+    <string name="delete_playlist_alert_title">प्लेलिस्ट हटाएं</string>
+    <string name="delete_playlist_alert_message">क्या आप वाकई\nइस प्लेलिस्ट को हटाना चाहते हैं?</string>
+
+    <string name="playlist_detail_menu_modify_name">नाम बदलें</string>
+    <string name="playlist_detail_menu_save_recent_playlist">प्लेलिस्ट सहेजें</string>
+    <string name="playlist_detail_menu_delete_playlist">प्लेलिस्ट हटाएं</string>
+
+    <string name="playlist_edit_title_new">नई प्लेलिस्ट</string>
+    <string name="playlist_edit_title_update">प्लेलिस्ट संपादित करें</string>
+    <string name="playlist_edit_name_placeholder">मेरी प्लेलिस्ट</string>
+    <string name="playlist_edit_error_too_long">नाम बहुत लंबा है</string>
+    <string name="playlist_edit_error_empty">नाम खाली है</string>
+
+    <string name="player_menu_playlist">प्लेलिस्ट</string>
+    <string name="player_menu_lyrics_empty">कोई बोल नहीं हैं</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[बोल पोस्ट करने के लिए <annotation>यहां</annotation> क्लिक करें]]></string>
+
+    <string name="artist_search_placeholder">कलाकार खोजें</string>
+    <string name="artist_sort_label_latest_artists">नवीनतम कलाकार</string>
+    <string name="artist_sort_label_a_to_z">A से Z</string>
+    <string name="artist_sort_label_z_to_a">Z से A</string>
+    <string name="artist_year_all_release_years">सभी रिलीज़ वर्ष</string>
+
+    <string name="artist_detail_label_popular_tracks">लोकप्रिय ट्रैक</string>
+    <string name="artist_detail_label_similar_tag_artists">समान कलाकार</string>
+
+    <string name="menu_open_source_licenses">ओपन सोर्स लाइसेंस</string>
+    <string name="menu_cache">कैश</string>
+    <string name="menu_contact">संपर्क करें</string>
+    <string name="menu_github_repository">Github रिपॉजिटरी</string>
+
+    <string name="menu_cache_screen_title">कैश</string>
+    <string name="menu_cache_screen_cached_size_label">कैश साइज़</string>
+    <string name="menu_cache_screen_enable_cache_label">कैश सक्षम करें</string>
+    <string name="menu_cache_screen_max_cache_size_label">अधिकतम कैश साइज़</string>
+    <string name="menu_cache_screen_clear_cache_label">कैश साफ़ करें</string>
+    <string name="menu_cache_screen_apply_description">ये सेटिंग्स ऐप को पुनः प्रारंभ करने के बाद लागू होंगी।</string>
+
+    <string name="Genre">शैली</string>
+    <string name="Genres">शैलियां</string>
+    <string name="Lyrics">बोल</string>
+    <string name="Mood">मूड</string>
+    <string name="Moods">मूड्स</string>
+    <string name="Tags">टैग</string>
+    <string name="Delete">हटाएं</string>
+    <string name="Cancel">रद्द करें</string>
+    <string name="save">सहेजें</string>
+    <string name="Download">डाउनलोड</string>
+    <string name="Cache">कैश</string>
+
+    <string name="playlist_name_auto_generated">हाल की प्लेलिस्ट</string>
+    <string name="playlist_name_offline_musics">ऑफ़लाइन संगीत</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
+
+    <string name="error_failed_to_load_musics">संगीत लोड करने में विफल</string>
+    <string name="error_failed_to_load_artists">कलाकार लोड करने में विफल</string>
+    <string name="error_failed_to_load_artist_detail">कलाकार का विवरण लोड करने में विफल</string>
+    <string name="retry">पुनः प्रयास करें</string>
+    <string name="exo_download_notification_channel_name">डाउनलोड चैनल</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">खोजें</string>
+    <string name="cd_close">बंद करें</string>
+    <string name="cd_back">वापस</string>
+    <string name="cd_more_options">अधिक विकल्प</string>
+    <string name="cd_menu">मेनू</string>
+    <string name="cd_arrow_dropdown">ड्रॉपडाउन मेनू दिखाएं</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">डाउनलोड किया गया संगीत</string>
+    <string name="cd_playing_music">वर्तमान में चल रहा संगीत</string>
+    <string name="cd_music_thumbnail">संगीत थंबनेल</string>
+    <string name="cd_playlist_thumbnail">प्लेलिस्ट थंबनेल</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">बोल विस्तार टॉगल करें</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">अभी चलाएं</string>
+    <string name="cd_library_music">संगीत विवरण देखें</string>
+    <string name="cd_bookmark_add">प्लेलिस्ट में जोड़ें</string>
+    <string name="cd_playlist_add">कतार में जोड़ें</string>
+    <string name="cd_download">डाउनलोड</string>
+    <string name="cd_select_music_app_bar_menu">मेनू</string>
+    <string name="cd_select_music_app_bar_close">चयन मोड से बाहर निकलें</string>
+    <string name="cd_music_option">%1$s संगीत विकल्प</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">नई प्लेलिस्ट बनाएं</string>
+    <string name="cd_playlist_cover">प्लेलिस्ट कवर छवि</string>
+    <string name="cd_music_cover">संगीत कवर छवि</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">प्लेलिस्ट का नाम संपादित करें</string>
+    <string name="cd_delete">प्लेलिस्ट हटाएं</string>
+    <string name="cd_play_playlist">प्लेलिस्ट चलाएं</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">ईमेल आइकन</string>
+    <string name="cd_copy_icon">क्लिपबोर्ड पर कॉपी करें</string>
+    <string name="cd_code_icon">कोड आइकन</string>
+    <string name="cd_github_icon">Github रिपॉजिटरी आइकन</string>
+    <string name="cd_expand_menu_arrow">मेनू विस्तृत करें</string>
+    <string name="cd_shrink_menu_arrow">मेनू संकुचित करें</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">खोज इतिहास आइकन</string>
+    <string name="cd_delete_search_history">खोज इतिहास हटाएं</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">जानकारी आइकन</string>
+    <string name="cd_cache_progress">कैश उपयोग प्रगति</string>
+
+    <!-- Artist -->
+    <string name="cd_artist_image">कलाकार छवि</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">शफल मोड चालू</string>
+    <string name="cd_player_shuffle_off">शफल मोड बंद</string>
+    <string name="cd_player_skip_previous">पिछले ट्रैक पर जाएं</string>
+    <string name="cd_player_pause">रोकें</string>
+    <string name="cd_player_play">चलाएं</string>
+    <string name="cd_player_skip_next">अगले ट्रैक पर जाएं</string>
+    <string name="cd_player_skip_next_disabled">अगले ट्रैक पर जाना उपलब्ध नहीं</string>
+    <string name="cd_player_repeat_one">वर्तमान ट्रैक दोहराएं</string>
+    <string name="cd_player_repeat_all">सभी ट्रैक दोहराएं</string>
+    <string name="cd_player_repeat_off">दोहराव मोड बंद</string>
+</resources>

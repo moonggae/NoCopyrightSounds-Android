@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Cancel">Cancelar</string>
+
+    <string name="cd_back">Atrás</string>
+    <string name="cd_menu">Menú</string>
+    <string name="cd_delete_item">Eliminar elemento</string>
+    <string name="cd_list_item_image">Imagen del elemento</string>
+    <string name="cd_close">Cerrar</string>
+</resources>

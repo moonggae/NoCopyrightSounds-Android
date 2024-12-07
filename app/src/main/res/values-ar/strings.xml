@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NMP</string>
+    <string name="not_connected">⚠️ أنت غير متصل بالإنترنت</string>
+    <string name="feature_home_title">الرئيسية</string>
+    <string name="feature_artist_title">الفنانون</string>
+    <string name="feature_library_title">المكتبة</string>
+    <string name="feature_menu_title">القائمة</string>
+    <string name="feature_playlist_title">قائمة التشغيل</string>
+
+    <string name="home_select_musics_menu_details">التفاصيل</string>
+    <string name="home_select_musics_menu_play_now">تشغيل الآن</string>
+    <string name="home_select_musics_menu_add_to_playlist">إضافة إلى قائمة التشغيل</string>
+    <string name="home_select_musics_menu_add_to_queue">إضافة إلى قائمة الانتظار</string>
+    <string name="home_select_musics_menu_download">تحميل</string>
+
+    <string name="home_search_placeholder"><![CDATA[البحث عن المقطوعات والفنانين]]></string>
+    <string name="select_playlist_dialog_title">اختر قائمة التشغيل</string>
+    <string name="select_playlist_dialog_no_playlist_available">لا توجد قوائم تشغيل متاحة</string>
+
+    <string name="message_added_to_queue">تمت الإضافة إلى قائمة الانتظار</string>
+    <string name="message_added_to_playlist">تمت الإضافة إلى قائمة التشغيل</string>
+
+    <string name="add_new_playlist">إضافة قائمة تشغيل جديدة</string>
+    <string name="songs_count">%1$s أغنية</string>
+
+    <string name="delete_playlist_alert_title">حذف قائمة التشغيل</string>
+    <string name="delete_playlist_alert_message">هل أنت متأكد\nمن حذف قائمة التشغيل هذه؟</string>
+
+    <string name="playlist_detail_menu_modify_name">تعديل الاسم</string>
+    <string name="playlist_detail_menu_save_recent_playlist">حفظ قائمة التشغيل</string>
+    <string name="playlist_detail_menu_delete_playlist">حذف قائمة التشغيل</string>
+
+    <string name="playlist_edit_title_new">قائمة تشغيل جديدة</string>
+    <string name="playlist_edit_title_update">تعديل قائمة التشغيل</string>
+    <string name="playlist_edit_name_placeholder">قائمة تشغيلي</string>
+    <string name="playlist_edit_error_too_long">الاسم طويل جداً</string>
+    <string name="playlist_edit_error_empty">الاسم فارغ</string>
+
+    <string name="player_menu_playlist">قائمة التشغيل</string>
+    <string name="player_menu_lyrics_empty">لا توجد كلمات</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[يمكنك نشر الكلمات بالنقر <annotation>هنا</annotation>]]></string>
+
+    <string name="artist_search_placeholder">البحث عن الفنانين</string>
+    <string name="artist_sort_label_latest_artists">أحدث الفنانين</string>
+    <string name="artist_sort_label_a_to_z">أ - ي</string>
+    <string name="artist_sort_label_z_to_a">ي - أ</string>
+    <string name="artist_year_all_release_years">كل سنوات الإصدار</string>
+
+    <string name="artist_detail_label_popular_tracks">المقطوعات الشائعة</string>
+    <string name="artist_detail_label_similar_tag_artists">فنانون مشابهون</string>
+
+    <string name="menu_open_source_licenses">تراخيص المصدر المفتوح</string>
+    <string name="menu_cache">ذاكرة التخزين المؤقت</string>
+    <string name="menu_contact">اتصل بنا</string>
+    <string name="menu_github_repository">مستودع Github</string>
+
+    <string name="menu_cache_screen_title">ذاكرة التخزين المؤقت</string>
+    <string name="menu_cache_screen_cached_size_label">حجم التخزين المؤقت</string>
+    <string name="menu_cache_screen_enable_cache_label">تفعيل التخزين المؤقت</string>
+    <string name="menu_cache_screen_max_cache_size_label">الحد الأقصى للتخزين المؤقت</string>
+    <string name="menu_cache_screen_clear_cache_label">مسح التخزين المؤقت</string>
+    <string name="menu_cache_screen_apply_description">سيتم تطبيق هذه الإعدادات بعد إعادة تشغيل التطبيق.</string>
+
+    <string name="Genre">النوع</string>
+    <string name="Genres">الأنواع</string>
+    <string name="Lyrics">الكلمات</string>
+    <string name="Mood">المزاج</string>
+    <string name="Moods">الأمزجة</string>
+    <string name="Tags">العلامات</string>
+    <string name="Delete">حذف</string>
+    <string name="Cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="Download">تحميل</string>
+    <string name="Cache">التخزين المؤقت</string>
+
+    <string name="playlist_name_auto_generated">قائمة التشغيل الأخيرة</string>
+    <string name="playlist_name_offline_musics">الموسيقى غير المتصلة</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
+
+    <string name="error_failed_to_load_musics">فشل تحميل الموسيقى</string>
+    <string name="error_failed_to_load_artists">فشل تحميل الفنانين</string>
+    <string name="error_failed_to_load_artist_detail">فشل تحميل تفاصيل الفنان</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">بحث</string>
+    <string name="cd_close">إغلاق</string>
+    <string name="cd_back">رجوع</string>
+    <string name="cd_more_options">خيارات إضافية</string>
+    <string name="cd_menu">القائمة</string>
+    <string name="cd_arrow_dropdown">عرض القائمة المنسدلة</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">الموسيقى المحملة</string>
+    <string name="cd_playing_music">الموسيقى قيد التشغيل حالياً</string>
+    <string name="cd_music_thumbnail">صورة مصغرة للموسيقى</string>
+    <string name="cd_playlist_thumbnail">صورة مصغرة لقائمة التشغيل</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">توسيع/طي الكلمات</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">وضع العشوائي مفعل</string>
+    <string name="cd_player_shuffle_off">وضع العشوائي معطل</string>
+    <string name="cd_player_skip_previous">العودة للمقطع السابق</string>
+    <string name="cd_player_pause">إيقاف مؤقت</string>
+    <string name="cd_player_play">تشغيل</string>
+    <string name="cd_player_skip_next">الانتقال للمقطع التالي</string>
+    <string name="cd_player_skip_next_disabled">الانتقال للمقطع التالي غير متاح</string>
+    <string name="cd_player_repeat_one">تكرار المقطع الحالي</string>
+    <string name="cd_player_repeat_all">تكرار كل المقاطع</string>
+    <string name="cd_player_repeat_off">إيقاف وضع التكرار</string>
+</resources>

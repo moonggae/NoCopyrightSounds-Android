@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.model.MusicTag
 
@@ -57,7 +59,7 @@ fun <T: MusicTag> MusicTagButton(
             Text(text = "#${item.name}")
         } else {
             Text(
-                text = "DELETE",
+                text = stringResource(R.string.Delete),
                 color = MaterialTheme.colorScheme.error
             )
         }

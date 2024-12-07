@@ -158,7 +158,7 @@ private fun ArtistDetailPopularTracks(
 ) {
     Column(modifier) {
         ContentLabelText(
-            text = "Popular Tracks",
+            text = stringResource(R.string.artist_detail_label_popular_tracks),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Column {
@@ -184,7 +184,7 @@ private fun ArtistDetailSimilarTagArtists(
 ) {
     Column(modifier) {
         ContentLabelText(
-            text = "Similar Tag Artists",
+            text = stringResource(R.string.artist_detail_label_similar_tag_artists),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Column {

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NMP</string>
+    <string name="not_connected">⚠️ No estás conectado a Internet</string>
+    <string name="feature_home_title">Inicio</string>
+    <string name="feature_artist_title">Artistas</string>
+    <string name="feature_library_title">Biblioteca</string>
+    <string name="feature_menu_title">Menú</string>
+    <string name="feature_playlist_title">Lista de reproducción</string>
+
+    <string name="home_select_musics_menu_details">Detalles</string>
+    <string name="home_select_musics_menu_play_now">Reproducir ahora</string>
+    <string name="home_select_musics_menu_add_to_playlist">Añadir a la lista</string>
+    <string name="home_select_musics_menu_add_to_queue">Añadir a la cola</string>
+    <string name="home_select_musics_menu_download">Descargar</string>
+
+    <string name="home_search_placeholder"><![CDATA[Buscar Pistas & Artistas]]></string>
+    <string name="select_playlist_dialog_title">Seleccionar Lista</string>
+    <string name="select_playlist_dialog_no_playlist_available">No hay listas disponibles</string>
+
+    <string name="message_added_to_queue">Añadido a la cola</string>
+    <string name="message_added_to_playlist">Añadido a la lista</string>
+
+    <string name="add_new_playlist">Nueva lista</string>
+    <string name="songs_count">%1$s canciones</string>
+
+    <string name="delete_playlist_alert_title">Eliminar Lista</string>
+    <string name="delete_playlist_alert_message">¿Estás seguro\nde que quieres eliminar esta lista?</string>
+
+    <string name="playlist_detail_menu_modify_name">Modificar nombre</string>
+    <string name="playlist_detail_menu_save_recent_playlist">Guardar lista</string>
+    <string name="playlist_detail_menu_delete_playlist">Eliminar lista</string>
+
+    <string name="playlist_edit_title_new">Nueva Lista</string>
+    <string name="playlist_edit_title_update">Editar Lista</string>
+    <string name="playlist_edit_name_placeholder">Mi Lista</string>
+    <string name="playlist_edit_error_too_long">El nombre es demasiado largo.</string>
+    <string name="playlist_edit_error_empty">El nombre está vacío.</string>
+
+    <string name="player_menu_playlist">Lista de reproducción</string>
+    <string name="player_menu_lyrics_empty">No se encontraron letras</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[Puedes publicar la letra haciendo clic <annotation>aquí</annotation>]]></string>
+
+    <string name="artist_search_placeholder">Buscar Artistas</string>
+    <string name="artist_sort_label_latest_artists">más recientes</string>
+    <string name="artist_sort_label_a_to_z">A - Z</string>
+    <string name="artist_sort_label_z_to_a">Z - A</string>
+    <string name="artist_year_all_release_years">Año de lanzamiento</string>
+
+    <string name="artist_detail_label_popular_tracks">Pistas Populares</string>
+    <string name="artist_detail_label_similar_tag_artists">Artistas Recomendados</string>
+
+    <string name="menu_open_source_licenses">Licencias de código abierto</string>
+    <string name="menu_cache">Caché</string>
+    <string name="menu_contact">Contacto</string>
+    <string name="menu_github_repository">Github Repository</string>
+
+    <string name="menu_cache_screen_title">Caché</string>
+    <string name="menu_cache_screen_cached_size_label">Tamaño del caché</string>
+    <string name="menu_cache_screen_enable_cache_label">Activar caché</string>
+    <string name="menu_cache_screen_max_cache_size_label">Tamaño máximo del caché</string>
+    <string name="menu_cache_screen_clear_cache_label">Limpiar caché</string>
+    <string name="menu_cache_screen_apply_description">Estos ajustes se aplicarán después de reiniciar la aplicación.</string>
+
+    <string name="Genre">Género</string>
+    <string name="Genres">Géneros</string>
+    <string name="Lyrics">Letra</string>
+    <string name="Mood">Estado de ánimo</string>
+    <string name="Moods">Estados de ánimo</string>
+    <string name="Tags">Etiquetas</string>
+    <string name="Delete">Eliminar</string>
+    <string name="Cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="Download">Descargar</string>
+    <string name="Cache">Caché</string>
+
+
+    <string name="playlist_name_auto_generated">Lista reciente</string>
+    <string name="playlist_name_offline_musics">Música sin conexión</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
+
+    <string name="error_failed_to_load_musics">Error al cargar la música</string>
+    <string name="error_failed_to_load_artists">Error al cargar los artistas</string>
+    <string name="error_failed_to_load_artist_detail">Error al cargar los detalles del artista</string>
+    <string name="retry">Reintentar</string>
+    <string name="exo_download_notification_channel_name">Canal de descargas</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">Buscar</string>
+    <string name="cd_close">Cerrar</string>
+    <string name="cd_back">Atrás</string>
+    <string name="cd_more_options">Más opciones</string>
+    <string name="cd_menu">Menú</string>
+    <string name="cd_arrow_dropdown">Mostrar menú desplegable</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">Música descargada</string>
+    <string name="cd_playing_music">Música en reproducción</string>
+    <string name="cd_music_thumbnail">Miniatura de música</string>
+    <string name="cd_playlist_thumbnail">Miniatura de lista</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">Expandir/contraer letras</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">Reproducir ahora</string>
+    <string name="cd_library_music">Ver detalles de música</string>
+    <string name="cd_bookmark_add">Añadir a la lista</string>
+    <string name="cd_playlist_add">Añadir a la cola</string>
+    <string name="cd_download">Descargar</string>
+    <string name="cd_select_music_app_bar_menu">Menú</string>
+    <string name="cd_select_music_app_bar_close">Salir del modo selección</string>
+    <string name="cd_music_option">Opciones de música %1$s</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">Crear nueva lista</string>
+    <string name="cd_playlist_cover">Imagen de portada de lista</string>
+    <string name="cd_music_cover">Imagen de portada de música</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">Editar nombre de lista</string>
+    <string name="cd_delete">Eliminar lista</string>
+    <string name="cd_play_playlist">Reproducir lista</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">Icono de correo</string>
+    <string name="cd_copy_icon">Copiar al portapapeles</string>
+    <string name="cd_code_icon">Icono de código</string>
+    <string name="cd_github_icon">Icono de Github Repository</string>
+    <string name="cd_expand_menu_arrow">Expandir menú</string>
+    <string name="cd_shrink_menu_arrow">Contraer menú</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">Icono de historial de búsqueda</string>
+    <string name="cd_delete_search_history">Eliminar historial de búsqueda</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">Icono de información</string>
+    <string name="cd_cache_progress">Progreso de uso de caché</string>
+
+    <!-- Artist -->
+    <string name="cd_artist_image">Imagen del artista</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">Modo aleatorio activado</string>
+    <string name="cd_player_shuffle_off">Modo aleatorio desactivado</string>
+    <string name="cd_player_skip_previous">Saltar a la pista anterior</string>
+    <string name="cd_player_pause">Pausar</string>
+    <string name="cd_player_play">Reproducir</string>
+    <string name="cd_player_skip_next">Saltar a la siguiente pista</string>
+    <string name="cd_player_skip_next_disabled">Saltar a la siguiente pista no disponible</string>
+    <string name="cd_player_repeat_one">Repetir pista actual</string>
+    <string name="cd_player_repeat_all">Repetir todas las pistas</string>
+    <string name="cd_player_repeat_off">Modo de repetición desactivado</string>
+</resources>

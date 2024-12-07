@@ -190,13 +190,13 @@ fun FilterOptions(
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         LabelCheckBox(
-            label = "Download",
+            label = stringResource(R.string.Download),
             checked = showDownloadedMusics,
             onCheckedChange = onShowDownloadedChange
         )
         Spacer(modifier = Modifier.width(16.dp))
         LabelCheckBox(
-            label = "Cache",
+            label = stringResource(R.string.Cache),
             checked = showCachedMusics,
             onCheckedChange = onShowCachedChange
         )

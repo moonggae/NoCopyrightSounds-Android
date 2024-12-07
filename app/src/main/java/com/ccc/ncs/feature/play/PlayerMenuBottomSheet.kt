@@ -34,10 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.ccc.ncs.R
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
@@ -138,10 +140,10 @@ fun PlayerMenuBottomSheet(
 
 enum class PlayerMenuTabs(
     val index: Int,
-    val label: String
+    val labelRes: Int
 ) {
-    PLAYLIST(0, "Playlist"),
-    LYRICS(1, "Lyrics");
+    PLAYLIST(0, R.string.player_menu_playlist),
+    LYRICS(1, R.string.Lyrics);
 
     @Composable
     fun Tab(
@@ -154,7 +156,7 @@ enum class PlayerMenuTabs(
             onClick = { onClick(this) }
         ) {
             Text(
-                text = label,
+                text = stringResource(labelRes),
                 style = NcsTypography.Player.bottomMenuText.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = textVisibleProgress),
                     textAlign = TextAlign.Center

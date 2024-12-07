@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NMP</string>
+    <string name="not_connected">⚠️ 인터넷에 연결되어 있지 않습니다</string>
+    <string name="feature_home_title">홈</string>
+    <string name="feature_artist_title">아티스트</string>
+    <string name="feature_library_title">라이브러리</string>
+    <string name="feature_menu_title">메뉴</string>
+    <string name="feature_playlist_title">재생목록</string>
+
+    <string name="home_select_musics_menu_details">상세정보</string>
+    <string name="home_select_musics_menu_play_now">지금 재생</string>
+    <string name="home_select_musics_menu_add_to_playlist">재생목록에 추가</string>
+    <string name="home_select_musics_menu_add_to_queue">대기열에 추가</string>
+    <string name="home_select_musics_menu_download">다운로드</string>
+
+    <string name="home_search_placeholder"><![CDATA[트랙 & 아티스트 검색]]></string>
+    <string name="select_playlist_dialog_title">재생목록 선택</string>
+    <string name="select_playlist_dialog_no_playlist_available">재생목록이 없습니다</string>
+
+    <string name="message_added_to_queue">대기열에 추가되었습니다</string>
+    <string name="message_added_to_playlist">재생목록에 추가되었습니다</string>
+
+    <string name="add_new_playlist">새 재생목록 추가</string>
+    <string name="songs_count">곡 %1$s개</string>
+
+    <string name="delete_playlist_alert_title">재생목록 삭제</string>
+    <string name="delete_playlist_alert_message">정말로\n이 재생목록을 삭제하시겠습니까?</string>
+
+    <string name="playlist_detail_menu_modify_name">이름 수정</string>
+    <string name="playlist_detail_menu_save_recent_playlist">재생목록 저장</string>
+    <string name="playlist_detail_menu_delete_playlist">재생목록 삭제</string>
+
+    <string name="playlist_edit_title_new">새 재생목록</string>
+    <string name="playlist_edit_title_update">재생목록 수정</string>
+    <string name="playlist_edit_name_placeholder">내 재생목록</string>
+    <string name="playlist_edit_error_too_long">이름이 너무 깁니다.</string>
+    <string name="playlist_edit_error_empty">이름을 입력해주세요.</string>
+
+    <string name="player_menu_playlist">재생목록</string>
+    <string name="player_menu_lyrics_empty">가사를 찾을 수 없습니다.</string>
+    <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[<annotation>여기</annotation>를 클릭하여 가사를 등록할 수 있습니다]]></string>
+
+    <string name="artist_search_placeholder">아티스트 검색</string>
+    <string name="artist_sort_label_latest_artists">최신 아티스트</string>
+    <string name="artist_sort_label_a_to_z">A - Z 순서</string>
+    <string name="artist_sort_label_z_to_a">Z - A 순서</string>
+    <string name="artist_year_all_release_years">전체 발매 연도</string>
+
+    <string name="artist_detail_label_popular_tracks">인기 트랙</string>
+    <string name="artist_detail_label_similar_tag_artists">추천 아티스트</string>
+
+    <string name="menu_open_source_licenses">오픈소스 라이선스</string>
+    <string name="menu_cache">캐시</string>
+    <string name="menu_contact">문의하기</string>
+    <string name="menu_github_repository">Github Repository</string>
+
+    <string name="menu_cache_screen_title">캐시</string>
+    <string name="menu_cache_screen_cached_size_label">캐시 크기</string>
+    <string name="menu_cache_screen_enable_cache_label">캐시 사용</string>
+    <string name="menu_cache_screen_max_cache_size_label">최대 캐시 크기</string>
+    <string name="menu_cache_screen_clear_cache_label">캐시 비우기</string>
+    <string name="menu_cache_screen_apply_description">이 설정은 앱을 다시 시작한 후에 적용됩니다.</string>
+
+    <string name="Genre">장르</string>
+    <string name="Genres">장르</string>
+    <string name="Lyrics">가사</string>
+    <string name="Mood">분위기</string>
+    <string name="Moods">분위기</string>
+    <string name="Tags">태그</string>
+    <string name="Delete">삭제</string>
+    <string name="Cancel">취소</string>
+    <string name="save">저장</string>
+    <string name="Download">다운로드</string>
+    <string name="Cache">캐시</string>
+
+    <string name="playlist_name_auto_generated">최근 재생목록</string>
+    <string name="playlist_name_offline_musics">오프라인 음악</string>
+
+    <string name="ContactEmail">egchoi.dev@gmail.com</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
+
+    <string name="error_failed_to_load_musics">음악을 불러오지 못했습니다</string>
+    <string name="error_failed_to_load_artists">아티스트를 불러오지 못했습니다</string>
+    <string name="error_failed_to_load_artist_detail">아티스트 정보를 불러오지 못했습니다</string>
+    <string name="retry">다시 시도</string>
+    <string name="exo_download_notification_channel_name">다운로드 채널</string>
+
+    <!-- Navigation & Search -->
+    <string name="cd_search">검색</string>
+    <string name="cd_close">닫기</string>
+    <string name="cd_back">뒤로</string>
+    <string name="cd_more_options">추가 옵션</string>
+    <string name="cd_menu">메뉴</string>
+    <string name="cd_arrow_dropdown">드롭다운 메뉴 표시</string>
+
+    <!-- Music & Playlist -->
+    <string name="cd_downloaded_music">다운로드된 음악</string>
+    <string name="cd_playing_music">현재 재생 중인 음악</string>
+    <string name="cd_music_thumbnail">음악 썸네일</string>
+    <string name="cd_playlist_thumbnail">재생목록 썸네일</string>
+
+    <!-- Music Detail Screen -->
+    <string name="cd_toggle_lyrics_expansion">가사 펼치기/접기</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">지금 재생</string>
+    <string name="cd_library_music">음악 상세정보 보기</string>
+    <string name="cd_bookmark_add">재생목록에 추가</string>
+    <string name="cd_playlist_add">대기열에 추가</string>
+    <string name="cd_download">다운로드</string>
+    <string name="cd_select_music_app_bar_menu">메뉴</string>
+    <string name="cd_select_music_app_bar_close">선택 모드 종료</string>
+    <string name="cd_music_option">%1$s 음악 옵션</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">새 재생목록 만들기</string>
+    <string name="cd_playlist_cover">재생목록 커버 이미지</string>
+    <string name="cd_music_cover">음악 커버 이미지</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">재생목록 이름 수정</string>
+    <string name="cd_delete">재생목록 삭제</string>
+    <string name="cd_play_playlist">재생목록 재생</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">이메일 아이콘</string>
+    <string name="cd_copy_icon">클립보드에 복사</string>
+    <string name="cd_code_icon">코드 아이콘</string>
+    <string name="cd_github_icon">Github 저장소 아이콘</string>
+    <string name="cd_expand_menu_arrow">메뉴 펼치기</string>
+    <string name="cd_shrink_menu_arrow">메뉴 접기</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">검색 기록 아이콘</string>
+    <string name="cd_delete_search_history">검색 기록 삭제</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">정보 아이콘</string>
+    <string name="cd_cache_progress">캐시 사용량 진행 상태</string>
+
+    <!-- Artist -->
+    <string name="cd_artist_image">아티스트 이미지</string>
+
+    <!-- Player -->
+    <string name="cd_player_shuffle_on">셔플 모드 켜짐</string>
+    <string name="cd_player_shuffle_off">셔플 모드 꺼짐</string>
+    <string name="cd_player_skip_previous">이전 트랙으로 이동</string>
+    <string name="cd_player_pause">일시정지</string>
+    <string name="cd_player_play">재생</string>
+    <string name="cd_player_skip_next">다음 트랙으로 이동</string>
+    <string name="cd_player_skip_next_disabled">다음 트랙으로 이동 불가능</string>
+    <string name="cd_player_repeat_one">현재 트랙 반복</string>
+    <string name="cd_player_repeat_all">전체 트랙 반복</string>
+    <string name="cd_player_repeat_off">반복 모드 꺼짐</string>
+</resources>

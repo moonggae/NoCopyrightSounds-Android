@@ -36,6 +36,7 @@
     <string name="playlist_edit_error_too_long">Name is too long.</string>
     <string name="playlist_edit_error_empty">Name is empty.</string>
 
+    <string name="player_menu_playlist">Playlist</string>
     <string name="player_menu_lyrics_empty">There is no Lyrics</string>
     <string name="player_menu_lyrics_click_here_to_post_lyrics"><![CDATA[You can post the lyrics to click <annotation>here</annotation>]]></string>
 
@@ -44,6 +45,9 @@
     <string name="artist_sort_label_a_to_z">A - Z</string>
     <string name="artist_sort_label_z_to_a">Z - A</string>
     <string name="artist_year_all_release_years">All Release Years</string>
+
+    <string name="artist_detail_label_popular_tracks">Popular Tracks</string>
+    <string name="artist_detail_label_similar_tag_artists">Similar Tag Artists</string>
 
     <string name="menu_open_source_licenses">Open Source Licenses</string>
     <string name="menu_cache">Cache</string>
@@ -59,17 +63,21 @@
 
     <string name="Genre">Genre</string>
     <string name="Genres">Genres</string>
+    <string name="Lyrics">Lyrics</string>
     <string name="Mood">Mood</string>
     <string name="Moods">Moods</string>
     <string name="Tags">Tags</string>
     <string name="Delete">Delete</string>
     <string name="Cancel">Cancel</string>
     <string name="save">save</string>
+    <string name="Download">Download</string>
+    <string name="Cache">Cache</string>
+
     <string name="playlist_name_auto_generated">Recent Playlist</string>
     <string name="playlist_name_offline_musics">Offline Musics</string>
 
     <string name="ContactEmail">egchoi.dev@gmail.com</string>
-    <string name="GithubRepositoryUrl">https://github.com/moonggae/ncs</string>
+    <string name="GithubRepositoryUrl">https://github.com/moonggae/NoCopyrightSounds-Android</string>
 
     <string name="error_failed_to_load_musics">Failed to load musics</string>
     <string name="error_failed_to_load_artists">Failed to load artists</string>
