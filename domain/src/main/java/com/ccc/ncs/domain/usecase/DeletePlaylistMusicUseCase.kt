@@ -20,6 +20,10 @@ class DeletePlaylistMusicUseCase(
 
         if (playlistId == playerRepository.playlist.first()?.id) {
             playbackController.removeMusic(music)
+
+            if (updatedMusics.isEmpty()) {
+                playerRepository.clear()
+            }
         }
     }
 }
