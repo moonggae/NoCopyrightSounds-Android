@@ -9,7 +9,6 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import com.ccc.ncs.cache.CacheManager
-import com.ccc.ncs.playback.playstate.PlaybackStateListener
 import com.ccc.ncs.playback.session.LibrarySessionCallback
 import com.ccc.ncs.playback.session.PlaybackService
 import dagger.Module
@@ -32,7 +31,6 @@ internal object PlaybackModule {
         @ApplicationContext context: Context,
         service: Service,
         cacheManager: CacheManager,
-        playbackStateListener: PlaybackStateListener,
     ): ExoPlayer {
         val audioAttributes = AudioAttributes.Builder()
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -53,9 +51,6 @@ internal object PlaybackModule {
         }
 
         return builder.build()
-            .also { player ->
-                playbackStateListener.attachTo(player)
-            }
     }
 
     @Provides

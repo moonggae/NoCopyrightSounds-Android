@@ -1,4 +1,4 @@
-package com.ccc.ncs.playback.playstate
+package com.ccc.ncs.playback.listener
 
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
@@ -6,6 +6,8 @@ import androidx.media3.common.Timeline
 import com.ccc.ncs.domain.model.PlaybackState
 import com.ccc.ncs.domain.model.PlayingStatus
 import com.ccc.ncs.domain.model.RepeatMode
+import com.ccc.ncs.playback.playstate.PlaybackStateManager
+import com.ccc.ncs.playback.playstate.playingStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-internal class PlaybackStateListener @Inject constructor(
+internal class PlaybackStateHandler @Inject constructor(
     private val scope: CoroutineScope,
     private val playbackStateManager: PlaybackStateManager
 ) : Player.Listener {
