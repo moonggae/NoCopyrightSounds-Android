@@ -33,7 +33,6 @@ import com.ccc.ncs.designsystem.theme.NcsTypography
 @Composable
 fun AlertDialog(
     modifier: Modifier = Modifier,
-    show: Boolean,
     onDismissRequest: () -> Unit,
     title: String,
     message: String,
@@ -42,7 +41,6 @@ fun AlertDialog(
     onCancel: (() -> Unit)? = null
 ) {
     NcsDialog(
-        show = show,
         onDismissRequest = onDismissRequest,
         title = title,
         message = message,
@@ -76,7 +74,6 @@ fun AlertDialog(
 @Composable
 fun NcsDialog(
     modifier: Modifier = Modifier,
-    show: Boolean,
     onDismissRequest: () -> Unit,
     title: String,
     message: String,
@@ -84,7 +81,6 @@ fun NcsDialog(
 ) {
     NcsDialog(
         modifier = modifier,
-        show = show,
         onDismissRequest = onDismissRequest,
         title = title,
         content = {
@@ -108,51 +104,48 @@ fun NcsDialog(
 @Composable
 fun NcsDialog(
     modifier: Modifier = Modifier,
-    show: Boolean,
     onDismissRequest: () -> Unit,
     title: String,
     content: @Composable () -> Unit,
     bottomContent: @Composable () -> Unit,
 ) {
-    if (show) {
-        Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier = modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Column(
-                modifier = modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = title,
-                        style = NcsTypography.Dialog.title.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 8.dp,
-                            bottom = 8.dp
-                        )
+                Text(
+                    text = title,
+                    style = NcsTypography.Dialog.title.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 8.dp
                     )
-
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    )
-
-                    content()
-                }
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh
                 )
 
-                bottomContent()
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                )
+
+                content()
             }
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            )
+
+            bottomContent()
         }
     }
 }
@@ -183,7 +176,6 @@ fun RowScope.NcsDialogTextButton(
 fun AlertDialogPreview(modifier: Modifier = Modifier) {
     NcsTheme(darkTheme = true) {
         AlertDialog(
-            show = true,
             onDismissRequest = {},
             title = "Delete Playlist",
             message = "Are you sure\nyou want to delete this playlist?",

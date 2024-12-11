@@ -26,7 +26,6 @@ import java.util.UUID
 @Composable
 fun AddMusicsToPlaylistDialog(
     modifier: Modifier = Modifier,
-    show: Boolean,
     onDismissRequest: () -> Unit,
     onFinish: () -> Unit,
     musicIds: List<UUID>,
@@ -41,7 +40,6 @@ fun AddMusicsToPlaylistDialog(
                 modifier = modifier,
                 playListItems = state.playlist,
                 currentPlaylist = state.currentPlaylist,
-                show = show,
                 onDismissRequest = onDismissRequest,
                 onClickPlayList = {
                     viewModel.addMusicToPlaylist(playList = it, musicIds = musicIds)
@@ -57,12 +55,10 @@ fun AddMusicsToPlaylistDialogContent(
     modifier: Modifier = Modifier,
     playListItems: List<PlayList>,
     currentPlaylist: PlayList?,
-    show: Boolean,
     onDismissRequest: () -> Unit,
     onClickPlayList: (PlayList) -> Unit
 ) {
     NcsDialog(
-        show = show,
         onDismissRequest = onDismissRequest,
         title = stringResource(R.string.select_playlist_dialog_title),
         content = {
@@ -116,7 +112,6 @@ fun AddMusicsToPlaylistDialogPreview(modifier: Modifier = Modifier) {
                     isUserCreated = true
                 )
             ),
-            show = true,
             onDismissRequest = {},
             onClickPlayList = {},
             currentPlaylist = null
@@ -131,7 +126,6 @@ fun AddMusicsToPlaylistDialogEmptyPreview(modifier: Modifier = Modifier) {
         AddMusicsToPlaylistDialogContent(
             modifier = modifier,
             playListItems = listOf(),
-            show = true,
             onDismissRequest = {},
             onClickPlayList = {},
             currentPlaylist = null

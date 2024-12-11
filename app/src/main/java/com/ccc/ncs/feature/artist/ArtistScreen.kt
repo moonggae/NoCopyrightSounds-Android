@@ -40,6 +40,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.feature.home.CustomFlowRow
@@ -73,6 +74,8 @@ fun ArtistRoute(
         onUpdateReleaseYears = viewModel::updateYear,
         onClickArtist = onClickArtist
     )
+
+    TrackScreenViewEvent("Artist")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ncs.android.application)
     alias(libs.plugins.ncs.android.compose)
     alias(libs.plugins.ncs.hilt)
+    alias(libs.plugins.ncs.android.application.firebase)
     alias(libs.plugins.google.oss)
     alias(libs.plugins.google.service)
     alias(libs.plugins.google.firebase.crashlytics)
@@ -74,6 +75,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":designsystem"))
     implementation(project(":playback"))
+    implementation(project(":analytics"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -109,10 +111,6 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.lottie.compose)
     implementation(libs.google.oss)
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
 
     implementation(libs.androidx.core.splashscreen)
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
@@ -62,6 +63,8 @@ fun CacheSettingRoute(
 
         is CacheUiState.Loading -> LoadingScreen()
     }
+
+    TrackScreenViewEvent("CacheSetting")
 }
 
 @Composable

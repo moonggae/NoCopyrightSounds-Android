@@ -7,7 +7,10 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.ccc.ncs.analytics.AnalyticsHelper
+import com.ccc.ncs.analytics.LocalAnalyticsHelper
 import com.ccc.ncs.data.util.NetworkMonitor
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.ui.NcsApp
@@ -20,6 +23,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel: MainViewModel by viewModels()
     
@@ -35,10 +41,12 @@ class MainActivity : ComponentActivity() {
                 networkMonitor = networkMonitor
             )
 
-            NcsTheme(
-                darkTheme = true
+            CompositionLocalProvider(
+                LocalAnalyticsHelper provides analyticsHelper
             ) {
-                NcsApp(appState = appState)
+                NcsTheme(darkTheme = true) {
+                    NcsApp(appState = appState)
+                }
             }
         }
     }

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.TransparentTextField
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.ui.component.LoadingScreen
@@ -55,6 +56,8 @@ fun EditPlaylistRoute(
             )
         }
     }
+
+    TrackScreenViewEvent("EditPlaylist")
 }
 
 const val PLAYLIST_NAME_LENGTH_LIMIT = 100

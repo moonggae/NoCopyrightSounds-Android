@@ -48,6 +48,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
@@ -96,6 +97,9 @@ fun HomeRoute(
         onClickMusic = { onPlayMusics(listOf(it)) },
         downloadMusic = viewModel::downloadMusic
     )
+
+
+    TrackScreenViewEvent("Home")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -239,17 +243,18 @@ internal fun HomeScreen(
         }
     )
 
-    AddMusicsToPlaylistDialog(
-        show = showAddMusicsToPlaylistDialog,
-        onDismissRequest = { showAddMusicsToPlaylistDialog = false },
-        musicIds = homeUiState.selectedMusicIds,
-        onFinish = {
-            showAddMusicsToPlaylistDialog = false
-            showSelectMusicMenu = false
-            updateSelectMode(false)
-            scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
-        }
-    )
+    if (showAddMusicsToPlaylistDialog) {
+        AddMusicsToPlaylistDialog(
+            onDismissRequest = { showAddMusicsToPlaylistDialog = false },
+            musicIds = homeUiState.selectedMusicIds,
+            onFinish = {
+                showAddMusicsToPlaylistDialog = false
+                showSelectMusicMenu = false
+                updateSelectMode(false)
+                scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
+            }
+        )
+    }
 }
 
 

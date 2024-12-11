@@ -54,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
@@ -105,6 +106,8 @@ fun MusicDetailRoute(
         is MusicDetailUiState.Loading -> LoadingScreen()
         is MusicDetailUiState.Fail -> onBack()
     }
+
+    TrackScreenViewEvent("MusicDetail")
 }
 
 @Composable
@@ -193,7 +196,7 @@ internal fun MusicDetailScreen(
                 .padding(top = 20.dp)
         )
 
-        ArtistList(
+         ArtistList(
             modifier = Modifier
                 .basicMarquee()
                 .padding(bottom = 12.dp),
@@ -262,16 +265,18 @@ internal fun MusicDetailScreen(
         onClickDetail = null
     )
 
-    AddMusicsToPlaylistDialog(
-        show = showAddMusicsToPlaylistDialog,
-        onDismissRequest = { showAddMusicsToPlaylistDialog = false },
-        musicIds = listOf(uiState.music.id),
-        onFinish = {
-            showAddMusicsToPlaylistDialog = false
-            showMenu = false
-            scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
-        }
-    )
+
+    if (showAddMusicsToPlaylistDialog) {
+        AddMusicsToPlaylistDialog(
+            onDismissRequest = { showAddMusicsToPlaylistDialog = false },
+            musicIds = listOf(uiState.music.id),
+            onFinish = {
+                showAddMusicsToPlaylistDialog = false
+                showMenu = false
+                scope.launch { onShowSnackbar(addedToPlaylistMessage, null) }
+            }
+        )
+    }
 }
 
 

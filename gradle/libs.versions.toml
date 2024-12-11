@@ -112,6 +112,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics" }
 
 [bundles]
 media3 = [
@@ -142,3 +143,4 @@ ncs-android-library = { id = "ncs.android.library" }
 ncs-android-compose = { id = "ncs.android.compose" }
 ncs-jvm-library = { id = "ncs.jvm.library" }
 ncs-hilt = { id = "ncs.hilt" }
+ncs-android-application-firebase = { id = "ncs.android.application.firebase" }

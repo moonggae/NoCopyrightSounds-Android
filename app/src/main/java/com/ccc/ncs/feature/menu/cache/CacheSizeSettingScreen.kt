@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.component.TransparentTextField
 import com.ccc.ncs.designsystem.theme.NcsTheme
@@ -58,6 +59,8 @@ fun CacheSizeSettingRoute(
 
         is CacheUiState.Loading -> LoadingScreen()
     }
+
+    TrackScreenViewEvent("CacheSizeSetting")
 }
 
 @Composable

@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":cache"))
+    implementation(project(":analytics"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.coroutines.guava)

@@ -39,6 +39,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.ccc.ncs.MainActivity
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.util.conditional
@@ -55,6 +56,8 @@ fun MenuRoute(
         onShowSnackbar = onShowSnackbar,
         onMoveCacheScreen = onMoveCacheScreen
     )
+
+    TrackScreenViewEvent("Menu")
 }
 
 @Composable

@@ -22,6 +22,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.firebase.crashlytics.gradlePlugin)
 }
 
 gradlePlugin {
@@ -45,6 +46,10 @@ gradlePlugin {
         register("hilt") {
             id = "ncs.hilt"
             implementationClass = "HiltConventionPlugin"
+        }
+        register("androidFirebase") {
+            id = "ncs.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
     }
 }

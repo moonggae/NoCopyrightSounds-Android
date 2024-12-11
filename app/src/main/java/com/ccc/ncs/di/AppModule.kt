@@ -4,9 +4,6 @@ import android.content.Context
 import android.os.Environment
 import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,8 +41,4 @@ object AppModule {
         ioDispatcher = ioDispatcher,
         downloadDirectory = downloadDirectory
     )
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAnalytics(): FirebaseAnalytics = Firebase.analytics
 }

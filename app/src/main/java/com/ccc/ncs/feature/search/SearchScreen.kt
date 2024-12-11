@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTheme
 import com.ccc.ncs.designsystem.theme.NcsTypography
@@ -53,6 +54,8 @@ internal fun SearchRoute(
         recentSearchesUiState = recentSearchQueriesUiState,
         onDeleteRecentSearch = viewModel::deleteRecentSearch
     )
+
+    TrackScreenViewEvent("Search")
 }
 
 @Composable

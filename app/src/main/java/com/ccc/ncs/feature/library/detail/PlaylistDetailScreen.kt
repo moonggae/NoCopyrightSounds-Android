@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.rememberAsyncImagePainter
 import com.ccc.ncs.R
+import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.component.AlertDialog
 import com.ccc.ncs.designsystem.component.CommonAppBar
 import com.ccc.ncs.designsystem.component.CommonModalBottomSheet
@@ -93,6 +94,8 @@ fun PlaylistDetailRoute(
             )
         }
     }
+
+    TrackScreenViewEvent("PlaylistDetail")
 }
 
 @Composable
@@ -159,18 +162,19 @@ internal fun PlaylistDetailScreen(
         onClickDelete = { showDeleteAlertDialog = true }
     )
 
-    AlertDialog(
-        show = showDeleteAlertDialog,
-        onDismissRequest = { showDeleteAlertDialog = false },
-        title = stringResource(R.string.delete_playlist_alert_title),
-        message = stringResource(R.string.delete_playlist_alert_message),
-        confirmLabel = stringResource(R.string.Delete),
-        onConfirm = {
-            showMenuBottomSheet = false
-            showDeleteAlertDialog = false
-            onDeletePlaylist()
-        }
-    )
+    if (showDeleteAlertDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteAlertDialog = false },
+            title = stringResource(R.string.delete_playlist_alert_title),
+            message = stringResource(R.string.delete_playlist_alert_message),
+            confirmLabel = stringResource(R.string.Delete),
+            onConfirm = {
+                showMenuBottomSheet = false
+                showDeleteAlertDialog = false
+                onDeletePlaylist()
+            }
+        )
+    }
 }
 
 @Composable
