@@ -110,7 +110,7 @@ internal fun LibraryScreen(
 fun LibraryEmptyScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Create your first playlist",
+            text = stringResource(R.string.library_empty_playlist_message),
             style = NcsTypography.Menu.description,
             modifier = Modifier.align(Alignment.Center)
         )

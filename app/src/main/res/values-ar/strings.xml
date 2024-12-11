@@ -27,6 +27,8 @@
     <string name="delete_playlist_alert_title">حذف قائمة التشغيل</string>
     <string name="delete_playlist_alert_message">هل أنت متأكد\nمن حذف قائمة التشغيل هذه؟</string>
 
+    <string name="library_empty_playlist_message">أنشئ قائمة تشغيلك الأولى</string>
+
     <string name="playlist_detail_menu_modify_name">تعديل الاسم</string>
     <string name="playlist_detail_menu_save_recent_playlist">حفظ قائمة التشغيل</string>
     <string name="playlist_detail_menu_delete_playlist">حذف قائمة التشغيل</string>
@@ -84,6 +86,7 @@
     <string name="error_failed_to_load_artists">فشل تحميل الفنانين</string>
     <string name="error_failed_to_load_artist_detail">فشل تحميل تفاصيل الفنان</string>
     <string name="retry">إعادة المحاولة</string>
+    <string name="exo_download_notification_channel_name">قناة التحميل</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">بحث</string>
@@ -101,6 +104,45 @@
 
     <!-- Music Detail Screen -->
     <string name="cd_toggle_lyrics_expansion">توسيع/طي الكلمات</string>
+
+    <!-- Home Screen -->
+    <string name="cd_play_circle">تشغيل الآن</string>
+    <string name="cd_library_music">عرض تفاصيل الموسيقى</string>
+    <string name="cd_bookmark_add">إضافة إلى قائمة التشغيل</string>
+    <string name="cd_playlist_add">إضافة إلى قائمة الانتظار</string>
+    <string name="cd_download">تحميل</string>
+    <string name="cd_select_music_app_bar_menu">القائمة</string>
+    <string name="cd_select_music_app_bar_close">الخروج من وضع التحديد</string>
+    <string name="cd_music_option">خيارات الموسيقى %1$s</string>
+
+    <!-- Library Screen -->
+    <string name="cd_add_playlist">إنشاء قائمة تشغيل جديدة</string>
+    <string name="cd_playlist_cover">صورة غلاف قائمة التشغيل</string>
+    <string name="cd_music_cover">صورة غلاف الموسيقى</string>
+
+    <!-- Playlist Detail Screen -->
+    <string name="cd_edit">تعديل اسم قائمة التشغيل</string>
+    <string name="cd_delete">حذف قائمة التشغيل</string>
+    <string name="cd_play_playlist">تشغيل قائمة التشغيل</string>
+
+    <!-- Menu Screen -->
+    <string name="cd_email_icon">أيقونة البريد الإلكتروني</string>
+    <string name="cd_copy_icon">نسخ إلى الحافظة</string>
+    <string name="cd_code_icon">أيقونة الكود</string>
+    <string name="cd_github_icon">أيقونة مستودع Github</string>
+    <string name="cd_expand_menu_arrow">توسيع القائمة</string>
+    <string name="cd_shrink_menu_arrow">تصغير القائمة</string>
+
+    <!-- Search Screen -->
+    <string name="cd_search_history_icon">أيقونة سجل البحث</string>
+    <string name="cd_delete_search_history">حذف عنصر من سجل البحث</string>
+
+    <!-- Cache Setting Screen -->
+    <string name="cd_info_icon">أيقونة المعلومات</string>
+    <string name="cd_cache_progress">تقدم استخدام التخزين المؤقت</string>
+
+    <!-- Artist -->
+    <string name="cd_artist_image">صورة الفنان</string>
 
     <!-- Player -->
     <string name="cd_player_shuffle_on">وضع العشوائي مفعل</string>

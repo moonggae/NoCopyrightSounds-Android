@@ -26,6 +26,8 @@
     <string name="delete_playlist_alert_title">Delete Playlist</string>
     <string name="delete_playlist_alert_message">Are you sure\nyou want to delete this playlist?</string>
 
+    <string name="library_empty_playlist_message">Create your first playlist</string>
+
     <string name="playlist_detail_menu_modify_name">Modify name</string>
     <string name="playlist_detail_menu_save_recent_playlist">Save Playlist</string>
     <string name="playlist_detail_menu_delete_playlist">Delete Playlist</string>
@@ -137,10 +139,6 @@
     <!-- Cache Setting Screen -->
     <string name="cd_info_icon">Information icon</string>
     <string name="cd_cache_progress">Cache usage progress</string>
-
-    <!--
-    contentDescription = null
-    -->
 
     <!-- Artist -->
     <string name="cd_artist_image">Arist image</string>

@@ -27,6 +27,8 @@
     <string name="delete_playlist_alert_title">प्लेलिस्ट हटाएं</string>
     <string name="delete_playlist_alert_message">क्या आप वाकई\nइस प्लेलिस्ट को हटाना चाहते हैं?</string>
 
+    <string name="library_empty_playlist_message">आइए अपनी पहली प्लेलिस्ट बनाएं</string>
+
     <string name="playlist_detail_menu_modify_name">नाम बदलें</string>
     <string name="playlist_detail_menu_save_recent_playlist">प्लेलिस्ट सहेजें</string>
     <string name="playlist_detail_menu_delete_playlist">प्लेलिस्ट हटाएं</string>

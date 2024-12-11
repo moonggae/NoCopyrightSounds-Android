@@ -27,6 +27,8 @@
     <string name="delete_playlist_alert_title">Hapus Daftar Putar</string>
     <string name="delete_playlist_alert_message">Apakah Anda yakin\ningin menghapus daftar putar ini?</string>
 
+    <string name="library_empty_playlist_message">Mari buat playlist pertama kamu</string>
+
     <string name="playlist_detail_menu_modify_name">Ubah nama</string>
     <string name="playlist_detail_menu_save_recent_playlist">Simpan Daftar Putar</string>
     <string name="playlist_detail_menu_delete_playlist">Hapus Daftar Putar</string>

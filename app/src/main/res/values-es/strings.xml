@@ -27,6 +27,8 @@
     <string name="delete_playlist_alert_title">Eliminar Lista</string>
     <string name="delete_playlist_alert_message">¿Estás seguro\nde que quieres eliminar esta lista?</string>
 
+    <string name="library_empty_playlist_message">Crea tu primera lista de reproducción</string>
+
     <string name="playlist_detail_menu_modify_name">Modificar nombre</string>
     <string name="playlist_detail_menu_save_recent_playlist">Guardar lista</string>
     <string name="playlist_detail_menu_delete_playlist">Eliminar lista</string>
