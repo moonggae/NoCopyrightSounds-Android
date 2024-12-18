@@ -14,16 +14,20 @@ import com.ccc.ncs.database.model.reference.MusicGenreCrossRef
 import com.ccc.ncs.database.model.reference.MusicMoodCrossRef
 import com.ccc.ncs.database.model.reference.PlayListMusicCrossRef
 import com.ccc.ncs.database.model.relation.PlayListWithMusics
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import com.ccc.ncs.database.test.mock.MockGenreEntityList
 import com.ccc.ncs.database.test.mock.MockMoodEntityList
 import com.ccc.ncs.database.test.mock.MockMusicList
 import com.ccc.ncs.database.test.mock.MockMusicWithGenreAndMoodList
 import com.ccc.ncs.database.test.mock.MockPlayList
+import com.ccc.ncs.database.util.ArtistConverter
+import com.ccc.ncs.model.Music
+import com.google.gson.Gson
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
 
 class DaoTest {
     private lateinit var moodDao: MoodDao
@@ -32,13 +36,18 @@ class DaoTest {
     private lateinit var playListDao: PlayListDao
     private lateinit var db: NcsDatabase
 
+    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private val testDbName = "test-database"
+
     @Before
     fun createDb() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(
+        db = Room.databaseBuilder(
             context,
-            NcsDatabase::class.java
-        ).build()
+            NcsDatabase::class.java,
+            testDbName
+        )
+            .addTypeConverter(ArtistConverter(Gson()))
+            .build()
         moodDao = db.moodDao()
         genreDao = db.genreDao()
         musicDao = db.musicDao()
@@ -46,7 +55,10 @@ class DaoTest {
     }
 
     @After
-    fun closeDb() = db.close()
+    fun closeDb() {
+        context.deleteFile(testDbName)
+        db.close()
+    }
 
     private suspend fun insertMockGenres() = genreDao.insertAllGenres(MockGenreEntityList)
     private suspend fun insertMockMoods() = moodDao.insertAllMoods(MockMoodEntityList)
@@ -209,4 +221,77 @@ class DaoTest {
         assert(deletedEntity == null)
     }
 
+
+    private val someDifferenceMockMusics = MockMusicList.mapIndexed { index, music ->
+        if (index % 7 == 0) {
+            music.copy(
+                artists = music.artists.map { artist ->
+                    artist.copy(
+                        name = "update ${artist.name}"
+                    )
+                }
+            )
+        } else music
+    }
+
+    @Test
+    fun measure_time_to_replace_all_musics() = runTest {
+        insertMockMusicList()
+
+        val time = measureTimeMillis {
+            musicDao.insertMusics(someDifferenceMockMusics.map(Music::asEntity))
+        }
+
+
+        // 검증 로직 추가
+        val updatedMusics = musicDao.getMusics(MockMusicList.map(Music::id)).first()
+
+        // 모든 음악이 업데이트되었는지 확인
+        assertEquals(someDifferenceMockMusics.size, updatedMusics.size)
+
+        // 각 음악이 예상대로 업데이트되었는지 확인
+        updatedMusics.forEach { musicWithData ->
+            val expectedMusic = someDifferenceMockMusics.find { it.id == musicWithData.music.id }
+                ?.asEntity()
+            assertEquals(expectedMusic, musicWithData.music)
+        }
+
+        println("replace all music time: $time")
+    }
+
+    @Test
+    fun measure_time_to_replace_difference_musics() = runTest {
+        insertMockMusicList()
+
+        val time = measureTimeMillis {
+            val insertedMusics = musicDao.getMusics(MockMusicList.map(Music::id))
+                .first()
+                .associate { it.music.id to it.music }
+
+            someDifferenceMockMusics
+                .map(Music::asEntity)
+                .filter { newMusic ->
+                    val oldMusic = insertedMusics[newMusic.id]
+                    oldMusic != newMusic
+                }
+                .forEach { musicDao.updateMusic(it) }
+        }
+
+        // 검증 로직 추가
+        val updatedMusics = musicDao.getMusics(MockMusicList.map(Music::id)).first()
+        updatedMusics.forEach { musicWithData ->
+            val expectedMusic = someDifferenceMockMusics.find { it.id == musicWithData.music.id }
+                ?.asEntity()
+            assertEquals(expectedMusic, musicWithData.music)
+        }
+
+        println("replace difference item time: $time")
+    }
+
+    private inline fun measureTimeMillis(block: () -> Unit): Long {
+        val start = System.nanoTime()
+        block()
+        val end = System.nanoTime()
+        return (end - start) / 1_000_000
+    }
 }

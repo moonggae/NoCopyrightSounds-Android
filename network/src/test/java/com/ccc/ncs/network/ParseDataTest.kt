@@ -1,6 +1,7 @@
 package com.ccc.ncs.network
 
 import com.ccc.ncs.network.converter.NcsHtmlConverterFactory
+import com.ccc.ncs.network.model.toDataClassString
 import com.ccc.ncs.network.retrofit.RetrofitNcsNetworkApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -23,8 +24,9 @@ class ParseDataTest {
     fun `test parse MusicList`() = runTest {
         val musics = service.getMusicList(1).body()
         musics?.forEach {
-            println(it)
+            println(it.toDataClassString() + ",")
         }
+
         assert(musics?.size == 20)
     }
 
@@ -41,6 +43,16 @@ class ParseDataTest {
     @Throws
     fun `test parse genre and mood`() = runTest {
         val (genres, moods) = service.getAllGenreAndMood().body() ?: throw Exception("Fail to get html")
+
+        genres.sortedBy { it.id }.forEach {
+            println(it)
+        }
+
+        moods.sortedBy { it.id }.forEach {
+            println(it)
+        }
+
+
         assert(
             genres.size > 10 &&
                     moods.size > 10

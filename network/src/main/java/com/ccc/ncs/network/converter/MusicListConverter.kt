@@ -37,25 +37,23 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
             try {
                 parseMusicRow(row)
             } catch (e: Throwable) {
+                e.printStackTrace()
                 null
             }
         }?: emptyList()
     }
 
-    private fun parseMusicRow(row: Element): Music? {
-        val titleTag = row.selectFirst("td:nth-child(1) > a") ?: return null
+    private fun parseMusicRow(row: Element): Music {
+        val titleTag = row.selectFirst("td:nth-child(1) > a") ?: throw IllegalArgumentException("Not Found title")
         val artists = parseArtists(titleTag)
-        val releaseDate = parseReleaseDate(row) ?: return null
+        val releaseDate = parseReleaseDate(row) ?: throw IllegalArgumentException("Not Found ReleaseDate")
         val genres = parseGenres(row)
         val moods = parseMoods(row)
         val versions = parseVersions(row)
         val dataUrl = titleTag.attribute("data-url").value
-        val id = try {
-            UUID.fromString(titleTag.attribute("data-tid").value)
-        } catch (e: IllegalArgumentException) { null }
+        val id = UUID.fromString(titleTag.attribute("data-tid").value)
 
-        if (dataUrl.isNullOrBlank()) return null
-        if (id == null) return null
+        if (dataUrl.isNullOrBlank()) throw IllegalArgumentException("Not Found dataUrl")
 
         return Music(
             id = id,
@@ -132,9 +130,5 @@ class MusicListConverter: Converter<ResponseBody, List<Music>> {
         return Version.entries.filter { version ->
             versionString.uppercase().contains(version.name.uppercase())
         }.toSet()
-    }
-
-    companion object {
-
     }
 }
