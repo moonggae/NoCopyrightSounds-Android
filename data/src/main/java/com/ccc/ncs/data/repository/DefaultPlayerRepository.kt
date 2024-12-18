@@ -15,9 +15,9 @@ import javax.inject.Inject
 internal class DefaultPlayerRepository @Inject constructor(
     private val playlistRepository: PlayListRepository,
     private val playerDataSource: PlayerDataStore
-): PlayerRepository {
-    override val playlist: Flow<PlayList?>
-        get() = playerDataSource.playlistId.flatMapLatest { playlistId ->
+) : PlayerRepository {
+    override val playlist: Flow<PlayList?> =
+        playerDataSource.playlistId.flatMapLatest { playlistId ->
             if (playlistId == null) flowOf(null)
             else playlistRepository.getPlayList(UUID.fromString(playlistId))
         }
@@ -26,15 +26,13 @@ internal class DefaultPlayerRepository @Inject constructor(
         playerDataSource.setPlaylistId(playlistId)
     }
 
-    override val musicIndex: Flow<Int?>
-        get() = playerDataSource.currentMusicIndex
+    override val musicIndex: Flow<Int?> = playerDataSource.currentMusicIndex
 
     override suspend fun updateMusicIndex(index: Int) {
         playerDataSource.setCurrentMusicIndex(index)
     }
 
-    override val position: Flow<Long?>
-        get() = playerDataSource.position
+    override val position: Flow<Long?> = playerDataSource.position
 
     override suspend fun updatePosition(position: Long) {
         playerDataSource.setPosition(position)
