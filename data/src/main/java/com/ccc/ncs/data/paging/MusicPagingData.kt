@@ -8,6 +8,7 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.network.NcsNetworkDataSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class MusicPagingData @Inject constructor(
     private val network: NcsNetworkDataSource,
@@ -27,7 +28,7 @@ class MusicPagingData @Inject constructor(
     ) {
         MusicPagingSource(
             dataSource = network,
-            syncLocalMusics = musicRepository::insertNotExistMusics,
+            syncLocalMusics = { musicRepository.insertMusics(it).first() },
             query = query,
             genreId = genreId,
             moodId = moodId,

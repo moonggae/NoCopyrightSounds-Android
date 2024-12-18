@@ -1,5 +1,6 @@
 package com.ccc.ncs.domain.usecase
 
+import com.ccc.ncs.domain.model.CURRENT_INDEX_UNSET
 import com.ccc.ncs.domain.model.PlayerState
 import com.ccc.ncs.domain.repository.LyricsRepository
 import com.ccc.ncs.domain.repository.PlaybackStateRepository
@@ -39,7 +40,7 @@ class GetPlayerStateUseCase(
         lyricsFlow
     ) { playbackState, playlist, lyrics ->
         playlist?.let {
-            if (playerRepository.musicIndex.first() != playbackState.currentIndex) {
+            if (playerRepository.musicIndex.first() != playbackState.currentIndex && playbackState.currentIndex != CURRENT_INDEX_UNSET) {
                 playerRepository.updateMusicIndex(playbackState.currentIndex)
             }
 
