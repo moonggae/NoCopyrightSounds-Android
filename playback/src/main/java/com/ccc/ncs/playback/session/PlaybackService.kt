@@ -1,5 +1,6 @@
 package com.ccc.ncs.playback.session
 
+import android.app.PendingIntent
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
@@ -15,7 +16,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaybackService : MediaLibraryService() {
 
-    @Inject
     lateinit var session: MediaLibrarySession
 
     @Inject
@@ -27,8 +27,23 @@ class PlaybackService : MediaLibraryService() {
     @Inject
     internal lateinit var playbackAnalyticsEventListener: PlaybackAnalyticsEventListener
 
+    @Inject
+    internal lateinit var player: ExoPlayer
+
+    @OptIn(UnstableApi::class)
+    @Inject
+    internal lateinit var callback: LibrarySessionCallback
+
+    @Inject
+    internal lateinit var sessionActivity: PendingIntent
+
     override fun onCreate() {
         super.onCreate()
+        session = MediaLibrarySession
+            .Builder(this, player, callback)
+            .setSessionActivity(sessionActivity)
+            .build()
+
         setupPlayer()
     }
 

@@ -1,16 +1,18 @@
 package com.ccc.ncs.playback.di
 
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.Service
 import android.content.Context
+import android.content.Intent
+import androidx.activity.ComponentActivity
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaLibraryService
 import com.ccc.ncs.cache.CacheManager
-import com.ccc.ncs.playback.session.LibrarySessionCallback
-import com.ccc.ncs.playback.session.PlaybackService
+import com.ccc.ncs.playback.util.PlaybackConstraint
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,12 +61,16 @@ internal object PlaybackModule {
 
     @Provides
     @ServiceScoped
-    fun providesSession(
-        service: Service,
-        player: ExoPlayer,
-        callback: LibrarySessionCallback,
-    ): MediaLibraryService.MediaLibrarySession =
-        MediaLibraryService.MediaLibrarySession
-            .Builder(service as PlaybackService, player, callback)
-            .build()
+    fun providesPendingIntent(
+        @ApplicationContext context: Context,
+        mainActivityClass: Class<out ComponentActivity>
+    ): PendingIntent = PendingIntent.getActivity(
+        context,
+        1,
+        Intent(context, mainActivityClass).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra(PlaybackConstraint.EXTRA_NAME_EVENT, PlaybackConstraint.EVENT_NOTIFICATION_CLICK)
+        },
+        FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 }

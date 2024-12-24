@@ -2,6 +2,8 @@ package com.ccc.ncs.di
 
 import android.content.Context
 import android.os.Environment
+import androidx.activity.ComponentActivity
+import com.ccc.ncs.MainActivity
 import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import dagger.Module
@@ -41,4 +43,8 @@ object AppModule {
         ioDispatcher = ioDispatcher,
         downloadDirectory = downloadDirectory
     )
+
+    @Provides
+    @Singleton
+    fun providesMainActivityClass(): Class<out ComponentActivity> = MainActivity::class.java
 }

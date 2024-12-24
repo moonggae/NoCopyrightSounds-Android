@@ -50,6 +50,7 @@ import com.ccc.ncs.feature.play.PlayerUiState
 import com.ccc.ncs.feature.play.PlayerViewModel
 import com.ccc.ncs.navigation.NcsNavHost
 import com.ccc.ncs.navigation.TopLevelDestination
+import kotlinx.coroutines.flow.collectLatest
 
 val PLAYER_SMALL_HEIGHT_DEFAULT = 60.dp
 
@@ -68,6 +69,12 @@ fun NcsApp(
     LaunchedEffect(playerUiState) {
         if (playerUiState is PlayerUiState.Idle) {
             playingScreenHeightWeight = 0f
+        }
+    }
+
+    LaunchedEffect(appState.notificationEvent) {
+        appState.notificationEvent.collectLatest {
+            appState.popNearestTopLevelDestination()
         }
     }
 
@@ -148,7 +155,8 @@ fun NcsApp(
                     onClose = playerViewModel::closePlayer,
                     onMoveToMusicDetail = { appState.navController.navigateToMusicDetail(it.id) },
                     onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) },
-                    onDeleteMusicInPlaylist = playerViewModel::removeFromQueue
+                    onDeleteMusicInPlaylist = playerViewModel::removeFromQueue,
+                    notificationEventFlow = appState.notificationEvent
                 )
             }
         }

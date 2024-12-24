@@ -15,6 +15,7 @@ import com.ccc.ncs.feature.library.navigateToLibrary
 import com.ccc.ncs.feature.menu.navigateToMenu
 import com.ccc.ncs.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,16 +25,19 @@ fun rememberNcsAppState(
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
+    notificationEvent: SharedFlow<Unit>
 ): NcsAppState {
     return remember(
         navController,
         coroutineScope,
-        networkMonitor
+        networkMonitor,
+        notificationEvent
     ) {
         NcsAppState(
             navController = navController,
             coroutineScope = coroutineScope,
-            networkMonitor = networkMonitor
+            networkMonitor = networkMonitor,
+            notificationEvent = notificationEvent
         )
     }
 }
@@ -42,7 +46,8 @@ fun rememberNcsAppState(
 class NcsAppState(
     val navController: NavHostController,
     networkMonitor: NetworkMonitor,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    val notificationEvent: SharedFlow<Unit>
 ) {
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)

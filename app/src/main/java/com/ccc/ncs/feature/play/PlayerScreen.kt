@@ -94,6 +94,8 @@ import com.ccc.ncs.ui.component.PlayerSkipPreviousButton
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.calculateScreenHeight
 import com.ccc.ncs.util.conditional
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -116,7 +118,8 @@ fun PlayerScreen(
     onClickOnList: (Int) -> Unit,
     onMoveToMusicDetail: (Music) -> Unit,
     onMoveToArtistDetail: (Artist) -> Unit,
-    onDeleteMusicInPlaylist: (Music) -> Unit
+    onDeleteMusicInPlaylist: (Music) -> Unit,
+    notificationEventFlow: SharedFlow<Unit>
 ) {
     val scope = rememberCoroutineScope()
 
@@ -136,8 +139,8 @@ fun PlayerScreen(
         onUpdateScreenSize(draggableState.percentage)
     }
 
-    val onClickSmallScreen: () -> Unit = {
-        scope.launch {
+    LaunchedEffect(notificationEventFlow) {
+        notificationEventFlow.collectLatest {
             draggableState.animateTo(SwipeAnchors.Big)
         }
     }
@@ -155,7 +158,11 @@ fun PlayerScreen(
                 )
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .conditional(draggableState.currentValue == SwipeAnchors.Small) {
-                    clickable(onClick = onClickSmallScreen)
+                    clickable(onClick = {
+                        scope.launch {
+                            draggableState.animateTo(SwipeAnchors.Big)
+                        }
+                    })
                 }
         ),
     ) {
