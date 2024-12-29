@@ -19,7 +19,9 @@ import kotlinx.coroutines.guava.asDeferred
 import kotlinx.coroutines.launch
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 internal class DefaultMediaPlaybackController @Inject constructor(
     private val context: Context
 ): MediaPlaybackController {
@@ -42,6 +44,7 @@ internal class DefaultMediaPlaybackController @Inject constructor(
             }
             return controllerDeferred
         }
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     override fun setPosition(positionMs: Long) = executeAfterPrepare { controller ->
