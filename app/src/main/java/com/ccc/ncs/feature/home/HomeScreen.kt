@@ -63,10 +63,14 @@ import com.ccc.ncs.ui.component.DropDownButton
 import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.MusicCardList
 import com.ccc.ncs.ui.component.MusicTagBottomSheet
+import com.ccc.ncs.util.Const
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+@OptIn(FlowPreview::class)
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
@@ -79,6 +83,17 @@ fun HomeRoute(
     navigateToMusicDetail: (UUID) -> Unit,
 ) {
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val failToDownloadMusicErrorMessage  = stringResource(R.string.error_message_fail_to_download_music)
+
+    LaunchedEffect(Unit) {
+        viewModel.errorEvents
+            .debounce(500L)
+            .collect { error ->
+            if (error == Const.ERROR_DOWNLOAD_MUSIC) {
+                onShowSnackbar(failToDownloadMusicErrorMessage, null)
+            }
+        }
+    }
 
     HomeScreen(
         modifier = modifier,
@@ -231,15 +246,20 @@ internal fun HomeScreen(
             scope.launch { onShowSnackbar(addedToQueueMessage, null) }
         },
         onClickDownload = {
-            scope.launch {
-                homeUiState.selectedMusicIds.forEach { music ->
-                    downloadMusic(music)
-                }
+            homeUiState.selectedMusicIds.forEach { music ->
+                downloadMusic(music)
             }
+
+            showSelectMusicMenu = false
+            updateSelectMode(false)
         },
-        onClickDetail = if (homeUiState.selectedMusicIds.size != 1) null
-        else {
-            { onMoveToDetailPage(homeUiState.selectedMusicIds.first()) }
+        onClickDetail = {
+            if (homeUiState.selectedMusicIds.size != 1) {
+                onMoveToDetailPage(homeUiState.selectedMusicIds.first())
+            }
+
+            showSelectMusicMenu = false
+            updateSelectMode(false)
         }
     )
 

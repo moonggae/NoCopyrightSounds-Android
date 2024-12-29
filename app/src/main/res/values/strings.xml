@@ -86,6 +86,7 @@
     <string name="error_failed_to_load_artist_detail">Failed to load artist detail</string>
     <string name="retry">Retry</string>
     <string name="exo_download_notification_channel_name">download channel</string>
+    <string name="error_message_fail_to_download_music">Failed to download music</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">Search</string>

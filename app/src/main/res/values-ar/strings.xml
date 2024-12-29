@@ -87,6 +87,7 @@
     <string name="error_failed_to_load_artist_detail">فشل تحميل تفاصيل الفنان</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="exo_download_notification_channel_name">قناة التحميل</string>
+    <string name="error_message_fail_to_download_music">فشل تحميل الموسيقى</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">بحث</string>

@@ -4,14 +4,17 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.domain.repository.LyricsRepository
+import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.model.Music
+import com.ccc.ncs.util.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -51,10 +54,17 @@ class MusicDetailViewModel @Inject constructor(
             initialValue = MusicDetailUiState.Loading
         )
 
+    private val _errorEvents = MutableSharedFlow<String>()
+    val errorEvents = _errorEvents.asSharedFlow()
+
     fun downloadMusic(musicId: UUID) {
         viewModelScope.launch {
-            musicRepository.getMusic(musicId).first()?.let { music ->
-                musicDownloader.download(music)
+            try {
+                musicRepository.getMusic(musicId).first()?.let { music ->
+                    musicDownloader.download(music)
+                }
+            } catch (e: Exception) {
+                _errorEvents.emit(Const.ERROR_DOWNLOAD_MUSIC)
             }
         }
     }

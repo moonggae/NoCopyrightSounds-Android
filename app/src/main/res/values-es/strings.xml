@@ -88,6 +88,7 @@
     <string name="error_failed_to_load_artist_detail">Error al cargar los detalles del artista</string>
     <string name="retry">Reintentar</string>
     <string name="exo_download_notification_channel_name">Canal de descargas</string>
+    <string name="error_message_fail_to_download_music">Error al descargar la música</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">Buscar</string>

@@ -87,6 +87,7 @@
     <string name="error_failed_to_load_artist_detail">कलाकार का विवरण लोड करने में विफल</string>
     <string name="retry">पुनः प्रयास करें</string>
     <string name="exo_download_notification_channel_name">डाउनलोड चैनल</string>
+    <string name="error_message_fail_to_download_music">संगीत डाउनलोड करने में विफल</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">खोजें</string>

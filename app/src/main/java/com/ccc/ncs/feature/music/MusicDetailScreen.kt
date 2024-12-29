@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +70,9 @@ import com.ccc.ncs.model.MusicTag
 import com.ccc.ncs.model.util.toString
 import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.mockMusics
+import com.ccc.ncs.util.Const
 import com.ccc.ncs.util.conditional
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
@@ -88,6 +91,17 @@ fun MusicDetailRoute(
     onMoveToArtistDetail: (Artist) -> Unit
 ) {
     val musicDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val failToDownloadMusicErrorMessage  = stringResource(R.string.error_message_fail_to_download_music)
+
+    LaunchedEffect(Unit) {
+        viewModel.errorEvents
+            .debounce(500L)
+            .collect { error ->
+                if (error == Const.ERROR_DOWNLOAD_MUSIC) {
+                    onShowSnackbar(failToDownloadMusicErrorMessage, null)
+                }
+            }
+    }
 
     when (musicDetailUiState) {
         is MusicDetailUiState.Success -> MusicDetailScreen(

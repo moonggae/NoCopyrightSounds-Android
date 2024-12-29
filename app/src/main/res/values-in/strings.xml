@@ -87,6 +87,7 @@
     <string name="error_failed_to_load_artist_detail">Gagal memuat detail artis</string>
     <string name="retry">Coba lagi</string>
     <string name="exo_download_notification_channel_name">Saluran unduhan</string>
+    <string name="error_message_fail_to_download_music">Gagal mengunduh musik</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">Cari</string>

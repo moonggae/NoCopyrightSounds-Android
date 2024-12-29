@@ -12,11 +12,14 @@ import com.ccc.ncs.model.Genre
 import com.ccc.ncs.model.Mood
 import com.ccc.ncs.model.MusicStatus
 import com.ccc.ncs.model.MusicTag
+import com.ccc.ncs.util.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -37,6 +40,9 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> get() = _uiState
+
+    private val _errorEvents = MutableSharedFlow<String>()
+    val errorEvents = _errorEvents.asSharedFlow()
 
     private val statusMusics = musicRepository
         .getMusicsByStatus(listOf(MusicStatus.FullyCached, MusicStatus.Downloading, MusicStatus.Downloaded("")))
@@ -161,8 +167,12 @@ class HomeViewModel @Inject constructor(
 
     fun downloadMusic(musicId: UUID) {
         viewModelScope.launch {
-            musicRepository.getMusic(musicId).first()?.let { music ->
-                musicDownloader.download(music)
+            try {
+                musicRepository.getMusic(musicId).first()?.let { music ->
+                    musicDownloader.download(music)
+                }
+            } catch (e: Exception) {
+                _errorEvents.emit(Const.ERROR_DOWNLOAD_MUSIC)
             }
         }
     }

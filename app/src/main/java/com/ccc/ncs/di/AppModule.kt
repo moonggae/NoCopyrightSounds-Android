@@ -1,14 +1,14 @@
 package com.ccc.ncs.di
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import androidx.activity.ComponentActivity
 import com.ccc.ncs.MainActivity
 import com.ccc.ncs.R
-import com.ccc.ncs.domain.repository.MusicRepository
-import com.ccc.ncs.download.MusicDownloader
 import com.ccc.ncs.playback.util.PlaylistString
 import com.ccc.ncs.playback.util.RecentPlaylistString
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,23 +32,34 @@ internal object AppModule {
 
     @Provides
     @Singleton
-    fun provideMusicDownloadDirectory(
-        @ApplicationContext context: Context
-    ): File? = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+    fun provideFirebaseCrashlytics(): FirebaseCrashlytics = FirebaseCrashlytics.getInstance()
 
     @Provides
     @Singleton
-    fun providesMusicDownloader(
+    fun provideMusicDownloadDirectory(
         @ApplicationContext context: Context,
-        musicRepository: MusicRepository,
-        ioDispatcher: CoroutineDispatcher,
-        downloadDirectory: File?
-    ): MusicDownloader = MusicDownloader(
-        context = context,
-        musicRepository = musicRepository,
-        ioDispatcher = ioDispatcher,
-        downloadDirectory = downloadDirectory
-    )
+        crashlytics: FirebaseCrashlytics
+    ): File? = try {
+        val isOnePlusDevice = Build.MANUFACTURER.equals("OnePlus", ignoreCase = true) ||
+                Build.BRAND.equals("OnePlus", ignoreCase = true)
+
+        crashlytics.setCustomKey("is_oneplus", isOnePlusDevice.toString())
+
+        val directory = if (isOnePlusDevice) {
+            context.getExternalFilesDir(null)?.also {
+                File(it, "Music").apply { mkdirs() }
+            }
+        } else {
+            context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+        }
+
+        directory?.takeIf {
+            it.canRead() && it.canWrite()
+        } ?: throw SecurityException("Unsupported path: ${directory?.absolutePath}")
+    } catch (e: SecurityException) {
+        crashlytics.recordException(e)
+        File(context.filesDir, "Music").apply { mkdirs() }
+    }
 
     @Provides
     @Singleton

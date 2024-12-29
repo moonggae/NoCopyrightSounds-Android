@@ -87,6 +87,7 @@
     <string name="error_failed_to_load_artist_detail">아티스트 정보를 불러오지 못했습니다</string>
     <string name="retry">다시 시도</string>
     <string name="exo_download_notification_channel_name">다운로드 채널</string>
+    <string name="error_message_fail_to_download_music">음악을 다운로드할 수 없습니다</string>
 
     <!-- Navigation & Search -->
     <string name="cd_search">검색</string>
