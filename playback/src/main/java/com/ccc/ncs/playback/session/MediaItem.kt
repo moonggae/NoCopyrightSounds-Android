@@ -24,6 +24,8 @@ internal fun Music.asMediaItem(): MediaItem = MediaItem.Builder()
             .setArtist(artistText)
             .setTitle(title)
             .setArtworkUri(Uri.parse(coverUrl))
+            .setIsPlayable(true)
+            .setIsBrowsable(true)
             .build()
     ).build()
 

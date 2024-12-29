@@ -16,10 +16,10 @@ import com.ccc.ncs.domain.usecase.UpdatePlaylistMusicOrderUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object DomainModule {
     @Provides
     fun providesGetPlayerStateUseCase(

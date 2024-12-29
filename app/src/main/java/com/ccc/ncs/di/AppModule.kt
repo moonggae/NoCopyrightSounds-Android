@@ -4,8 +4,11 @@ import android.content.Context
 import android.os.Environment
 import androidx.activity.ComponentActivity
 import com.ccc.ncs.MainActivity
+import com.ccc.ncs.R
 import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.download.MusicDownloader
+import com.ccc.ncs.playback.util.PlaylistString
+import com.ccc.ncs.playback.util.RecentPlaylistString
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +22,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+internal object AppModule {
+    @Provides
+    fun providesContext(@ApplicationContext context: Context): Context = context
+
     @Provides
     @Singleton
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
@@ -47,4 +53,16 @@ object AppModule {
     @Provides
     @Singleton
     fun providesMainActivityClass(): Class<out ComponentActivity> = MainActivity::class.java
+
+    @Provides
+    @Singleton
+    @PlaylistString
+    fun providesPlaylistString(@ApplicationContext context: Context): String =
+        context.getString(R.string.feature_playlist_title)
+
+    @Provides
+    @Singleton
+    @RecentPlaylistString
+    fun providesRecentPlaylistString(@ApplicationContext context: Context): String =
+        context.getString(R.string.playlist_name_auto_generated)
 }

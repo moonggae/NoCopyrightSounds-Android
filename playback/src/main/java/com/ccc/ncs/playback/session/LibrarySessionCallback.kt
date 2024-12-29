@@ -1,27 +1,37 @@
 package com.ccc.ncs.playback.session
 
 import android.os.Bundle
+import androidx.annotation.OptIn
 import androidx.media3.common.C
-import androidx.media3.common.Player
+import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.LibraryResult
+import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
+import androidx.media3.session.MediaSession.ConnectionResult.AcceptedResultBuilder
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import com.ccc.ncs.domain.repository.PlayerRepository
+import com.ccc.ncs.playback.session.MediaCustomLayoutHandler.Companion.customCommandRepeat
+import com.ccc.ncs.playback.session.MediaCustomLayoutHandler.Companion.customCommandShuffle
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.future
+import java.util.UUID
 import javax.inject.Inject
 
 
-@UnstableApi
+@OptIn(UnstableApi::class)
 internal class LibrarySessionCallback @Inject constructor(
     private val scope: CoroutineScope,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val customLayoutHandler: MediaCustomLayoutHandler,
+    private val autoSessionHandler: AutoSessionHandler,
+    private val mediaLibraryBrowser: MediaLibraryBrowser
 ) : MediaLibrarySession.Callback {
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
@@ -36,26 +46,28 @@ internal class LibrarySessionCallback @Inject constructor(
     }
 
     override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo): MediaSession.ConnectionResult {
-        if (session.isMediaNotificationController(controller)) {
-            val sessionCommands = MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
-                .add(customCommandRepeat)
-                .add(customCommandShuffle)
-                .build()
+        val sessionCommands = MediaSession.ConnectionResult.DEFAULT_SESSION_AND_LIBRARY_COMMANDS.buildUpon()
+            .add(customCommandRepeat)
+            .add(customCommandShuffle)
+            .remove(SessionCommand.COMMAND_CODE_SESSION_SET_RATING)
+            .remove(SessionCommand.COMMAND_CODE_LIBRARY_SUBSCRIBE)
+            .remove(SessionCommand.COMMAND_CODE_LIBRARY_UNSUBSCRIBE)
+            .remove(SessionCommand.COMMAND_CODE_LIBRARY_SEARCH)
+            .remove(SessionCommand.COMMAND_CODE_LIBRARY_GET_SEARCH_RESULT)
+            .build()
 
-            val playerCommands = MediaSession.ConnectionResult.DEFAULT_PLAYER_COMMANDS.buildUpon().build()
+        val playerCommands = MediaSession.ConnectionResult.DEFAULT_PLAYER_COMMANDS.buildUpon().build()
 
-            return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
-                .setCustomLayout(
-                    ImmutableList.of(
-                        createRepeatButton(session),
-                        createShuffleButton(session)
-                    )
-                )
-                .setAvailablePlayerCommands(playerCommands)
-                .setAvailableSessionCommands(sessionCommands)
-                .build()
+        return when {
+            session.isMediaNotificationController(controller) || autoSessionHandler.isAutoController(session, controller) ->
+                AcceptedResultBuilder(session)
+                    .setAvailablePlayerCommands(playerCommands)
+                    .setAvailableSessionCommands(sessionCommands)
+                    .setCustomLayout(customLayoutHandler.createCustomLayout(session))
+                    .build()
+
+            else -> AcceptedResultBuilder(session).build()
         }
-        return MediaSession.ConnectionResult.AcceptedResultBuilder(session).build()
     }
 
     override fun onCustomCommand(
@@ -64,32 +76,52 @@ internal class LibrarySessionCallback @Inject constructor(
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        when (customCommand.customAction) {
-            ACTION_REPEAT -> {
-                session.player.repeatMode = when (session.player.repeatMode) {
-                    Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ONE
-                    Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_ALL
-                    Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_OFF
-                    else -> Player.REPEAT_MODE_OFF
-                }
-            }
-            ACTION_SHUFFLE -> {
-                session.player.shuffleModeEnabled = !session.player.shuffleModeEnabled
-            }
-        }
-
-        // 상태 변경 후, MediaSession을 통한 알림 갱신
-        updateCustomLayout(session)
-
+        customLayoutHandler.handleCustomCommand(session, customCommand)
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
     }
 
-    private fun updateCustomLayout(session: MediaSession) {
-        session.setCustomLayout(
-            ImmutableList.of(
-                createRepeatButton(session),
-                createShuffleButton(session)
-            )
-        )
+    override fun onGetLibraryRoot(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        params: MediaLibraryService.LibraryParams?
+    ): ListenableFuture<LibraryResult<MediaItem>> {
+        val rootItem = mediaLibraryBrowser.getRootItem()
+        val result = LibraryResult.ofItem(rootItem, params)
+        return Futures.immediateFuture(result)
     }
+
+    override fun onGetChildren(
+        session: MediaLibrarySession,
+        browser: MediaSession.ControllerInfo,
+        parentId: String,
+        page: Int,
+        pageSize: Int,
+        params: MediaLibraryService.LibraryParams?
+    ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> =
+        scope.future {
+            val items = mediaLibraryBrowser.getChildren(parentId)
+            autoSessionHandler.setPlaylistId(parentId)
+            LibraryResult.ofItemList(items, params)
+        }
+
+
+    override fun onSetMediaItems(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        mediaItems: MutableList<MediaItem>,
+        startIndex: Int,
+        startPositionMs: Long
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+        if (autoSessionHandler.isAutoController(mediaSession, controller)) {
+            autoSessionHandler.handleAutoMediaItems(mediaItems)
+        }
+
+        return super.onSetMediaItems(mediaSession, controller, mediaItems, startIndex, startPositionMs)
+    }
+}
+
+fun String.toUUID(): UUID? = try {
+    UUID.fromString(this)
+} catch (e: Exception) {
+    null
 }
