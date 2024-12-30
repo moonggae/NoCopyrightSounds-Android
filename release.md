@@ -1,3 +1,90 @@
+### 0.2.24
+```
+<ko-KR>
+✨ 새로운 기능
+- Android Auto를 지원합니다! 이제 차량에서도 음악을 더 편리하게 즐기실 수 있어요.
+- 알림을 클릭하면 음악 플레이어 화면으로 바로 이동하도록 개선했어요.
+
+🐛 개선 및 버그 수정
+- OnePlus 기기에서 음악 다운로드가 안되는 문제를 해결했어요.
+- 아티스트 정보가 표시되지 않던 문제를 수정했어요.
+- 음악 데이터를 안정적으로 가져오도록 개선했어요.
+
+</ko-KR>
+
+<en-US>
+✨ New Features
+- Added Android Auto support! Now you can enjoy your music more conveniently in your car.
+- Added direct navigation to player screen when clicking notifications.
+
+🐛 Improvements & Bug Fixes
+- Fixed music download issues on OnePlus devices.
+- Fixed an issue where artist information wasn't displaying properly.
+- Improved stability when loading music data.
+
+</en-US>
+
+<es-ES>
+✨ Nuevas funciones
+- ¡Se agregó soporte para Android Auto! Ahora puedes disfrutar de tu música más cómodamente en tu coche.
+- Se agregó navegación directa a la pantalla del reproductor al hacer clic en las notificaciones.
+
+🐛 Mejoras y correcciones
+- Se solucionó el problema de descarga de música en dispositivos OnePlus.
+- Se corrigió un problema donde la información del artista no se mostraba correctamente.
+- Se mejoró la estabilidad al cargar datos de música.
+
+</es-ES>
+
+<es-419>
+✨ Nuevas funciones
+- ¡Se agregó soporte para Android Auto! Ahora puedes disfrutar de tu música más cómodamente en tu auto.
+- Se agregó navegación directa a la pantalla del reproductor al hacer clic en las notificaciones.
+
+🐛 Mejoras y correcciones
+- Se solucionó el problema de descarga de música en dispositivos OnePlus.
+- Se corrigió un problema donde la información del artista no se mostraba correctamente.
+- Se mejoró la estabilidad al cargar datos de música.
+
+</es-419>
+
+<ar>
+✨ ميزات جديدة
+- تمت إضافة دعم Android Auto! الآن يمكنك الاستمتاع بالموسيقى بشكل أكثر راحة في سيارتك.
+- تمت إضافة التنقل المباشر إلى شاشة المشغل عند النقر على الإشعارات.
+
+🐛 التحسينات والإصلاحات
+- تم إصلاح مشكلات تنزيل الموسيقى على أجهزة OnePlus.
+- تم إصلاح مشكلة عدم عرض معلومات الفنان بشكل صحيح.
+- تم تحسين الاستقرار عند تحميل بيانات الموسيقى.
+
+</ar>
+
+<hi-IN>
+✨ नई सुविधाएं
+- Android Auto सपोर्ट जोड़ा गया! अब आप अपनी कार में भी आसानी से संगीत का आनंद ले सकते हैं।
+- नोटिफिकेशन पर क्लिक करने पर प्लेयर स्क्रीन पर सीधे जाने की सुविधा जोड़ी गई।
+
+🐛 सुधार और समस्या समाधान
+- OnePlus डिवाइस पर संगीत डाउनलोड की समस्या को ठीक किया गया।
+- कलाकार की जानकारी सही ढंग से न दिखने की समस्या को ठीक किया गया।
+- संगीत डेटा लोड करने में स्थिरता में सुधार किया गया।
+
+</hi-IN>
+
+<id>
+✨ Fitur Baru
+- Menambahkan dukungan Android Auto! Sekarang Anda dapat menikmati musik dengan lebih nyaman di mobil Anda.
+- Menambahkan navigasi langsung ke layar pemutar saat mengklik notifikasi.
+
+🐛 Peningkatan dan Perbaikan
+- Memperbaiki masalah pengunduhan musik pada perangkat OnePlus.
+- Memperbaiki masalah di mana informasi artis tidak ditampilkan dengan benar.
+- Meningkatkan stabilitas saat memuat data musik.
+
+</id>
+```
+
 ### 0.2.23
 ### 0.2.21
 ```
