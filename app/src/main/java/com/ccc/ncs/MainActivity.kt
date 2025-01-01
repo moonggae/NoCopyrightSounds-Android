@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private val notificationEvent = MutableSharedFlow<Unit>(1)
+    private val notificationEvent = MutableSharedFlow<Unit>(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
@@ -62,10 +62,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+    
+    private fun handleIntent(intent: Intent) {
         if (intent.getStringExtra(PlaybackConstraint.EXTRA_NAME_EVENT) == PlaybackConstraint.EVENT_NOTIFICATION_CLICK) {
             lifecycleScope.launch {
                 try {
-                    notificationEvent.emit(Unit)   
+                    notificationEvent.emit(Unit)
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to emit notification event", e)
                 }

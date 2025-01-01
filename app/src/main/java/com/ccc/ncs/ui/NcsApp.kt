@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -72,9 +73,11 @@ fun NcsApp(
         }
     }
 
+    var shouldExpandPlayerScreen by remember { mutableStateOf(false) }
     LaunchedEffect(appState.notificationEvent) {
         appState.notificationEvent.collectLatest {
             appState.popNearestTopLevelDestination()
+            shouldExpandPlayerScreen = true
         }
     }
 
@@ -156,7 +159,10 @@ fun NcsApp(
                     onMoveToMusicDetail = { appState.navController.navigateToMusicDetail(it.id) },
                     onMoveToArtistDetail = { appState.navController.navigateToArtistDetail(it.detailUrl) },
                     onDeleteMusicInPlaylist = playerViewModel::removeFromQueue,
-                    notificationEventFlow = appState.notificationEvent
+                    shouldExpandScreen = shouldExpandPlayerScreen,
+                    onExpandComplete = {
+                        shouldExpandPlayerScreen = false
+                    }
                 )
             }
         }
