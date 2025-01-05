@@ -133,6 +133,8 @@
     <string name="cd_github_icon">Github रिपॉजिटरी आइकन</string>
     <string name="cd_expand_menu_arrow">मेनू विस्तृत करें</string>
     <string name="cd_shrink_menu_arrow">मेनू संकुचित करें</string>
+    <string name="cd_copy_email_button">ईमेल कॉपी करने का बटन</string>
+    <string name="cd_copy_repository_button">GitHub रिपॉजिटरी पता कॉपी करने का बटन</string>
 
     <!-- Search Screen -->
     <string name="cd_search_history_icon">खोज इतिहास आइकन</string>

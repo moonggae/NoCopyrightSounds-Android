@@ -132,6 +132,8 @@
     <string name="cd_github_icon">Github repository icon</string>
     <string name="cd_expand_menu_arrow">Expand menu</string>
     <string name="cd_shrink_menu_arrow">Shrink menu</string>
+    <string name="cd_copy_email_button">Copy email button</string>
+    <string name="cd_copy_repository_button">Copy GitHub repository address button</string>
 
     <!-- Search Screen -->
     <string name="cd_search_history_icon">Search history icon</string>

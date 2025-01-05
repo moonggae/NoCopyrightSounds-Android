@@ -53,8 +53,8 @@ fun PlayerButton(
 enum class PlayerControllerType(val size: Dp, val iconPadding: Dp) {
     Big(32.dp, 0.dp),
     BigCenter(40.dp, 0.dp),
-    Small(48.dp, 12.dp),
-    SmallCenter(48.dp, 8.dp)
+    Small(52.dp, 12.dp),
+    SmallCenter(52.dp, 8.dp)
 }
 
 

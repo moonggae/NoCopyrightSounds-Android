@@ -43,11 +43,11 @@ fun CommonAppBar(
             contentDescription = stringResource(R.string.cd_back),
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
-                .size(28.dp)
                 .clip(CircleShape)
                 .clickable(onClick = onBack)
+                .padding(12.dp)
+                .size(28.dp)
         )
-
 
         if (content == null) {
             Spacer(Modifier.size(28.dp))

@@ -72,11 +72,13 @@ import com.ccc.ncs.ui.component.LoadingScreen
 import com.ccc.ncs.ui.component.mockMusics
 import com.ccc.ncs.util.Const
 import com.ccc.ncs.util.conditional
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
 
+@OptIn(FlowPreview::class)
 @Composable
 fun MusicDetailRoute(
     modifier: Modifier = Modifier,
@@ -156,20 +158,18 @@ internal fun MusicDetailScreen(
 
         CommonAppBar(
             onBack = onBack,
-            padding = PaddingValues(
-                top = 12.dp,
-                bottom = 16.dp
-            ),
+            padding = PaddingValues(vertical = 4.dp),
             suffix = {
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row {
                     Icon(
                         imageVector = NcsIcons.Close,
                         contentDescription = stringResource(com.ccc.ncs.designsystem.R.string.cd_close),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
-                            .size(28.dp)
                             .clip(CircleShape)
                             .clickable(onClick = onClose)
+                            .padding(12.dp)
+                            .size(28.dp)
                     )
 
                     Icon(
@@ -177,9 +177,10 @@ internal fun MusicDetailScreen(
                         contentDescription = stringResource(com.ccc.ncs.designsystem.R.string.cd_menu),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
-                            .size(28.dp)
                             .clip(CircleShape)
                             .clickable(onClick = { showMenu = true })
+                            .padding(12.dp)
+                            .size(28.dp)
                     )
                 }
             }

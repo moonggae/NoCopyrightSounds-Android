@@ -133,6 +133,8 @@
     <string name="cd_github_icon">Ikon Github Repository</string>
     <string name="cd_expand_menu_arrow">Buka menu</string>
     <string name="cd_shrink_menu_arrow">Tutup menu</string>
+    <string name="cd_copy_email_button">Tombol salin email</string>
+    <string name="cd_copy_repository_button">Tombol salin alamat repositori GitHub</string>
 
     <!-- Search Screen -->
     <string name="cd_search_history_icon">Ikon riwayat pencarian</string>

@@ -133,6 +133,8 @@
     <string name="cd_github_icon">أيقونة مستودع Github</string>
     <string name="cd_expand_menu_arrow">توسيع القائمة</string>
     <string name="cd_shrink_menu_arrow">تصغير القائمة</string>
+    <string name="cd_copy_email_button">زر نسخ البريد الإلكتروني</string>
+    <string name="cd_copy_repository_button">زر نسخ عنوان مستودع GitHub</string>
 
     <!-- Search Screen -->
     <string name="cd_search_history_icon">أيقونة سجل البحث</string>

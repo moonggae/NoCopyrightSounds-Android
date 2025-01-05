@@ -133,6 +133,8 @@
     <string name="cd_github_icon">Github 저장소 아이콘</string>
     <string name="cd_expand_menu_arrow">메뉴 펼치기</string>
     <string name="cd_shrink_menu_arrow">메뉴 접기</string>
+    <string name="cd_copy_email_button">이메일 복사 버튼</string>
+    <string name="cd_copy_repository_button">깃허브 레포지토리 주소 복사 버튼</string>
 
     <!-- Search Screen -->
     <string name="cd_search_history_icon">검색 기록 아이콘</string>

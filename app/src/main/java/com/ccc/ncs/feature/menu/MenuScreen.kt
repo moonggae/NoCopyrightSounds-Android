@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -44,7 +45,6 @@ import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.util.conditional
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import kotlinx.coroutines.launch
 
 @Composable
 fun MenuRoute(
@@ -53,7 +53,6 @@ fun MenuRoute(
     onMoveCacheScreen: () -> Unit
 ) {
     MenuScreen(
-        onShowSnackbar = onShowSnackbar,
         onMoveCacheScreen = onMoveCacheScreen
     )
 
@@ -62,8 +61,6 @@ fun MenuRoute(
 
 @Composable
 internal fun MenuScreen(
-    modifier: Modifier = Modifier,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
     onMoveCacheScreen: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -81,38 +78,33 @@ internal fun MenuScreen(
         }
 
         ExpandableMenuItem(label = stringResource(R.string.menu_contact)) {
-            ContactContent(
-                showSnackbar = {
-                    scope.launch {
-                        onShowSnackbar(it, null)
-                    }
-                }
-            )
+            ContactContent()
         }
     }
 }
 
 @Composable
-fun ContactContent(
-    showSnackbar: (String) -> Unit
-) {
+fun ContactContent() {
     val clipboardManager = LocalClipboardManager.current
     val uriHandler = LocalUriHandler.current
     val email = stringResource(id = R.string.ContactEmail)
     val githubRepo = stringResource(id = R.string.GithubRepositoryUrl)
 
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.padding(start = 20.dp, top = 4.dp, bottom = 4.dp)
+    ) {
         CopyableRow(
             icon = { Icon(imageVector = NcsIcons.Email, contentDescription = stringResource(R.string.cd_email_icon)) },
             text = email,
+            copyButtonContentDescription = stringResource(R.string.cd_copy_email_button),
             onCopy = {
                 clipboardManager.setText(AnnotatedString(email))
-//                showSnackbar("Email copied to clipboard")
             }
         )
 
-        ClickableRow(
+        CopyableRow(
             icon = {
                 Icon(
                     imageVector = NcsIcons.Code,
@@ -121,9 +113,9 @@ fun ContactContent(
             },
             text = stringResource(R.string.menu_github_repository),
             onClick = { uriHandler.openUri(githubRepo) },
+            copyButtonContentDescription = stringResource(R.string.cd_copy_repository_button),
             onCopy = {
                 clipboardManager.setText(AnnotatedString(githubRepo))
-//                showSnackbar("Github repository URL copied to clipboard")
             }
         )
     }
@@ -133,44 +125,34 @@ fun ContactContent(
 fun CopyableRow(
     icon: @Composable () -> Unit,
     text: String,
+    onClick: (() -> Unit)? = null,
+    copyButtonContentDescription: String?,
     onCopy: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         icon()
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text)
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            imageVector = NcsIcons.Copy,
-            contentDescription = stringResource(R.string.cd_copy_icon),
-            modifier = Modifier
-                .size(16.dp)
-                .clickable(onClick = onCopy)
-        )
-    }
-}
 
-@Composable
-fun ClickableRow(
-    icon: @Composable () -> Unit,
-    text: String,
-    onClick: () -> Unit,
-    onCopy: () -> Unit
-) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        icon()
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = text,
-            modifier = Modifier.clickable(onClick = onClick)
-        )
+        if (onClick == null) {
+            Text(text)
+        }
+
+        else {
+            Text(
+                text = text,
+                modifier = Modifier.clickable(onClick = onClick)
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             imageVector = NcsIcons.Copy,
-            contentDescription = stringResource(R.string.cd_copy_icon),
+            contentDescription = copyButtonContentDescription,
             modifier = Modifier
-                .size(16.dp)
+                .clip(CircleShape)
                 .clickable(onClick = onCopy)
+                .padding(16.dp)
+                .size(16.dp)
         )
     }
 }
