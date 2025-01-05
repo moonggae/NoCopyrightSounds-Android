@@ -254,7 +254,7 @@ internal fun HomeScreen(
             updateSelectMode(false)
         },
         onClickDetail = {
-            if (homeUiState.selectedMusicIds.size != 1) {
+            if (homeUiState.selectedMusicIds.isNotEmpty()) {
                 onMoveToDetailPage(homeUiState.selectedMusicIds.first())
             }
 
