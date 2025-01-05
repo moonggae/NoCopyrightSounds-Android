@@ -1,6 +1,7 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.ccc.ncs.configureAndroidBuildConfig
+import com.ccc.ncs.configureCopyLicenseFilesTask
 import com.ccc.ncs.configureGenerateSymbols
 import com.ccc.ncs.configureKotlinAndroid
 import org.gradle.api.Plugin
@@ -19,6 +20,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 configureAndroidBuildConfig(this)
                 configureGenerateSymbols(this)
+                configureCopyLicenseFilesTask()
                 defaultConfig.targetSdk = 35
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             }

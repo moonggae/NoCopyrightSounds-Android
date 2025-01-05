@@ -10,15 +10,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
-    }
-    resolutionStrategy {
-        eachPlugin {
-            when (requested.id.id) {
-                // https://github.com/google/play-services-plugins/issues/223
-                "com.google.android.gms.oss-licenses-plugin" -> useModule("com.google.android.gms:oss-licenses-plugin:${requested.version}")
-            }
-        }
     }
 }
 dependencyResolutionManagement {

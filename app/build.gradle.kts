@@ -6,9 +6,9 @@ plugins {
     alias(libs.plugins.ncs.android.compose)
     alias(libs.plugins.ncs.hilt)
     alias(libs.plugins.ncs.android.application.firebase)
-    alias(libs.plugins.google.oss)
     alias(libs.plugins.google.service)
     alias(libs.plugins.google.firebase.crashlytics)
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
