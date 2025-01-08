@@ -1,13 +1,13 @@
 package com.ccc.ncs.di
 
 import android.content.Context
-import android.os.Build
 import android.os.Environment
 import androidx.activity.ComponentActivity
 import com.ccc.ncs.MainActivity
 import com.ccc.ncs.R
 import com.ccc.ncs.playback.util.PlaylistString
 import com.ccc.ncs.playback.util.RecentPlaylistString
+import com.ccc.ncs.util.isDeviceOnePlus
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.Module
 import dagger.Provides
@@ -40,12 +40,7 @@ internal object AppModule {
         @ApplicationContext context: Context,
         crashlytics: FirebaseCrashlytics
     ): File? = try {
-        val isOnePlusDevice = Build.MANUFACTURER.equals("OnePlus", ignoreCase = true) ||
-                Build.BRAND.equals("OnePlus", ignoreCase = true)
-
-        crashlytics.setCustomKey("is_oneplus", isOnePlusDevice.toString())
-
-        val directory = if (isOnePlusDevice) {
+        val directory = if (isDeviceOnePlus()) {
             context.getExternalFilesDir(null)?.also {
                 File(it, "Music").apply { mkdirs() }
             }

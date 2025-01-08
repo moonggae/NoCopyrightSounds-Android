@@ -44,6 +44,7 @@ import com.ccc.ncs.analytics.TrackScreenViewEvent
 import com.ccc.ncs.designsystem.icon.NcsIcons
 import com.ccc.ncs.designsystem.theme.NcsTypography
 import com.ccc.ncs.util.conditional
+import com.ccc.ncs.util.isDeviceNexus5X
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 @Composable
@@ -70,7 +71,9 @@ internal fun MenuScreen(
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
         MenuItem(label = stringResource(R.string.menu_open_source_licenses)) {
-            activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+            if (!isDeviceNexus5X()) {
+                activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+            }
         }
 
         MenuItem(label = stringResource(R.string.menu_cache)) {
