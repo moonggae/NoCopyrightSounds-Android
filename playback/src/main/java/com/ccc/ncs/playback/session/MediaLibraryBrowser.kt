@@ -3,8 +3,8 @@ package com.ccc.ncs.playback.session
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.ccc.ncs.domain.repository.PlayListRepository
-import com.ccc.ncs.playback.util.PlaylistString
-import com.ccc.ncs.playback.util.RecentPlaylistString
+import com.ccc.ncs.playback.di.PlaylistString
+import com.ccc.ncs.playback.di.RecentPlaylistString
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

@@ -7,12 +7,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 interface CacheDataStore {
@@ -30,7 +31,8 @@ interface CacheDataStore {
 }
 
 internal class DefaultCacheDataStore @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val scope: CoroutineScope
 ): CacheDataStore {
     private val Context.oldDataStore by preferencesDataStore(name = PREFERENCES_NAME)
     private val prefs: SharedPreferences = context.getSharedPreferences(
@@ -40,7 +42,7 @@ internal class DefaultCacheDataStore @Inject constructor(
 
     init {
         if (needsMigration()) {
-            runBlocking {
+            scope.launch {
                 migrateToSharedPreferences()
             }
         }

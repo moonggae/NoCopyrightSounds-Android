@@ -4,7 +4,6 @@ import com.ccc.ncs.cache.CacheManager
 import com.ccc.ncs.domain.repository.MusicCacheRepository
 import com.ccc.ncs.domain.repository.MusicRepository
 import com.ccc.ncs.model.MusicStatus
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -20,7 +19,7 @@ import javax.inject.Inject
 internal class DefaultMusicCacheRepository @Inject constructor(
     private val cacheManager: CacheManager,
     private val musicRepository: MusicRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val scope: CoroutineScope
 ): MusicCacheRepository {
     override val maxSizeMb: Flow<Int> = cacheManager.maxSizeMbFlow
 
@@ -52,7 +51,7 @@ internal class DefaultMusicCacheRepository @Inject constructor(
     }
 
     override fun clearCache() {
-        CoroutineScope(ioDispatcher).launch {
+        scope.launch {
             cacheManager.cleanCache()
             musicRepository.getMusicsByStatus(
                 status = listOf(MusicStatus.FullyCached, MusicStatus.PartiallyCached)

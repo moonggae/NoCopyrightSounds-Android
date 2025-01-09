@@ -10,7 +10,6 @@ import com.ccc.ncs.model.artistText
 import com.ccc.ncs.ui.model.downloadUrl
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -20,9 +19,9 @@ import javax.inject.Inject
 class MusicDownloader @Inject constructor(
     @ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
-    private val ioDispatcher: CoroutineDispatcher,
     private val downloadDirectory: File?,
-    private val crashlytics: FirebaseCrashlytics
+    private val crashlytics: FirebaseCrashlytics,
+    private val scope: CoroutineScope
 ) {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
 
@@ -36,7 +35,7 @@ class MusicDownloader @Inject constructor(
         if (file.exists()) file.delete()
 
         return try {
-            CoroutineScope(ioDispatcher).launch {
+            scope.launch {
                 musicRepository.updateMusicStatus(music.id, MusicStatus.Downloading)
             }
 

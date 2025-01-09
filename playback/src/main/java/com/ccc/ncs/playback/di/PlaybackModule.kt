@@ -19,9 +19,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 @UnstableApi
 @Module
@@ -54,10 +51,6 @@ internal object PlaybackModule {
 
         return builder.build()
     }
-
-    @Provides
-    @ServiceScoped
-    fun providesScope(): CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     @Provides
     @ServiceScoped

@@ -8,6 +8,7 @@ import com.ccc.ncs.domain.model.PlayingStatus
 import com.ccc.ncs.domain.model.RepeatMode
 import com.ccc.ncs.playback.playstate.PlaybackStateManager
 import com.ccc.ncs.playback.playstate.playingStatus
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +20,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 internal class PlaybackStateHandler @Inject constructor(
     private val scope: CoroutineScope,
-    private val playbackStateManager: PlaybackStateManager
+    private val playbackStateManager: PlaybackStateManager,
+    private val mainDispatcher: CoroutineDispatcher
 ) : Player.Listener {
 
     private lateinit var player: Player
@@ -30,7 +32,7 @@ internal class PlaybackStateHandler @Inject constructor(
         player.addListener(this)
 
         job?.cancel()
-        job = scope.launch {
+        job = scope.launch(mainDispatcher) {
             playbackStateManager.flow
                 .map { it.playingStatus }
                 .collectLatest { playingStatus ->

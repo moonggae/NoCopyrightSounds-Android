@@ -45,7 +45,6 @@ import com.ccc.ncs.model.Music
 import com.ccc.ncs.model.PlayList
 import com.ccc.ncs.util.calculateScreenHeight
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -198,7 +197,7 @@ class PlayerMenuBottomSheetState(
     val windowInsetPaddings: PaddingValues,
     val screenHeight: Dp,
     val density: Density,
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    coroutineScope: CoroutineScope
 ) {
     val sheetPeekHeight: Dp get() = sheetDragHandleHeight + windowInsetPaddings.calculateBottomPadding()
     val bottomSheetStateMinOffset: Dp get() = windowInsetPaddings.calculateTopPadding()

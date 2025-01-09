@@ -1,4 +1,4 @@
-package com.ccc.ncs.playback.util
+package com.ccc.ncs.playback.di
 
 import javax.inject.Qualifier
 

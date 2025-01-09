@@ -5,8 +5,8 @@ import android.os.Environment
 import androidx.activity.ComponentActivity
 import com.ccc.ncs.MainActivity
 import com.ccc.ncs.R
-import com.ccc.ncs.playback.util.PlaylistString
-import com.ccc.ncs.playback.util.RecentPlaylistString
+import com.ccc.ncs.playback.di.PlaylistString
+import com.ccc.ncs.playback.di.RecentPlaylistString
 import com.ccc.ncs.util.isDeviceOnePlus
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.Module
@@ -15,7 +15,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.io.File
 import javax.inject.Singleton
 
@@ -28,7 +30,12 @@ internal object AppModule {
 
     @Provides
     @Singleton
-    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun providesApplicationScope(): CoroutineScope =
+        CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
     @Provides
     @Singleton

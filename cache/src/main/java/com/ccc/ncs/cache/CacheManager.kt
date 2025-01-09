@@ -14,7 +14,6 @@ import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.File
@@ -64,14 +63,14 @@ class CacheManager @Inject constructor(
     ) {
         val listener = object : Cache.Listener {
             override fun onSpanAdded(cache: Cache, span: CacheSpan) {
-                scope.launch(Dispatchers.IO) {
+                scope.launch {
                     val isFullyCached = cache.isFullyCached(key)
                     block(isFullyCached)
                 }
             }
 
             override fun onSpanTouched(cache: Cache, oldSpan: CacheSpan, newSpan: CacheSpan) {
-                scope.launch(Dispatchers.IO) {
+                scope.launch {
                     val isFullyCached = cache.isFullyCached(key)
                     block(isFullyCached)
                 }

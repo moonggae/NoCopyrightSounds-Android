@@ -7,22 +7,6 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-
-//@Module
-//@InstallIn(SingletonComponent::class)
-//object CacheModule {
-//    @OptIn(UnstableApi::class)
-//    @Provides
-//    @Singleton
-//    fun provideCacheManager(
-//        @ApplicationContext context: Context,
-//        cacheDataStore: CacheDataStore
-//    ): CacheManager = CacheManager(
-//        context = context,
-//        dataStore = cacheDataStore
-//    )
-//}
-
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class CacheDataStoreModule {
