@@ -16,8 +16,8 @@ android {
 
     defaultConfig {
         applicationId = "com.ccc.ncs"
-        versionCode = 33
-        versionName = "0.2.27"
+        versionCode = 34
+        versionName = "0.2.28"
 
         vectorDrawables {
             useSupportLibrary = true
