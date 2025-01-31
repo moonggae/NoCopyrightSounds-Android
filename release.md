@@ -1,3 +1,40 @@
+### 0.2.31
+```
+<ko-KR>
+🐛 버그 수정
+- 오프라인 음악 목록이 삭제되는 문제를 해결했어요.
+</ko-KR>
+
+<en-US>
+🐛 Bug fixes  
+- Fixed an issue where offline music lists were being deleted.
+</en-US>
+
+<es-ES>
+🐛 Corrección de errores
+- Se ha solucionado un problema donde las listas de música sin conexión se eliminaban.
+</es-ES>
+
+<es-419>
+🐛 Corrección de errores
+- Se solucionó un problema donde las listas de música sin conexión se eliminaban.
+</es-419>
+
+<ar>
+🐛 إصلاح الأخطاء
+- تم إصلاح مشكلة حذف قوائم الموسيقى غير المتصلة بالإنترنت.
+</ar>
+
+<hi-IN>
+🐛 बग फिक्स
+- ऑफलाइन संगीत सूचियों के हटने की समस्या को ठीक किया गया।
+</hi-IN>
+
+<id>
+🐛 Perbaikan bug
+- Memperbaiki masalah daftar musik offline yang terhapus.
+</id>
+```
 ### 0.2.30
 ### 0.2.28
 ### 0.2.27

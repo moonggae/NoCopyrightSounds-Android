@@ -53,7 +53,16 @@ internal class DefaultMusicRepository @Inject constructor(
     }
 
     override fun insertMusics(musics: List<Music>): Flow<List<Music>> = flow {
-        musicDao.insertMusics(musics.map { it.asEntity() })
+        val existMusics = getMusics(musics.map(Music::id)).first()
+
+        val updatedMusics = musics.map { music ->
+            music.copy(
+                status = existMusics.find { it.id == music.id }?.status ?: MusicStatus.None
+            ).asEntity()
+        }
+
+        // Insert musics with existing status preservation
+        musicDao.insertMusics(updatedMusics)
 
         val musicGenreCrossRefs = mutableListOf<MusicGenreCrossRef>()
         val musicMoodCrossRefs = mutableListOf<MusicMoodCrossRef>()
