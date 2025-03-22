@@ -1,5 +1,12 @@
 # NCS (NoCopyrightSounds)
 
+### ❗ Note
+```
+이 프로젝트는 Kotlin Multiplatform 버전으로 마이그레이션되어 프라이빗 레포지토리로 이전되었습니다. 접근이 필요하신 경우 문의해 주세요.
+
+This project has been migrated to a Kotlin Multiplatform version and moved to a private repository. If you need access, please contact me.
+```
+
 ### 📝 Summary
 [NCS (NoCopyrightSounds)](https://ncs.io/) 음악 플레이어
 
